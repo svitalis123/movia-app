@@ -2,16 +2,18 @@
 export const env = {
   // TMDB API Configuration
   TMDB_API_KEY: import.meta.env.VITE_TMDB_API_KEY || '',
-  TMDB_BASE_URL: import.meta.env.VITE_TMDB_BASE_URL || 'https://api.themoviedb.org/3',
-  TMDB_IMAGE_BASE_URL: import.meta.env.VITE_TMDB_IMAGE_BASE_URL || 'https://image.tmdb.org/t/p',
-  
+  TMDB_BASE_URL:
+    import.meta.env.VITE_TMDB_BASE_URL || 'https://api.themoviedb.org/3',
+  TMDB_IMAGE_BASE_URL:
+    import.meta.env.VITE_TMDB_IMAGE_BASE_URL || 'https://image.tmdb.org/t/p',
+
   // Authentication Configuration
   CLERK_PUBLISHABLE_KEY: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || '',
-  
+
   // Application Configuration
   APP_NAME: import.meta.env.VITE_APP_NAME || 'Movie Recommendation App',
   APP_VERSION: import.meta.env.VITE_APP_VERSION || '1.0.0',
-  
+
   // Development flags
   isDevelopment: import.meta.env.DEV,
   isProduction: import.meta.env.PROD,
