@@ -12,6 +12,15 @@ dist
 dist-ssr
 *.local
 
+# Environment variables
+.env
+.env.local
+.env.production.local
+.env.test.local
+
+# Build info
+tsconfig.app.tsbuildinfo
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
