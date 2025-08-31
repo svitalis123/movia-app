@@ -20,10 +20,14 @@ export function ClerkAuthProvider({ children }: ClerkAuthProviderProps) {
   return (
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY}
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+      afterSignInUrl="/"
+      afterSignUpUrl="/"
       appearance={{
-        baseTheme: undefined, // Will be configured based on app theme
+        baseTheme: undefined,
         variables: {
-          colorPrimary: '#3b82f6', // Blue-500 to match app theme
+          colorPrimary: '#3b82f6',
           colorBackground: '#ffffff',
           colorInputBackground: '#f9fafb',
           colorInputText: '#111827',

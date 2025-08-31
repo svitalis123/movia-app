@@ -1,4 +1,3 @@
-
 import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
 
 interface SignInProps {
@@ -19,6 +18,7 @@ export function SignIn({ redirectUrl = '/', className }: SignInProps) {
           routing="path"
           path="/sign-in"
           signUpUrl="/sign-up"
+          afterSignInUrl="/"
           appearance={{
             elements: {
               rootBox: 'w-full',

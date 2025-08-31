@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense } from 'react';
 import { ClerkAuthProvider } from './lib/providers/clerk-provider';
@@ -45,9 +44,9 @@ function App() {
             <main className='bg-[#613599]'>
               <Suspense fallback={<RouteLoadingFallback />}>
                 <Routes>
-                  {/* Public routes - only accessible when signed out */}
+                  {/* Public routes - exact paths for Clerk */}
                   <Route 
-                    path="/sign-in/*" 
+                    path="/sign-in" 
                     element={
                       <SignedOut>
                         <SignInPage />
@@ -55,7 +54,7 @@ function App() {
                     } 
                   />
                   <Route 
-                    path="/sign-up/*" 
+                    path="/sign-up" 
                     element={
                       <SignedOut>
                         <SignUpPage />
