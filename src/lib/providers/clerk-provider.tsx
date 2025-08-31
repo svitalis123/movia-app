@@ -14,16 +14,12 @@ interface ClerkAuthProviderProps {
 
 /**
  * Clerk authentication provider wrapper
- * Configures Clerk with the application settings
+ * Configures Clerk with the application settings for development
  */
 export function ClerkAuthProvider({ children }: ClerkAuthProviderProps) {
   return (
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY}
-      signInUrl="/sign-in"
-      signUpUrl="/sign-up"
-      afterSignInUrl="/"
-      afterSignUpUrl="/"
       appearance={{
         baseTheme: undefined,
         variables: {
