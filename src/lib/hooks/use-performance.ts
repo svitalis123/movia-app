@@ -49,7 +49,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
   delay: number,
   deps: React.DependencyList = []
 ): T {
-  const debouncedCallback = useRef<T>();
+  const debouncedCallback = useRef<T | null>(null);
 
   useEffect(() => {
     debouncedCallback.current = debounce(callback, delay) as T;
@@ -66,7 +66,7 @@ export function useThrottle<T extends (...args: any[]) => any>(
   limit: number,
   deps: React.DependencyList = []
 ): T {
-  const throttledCallback = useRef<T>();
+  const throttledCallback = useRef<T | null>(null);
 
   useEffect(() => {
     throttledCallback.current = throttle(callback, limit) as T;

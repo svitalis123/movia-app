@@ -1,4 +1,4 @@
-import { Star, Calendar, Clock } from 'lucide-react';
+import { Star, Calendar } from 'lucide-react';
 import { MoviePoster } from '../ui/image-with-fallback';
 import { cn } from '../../lib/utils';
 

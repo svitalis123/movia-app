@@ -184,7 +184,7 @@ export function SmartMovieList({
   containerRef,
   ...props
 }: SmartMovieListProps) {
-  const { calculateDimensions } = useResponsiveMovieGrid(containerRef || { current: null });
+  const { calculateDimensions } = useResponsiveMovieGrid(containerRef as React.RefObject<HTMLElement>);
   const dimensions = calculateDimensions();
 
   // Use virtual scrolling only for large lists

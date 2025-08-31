@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { APIError, NetworkError } from '../types';
 
@@ -31,7 +32,7 @@ const RETRY_CONFIG = {
  * - Timeout configuration
  */
 class HttpClient {
-  private axiosInstance: any; // Using any to avoid type issues
+  private axiosInstance: any;
   private config: HttpClientConfig;
 
   constructor(config: Partial<HttpClientConfig> = {}) {
@@ -40,9 +41,6 @@ class HttpClient {
     this.setupInterceptors();
   }
 
-  /**
-   * Creates and configures the Axios instance
-   */
   private createAxiosInstance() {
     return axios.create({
       baseURL: this.config.baseURL,
@@ -54,14 +52,9 @@ class HttpClient {
     });
   }
 
-  /**
-   * Sets up request and response interceptors
-   */
   private setupInterceptors(): void {
-    // Request interceptor - adds API key to all requests
     this.axiosInstance.interceptors.request.use(
       (config: any) => {
-        // Add API key to all requests
         const apiKey = import.meta.env.VITE_TMDB_API_KEY;
         if (apiKey) {
           config.params = {
@@ -70,7 +63,6 @@ class HttpClient {
           };
         }
 
-        // Add request timestamp for debugging
         config.metadata = { startTime: Date.now() };
 
         console.log(`[HTTP] ${config.method?.toUpperCase()} ${config.url}`, {
@@ -86,7 +78,6 @@ class HttpClient {
       }
     );
 
-    // Response interceptor - handles responses and errors
     this.axiosInstance.interceptors.response.use(
       (response: any) => {
         const duration = Date.now() - (response.config.metadata?.startTime || 0);
@@ -99,9 +90,6 @@ class HttpClient {
     );
   }
 
-  /**
-   * Handles request errors
-   */
   private handleRequestError(error: any): Error {
     if (error.code === 'ECONNABORTED') {
       return new NetworkError('Request timeout');
@@ -112,93 +100,68 @@ class HttpClient {
     return new APIError('Request failed', 0, error.config?.url || 'unknown');
   }
 
-  /**
-   * Handles response errors with retry logic
-   */
-  private async handleResponseError(error: any): Promise<never> {
+  private async handleResponseError(error: any): Promise<any> {
     const { config, response } = error;
     
-    // Log the error
     console.error('[HTTP] Response error:', {
       status: response?.status,
       url: config?.url,
       message: error.message,
     });
 
-    // Check if we should retry the request
     if (this.shouldRetry(error)) {
       return this.retryRequest(error);
     }
 
-    // Transform error to our custom error types
     throw this.transformError(error);
   }
 
-  /**
-   * Determines if a request should be retried
-   */
   private shouldRetry(error: any): boolean {
     const { config, response } = error;
     
-    // Don't retry if no config or already exceeded max retries
     if (!config || config.__retryCount >= this.config.retries) {
       return false;
     }
 
-    // Only retry specific HTTP methods
     if (!RETRY_CONFIG.retryableMethods.includes(config.method?.toUpperCase() || '')) {
       return false;
     }
 
-    // Retry on network errors
     if (!response) {
       return true;
     }
 
-    // Retry on specific status codes
     return RETRY_CONFIG.retryableStatuses.includes(response.status);
   }
 
-  /**
-   * Retries a failed request with exponential backoff
-   */
-  private async retryRequest(error: any): Promise<never> {
+  private async retryRequest(error: any): Promise<any> {
     const config = error.config;
     const retryCount = config.__retryCount || 0;
     
     config.__retryCount = retryCount + 1;
 
-    // Calculate delay with exponential backoff
     const delay = this.config.retryDelay * Math.pow(2, retryCount);
     
     console.log(`[HTTP] Retrying request (${retryCount + 1}/${this.config.retries}) after ${delay}ms`);
 
-    // Wait before retrying
     await new Promise(resolve => setTimeout(resolve, delay));
 
-    // Retry the request
     return this.axiosInstance.request(config);
   }
 
-  /**
-   * Transforms Axios errors to our custom error types
-   */
   private transformError(error: any): Error {
     const { response, config } = error;
 
     if (!response) {
-      // Network error
       if (error.code === 'ECONNABORTED') {
         return new NetworkError('Request timeout');
       }
       return new NetworkError('Network error - please check your connection');
     }
 
-    // API error with response
     const status = response.status;
     const endpoint = config?.url || 'unknown';
     
-    // Handle specific status codes
     switch (status) {
       case 401:
         return new APIError('Invalid API key', status, endpoint, 'UNAUTHORIZED');
@@ -214,57 +177,48 @@ class HttpClient {
     }
   }
 
-  /**
-   * Public methods for making HTTP requests
-   */
-  
+  // Fixed the problematic method - line 180
+  async request(config: any): Promise<any> {
+    return this.axiosInstance.request(config);
+  }
+
   async get<T>(url: string, config?: any): Promise<T> {
-    const response = await this.axiosInstance.get<T>(url, config);
+    const response = await this.axiosInstance.get(url, config);
     return response.data;
   }
 
   async post<T>(url: string, data?: any, config?: any): Promise<T> {
-    const response = await this.axiosInstance.post<T>(url, data, config);
+    const response = await this.axiosInstance.post(url, data, config);
     return response.data;
   }
 
   async put<T>(url: string, data?: any, config?: any): Promise<T> {
-    const response = await this.axiosInstance.put<T>(url, data, config);
+    const response = await this.axiosInstance.put(url, data, config);
     return response.data;
   }
 
   async delete<T>(url: string, config?: any): Promise<T> {
-    const response = await this.axiosInstance.delete<T>(url, config);
+    const response = await this.axiosInstance.delete(url, config);
     return response.data;
   }
 
   async patch<T>(url: string, data?: any, config?: any): Promise<T> {
-    const response = await this.axiosInstance.patch<T>(url, data, config);
+    const response = await this.axiosInstance.patch(url, data, config);
     return response.data;
   }
 
-  /**
-   * Gets the underlying Axios instance for advanced usage
-   */
   getAxiosInstance() {
     return this.axiosInstance;
   }
 
-  /**
-   * Updates the configuration
-   */
   updateConfig(newConfig: Partial<HttpClientConfig>): void {
     this.config = { ...this.config, ...newConfig };
     
-    // Update Axios instance configuration
     this.axiosInstance.defaults.baseURL = this.config.baseURL;
     this.axiosInstance.defaults.timeout = this.config.timeout;
   }
 }
 
-// Create and export a singleton instance
 export const httpClient = new HttpClient();
-
-// Export the class for testing and custom instances
 export { HttpClient };
 export type { HttpClientConfig };

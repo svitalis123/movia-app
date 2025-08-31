@@ -38,7 +38,7 @@ export function throttle<T extends (...args: any[]) => any>(
   
   return function executedFunction(...args: Parameters<T>) {
     if (!inThrottle) {
-      func.apply(this, args);
+      func.apply(null as any, args);
       inThrottle = true;
       setTimeout(() => inThrottle = false, limit);
     }
@@ -371,7 +371,7 @@ export const memoryManagement = {
         } else if (cache.size >= maxSize) {
           // Remove least recently used (first item)
           const firstKey = cache.keys().next().value;
-          cache.delete(firstKey);
+          if (firstKey !== undefined) cache.delete(firstKey);
         }
         cache.set(key, value);
       },

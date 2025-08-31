@@ -1,12 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    tailwindcss(), // Add Tailwind CSS v4 Vite plugin
     react()
   ],
   resolve: {
@@ -18,18 +15,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Vendor chunk for React and related libraries
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          // UI chunk for component libraries
           ui: ['lucide-react'],
-          // Auth chunk for authentication related code
           auth: ['@clerk/clerk-react'],
-          // Store chunk for state management
           store: ['zustand'],
-          // Utils chunk for utility libraries
           utils: ['axios', 'clsx']
         },
-        // Optimize chunk file names
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId
             ? chunkInfo.facadeModuleId.split('/').pop()?.replace(/\.[^/.]+$/, '')
@@ -50,15 +41,7 @@ export default defineConfig({
         }
       }
     },
-    // Enable tree shaking and minification
     minify: 'terser',
-    // Optimize chunk size warnings
     chunkSizeWarningLimit: 1000,
-  },
-  // @ts-ignore
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
   },
 })

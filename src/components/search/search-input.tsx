@@ -61,7 +61,7 @@ export function SearchInput({
   
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Search history management (local state instead of store to avoid infinite loops)
   const [searchHistory, setSearchHistory] = useState<string[]>(() => {
