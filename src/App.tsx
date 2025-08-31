@@ -42,7 +42,7 @@ function App() {
               <Header />
             </SignedIn>
 
-            <main>
+            <main className='bg-[#613599]'>
               <Suspense fallback={<RouteLoadingFallback />}>
                 <Routes>
                   {/* Public routes - only accessible when signed out */}

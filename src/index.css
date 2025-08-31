@@ -4,28 +4,41 @@
 @source "./src/**/*.{html,js,ts,jsx,tsx}";
 
 @theme {
-  --color-background: 0 0% 100%;
-  --color-foreground: 222.2 84% 4.9%;
-  --color-card: 0 0% 100%;
-  --color-card-foreground: 222.2 84% 4.9%;
-  --color-popover: 0 0% 100%;
-  --color-popover-foreground: 222.2 84% 4.9%;
-  --color-primary: 222.2 47.4% 11.2%;
-  --color-primary-foreground: 210 40% 98%;
-  --color-secondary: 210 40% 96%;
-  --color-secondary-foreground: 222.2 47.4% 11.2%;
-  --color-muted: 210 40% 96%;
-  --color-muted-foreground: 215.4 16.3% 46.9%;
-  --color-accent: 210 40% 96%;
-  --color-accent-foreground: 222.2 47.4% 11.2%;
-  --color-destructive: 0 84.2% 60.2%;
-  --color-destructive-foreground: 210 40% 98%;
-  --color-border: 214.3 31.8% 91.4%;
-  --color-input: 214.3 31.8% 91.4%;
-  --color-ring: 222.2 84% 4.9%;
-  --radius: 0.5rem;
+  /* Light mode colors - better contrast */
+  --color-background: 255 255 255;        /* Pure white background */
+  --color-foreground: 15 23 42;           /* Dark slate for main text */
+  --color-card: 255 255 255;              /* White cards */
+  --color-card-foreground: 15 23 42;      /* Dark text on cards */
+  --color-popover: 255 255 255;           /* White popovers */
+  --color-popover-foreground: 15 23 42;   /* Dark text in popovers */
   
-  /* Container configuration */
+  /* Primary colors - modern blue */
+  --color-primary: 255 255 255;             /* black-600 */
+  --color-primary-foreground: 248 250 252; /* Slate-50 for contrast */
+  
+  /* Secondary colors - light gray */
+  --color-secondary: 241 245 249;         /* Slate-100 */
+  --color-secondary-foreground: 15 23 42; /* Dark slate text */
+  
+  /* Muted colors - for subtle elements */
+  --color-muted: 248 250 252;             /* Slate-50 */
+  --color-muted-foreground: 255 255 255;  /* Slate-500 for muted text */
+  
+  /* Accent colors - slightly darker than secondary */
+  --color-accent: 226 232 240;            /* Slate-200 */
+  --color-accent-foreground: 15 23 42;    /* Dark text */
+  
+  /* Destructive colors - red for errors */
+  --color-destructive: 239 68 68;         /* Red-500 */
+  --color-destructive-foreground: 254 242 242; /* Red-50 */
+  
+  /* Border and input colors */
+  --color-border: 226 232 240;            /* Slate-200 */
+  --color-input: 226 232 240;             /* Slate-200 */
+  --color-ring: 37 99 235;                /* Blue-600 for focus rings */
+  
+  /* Layout */
+  --radius: 0.5rem;
   --container-center: true;
   --container-padding: 2rem;
   --container-screens-2xl: 1400px;
@@ -39,50 +52,62 @@
 /* Dark mode colors */
 @media (prefers-color-scheme: dark) {
   @theme {
-    --color-background: 222.2 84% 4.9%;
-    --color-foreground: 210 40% 98%;
-    --color-card: 222.2 84% 4.9%;
-    --color-card-foreground: 210 40% 98%;
-    --color-popover: 222.2 84% 4.9%;
-    --color-popover-foreground: 210 40% 98%;
-    --color-primary: 210 40% 98%;
-    --color-primary-foreground: 222.2 47.4% 11.2%;
-    --color-secondary: 217.2 32.6% 17.5%;
-    --color-secondary-foreground: 210 40% 98%;
-    --color-muted: 217.2 32.6% 17.5%;
-    --color-muted-foreground: 215 20.2% 65.1%;
-    --color-accent: 217.2 32.6% 17.5%;
-    --color-accent-foreground: 210 40% 98%;
-    --color-destructive: 0 62.8% 30.6%;
-    --color-destructive-foreground: 210 40% 98%;
-    --color-border: 217.2 32.6% 17.5%;
-    --color-input: 217.2 32.6% 17.5%;
-    --color-ring: 212.7 26.8% 83.9%;
+    --color-background: 2 6 23;            /* Very dark blue */
+    --color-foreground: 248 250 252;       /* Light text */
+    --color-card: 15 23 42;                /* Dark slate cards */
+    --color-card-foreground: 248 250 252;  /* Light text on cards */
+    --color-popover: 15 23 42;             /* Dark popovers */
+    --color-popover-foreground: 248 250 252; /* Light text in popovers */
+    
+    --color-primary: 59 130 246;           /* Blue-500 (brighter for dark mode) */
+    --color-primary-foreground: 15 23 42;  /* Dark text */
+    
+    --color-secondary: 30 41 59;           /* Slate-700 */
+    --color-secondary-foreground: 248 250 252; /* Light text */
+    
+    --color-muted: 30 41 59;               /* Slate-700 */
+    --color-muted-foreground: 148 163 184; /* Slate-400 */
+    
+    --color-accent: 51 65 85;              /* Slate-600 */
+    --color-accent-foreground: 248 250 252; /* Light text */
+    
+    --color-destructive: 185 28 28;        /* Red-700 */
+    --color-destructive-foreground: 254 242 242; /* Red-50 */
+    
+    --color-border: 51 65 85;              /* Slate-600 */
+    --color-input: 51 65 85;               /* Slate-600 */
+    --color-ring: 59 130 246;              /* Blue-500 */
   }
 }
 
-/* Or with class-based dark mode */
+/* Class-based dark mode */
 .dark {
   @theme {
-    --color-background: 222.2 84% 4.9%;
-    --color-foreground: 210 40% 98%;
-    --color-card: 222.2 84% 4.9%;
-    --color-card-foreground: 210 40% 98%;
-    --color-popover: 222.2 84% 4.9%;
-    --color-popover-foreground: 210 40% 98%;
-    --color-primary: 210 40% 98%;
-    --color-primary-foreground: 222.2 47.4% 11.2%;
-    --color-secondary: 217.2 32.6% 17.5%;
-    --color-secondary-foreground: 210 40% 98%;
-    --color-muted: 217.2 32.6% 17.5%;
-    --color-muted-foreground: 215 20.2% 65.1%;
-    --color-accent: 217.2 32.6% 17.5%;
-    --color-accent-foreground: 210 40% 98%;
-    --color-destructive: 0 62.8% 30.6%;
-    --color-destructive-foreground: 210 40% 98%;
-    --color-border: 217.2 32.6% 17.5%;
-    --color-input: 217.2 32.6% 17.5%;
-    --color-ring: 212.7 26.8% 83.9%;
+    --color-background: 2 6 23;            /* Very dark blue */
+    --color-foreground: 248 250 252;       /* Light text */
+    --color-card: 15 23 42;                /* Dark slate cards */
+    --color-card-foreground: 248 250 252;  /* Light text on cards */
+    --color-popover: 15 23 42;             /* Dark popovers */
+    --color-popover-foreground: 248 250 252; /* Light text in popovers */
+    
+    --color-primary: 59 130 246;           /* Blue-500 (brighter for dark mode) */
+    --color-primary-foreground: 15 23 42;  /* Dark text */
+    
+    --color-secondary: 30 41 59;           /* Slate-700 */
+    --color-secondary-foreground: 248 250 252; /* Light text */
+    
+    --color-muted: 30 41 59;               /* Slate-700 */
+    --color-muted-foreground: 148 163 184; /* Slate-400 */
+    
+    --color-accent: 51 65 85;              /* Slate-600 */
+    --color-accent-foreground: 248 250 252; /* Light text */
+    
+    --color-destructive: 185 28 28;        /* Red-700 */
+    --color-destructive-foreground: 254 242 242; /* Red-50 */
+    
+    --color-border: 51 65 85;              /* Slate-600 */
+    --color-input: 51 65 85;               /* Slate-600 */
+    --color-ring: 59 130 246;              /* Blue-500 */
   }
 }
 
@@ -105,16 +130,66 @@
   animation: accordion-up 0.2s ease-out;
 }
 
-/* Base styles */
+/* Base styles with proper contrast */
 * {
-  border-color: hsl(var(--color-border));
+  border-color: rgb(var(--color-border));
 }
 
+
+
 body {
-  background-color: hsl(var(--color-background));
-  color: hsl(var(--color-foreground));
+  background-color: #613599 ;
+  color: rgb(var(--color-foreground));
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Additional utility classes for better visibility */
+.text-visible {
+  color: rgb(var(--color-foreground)) !important;
+}
+
+.bg-visible {
+  background-color: rgb(var(--color-background)) !important;
+}
+
+/* Movie card specific improvements */
+.movie-card {
+  background-color: rgb(var(--color-card));
+  color: rgb(var(--color-card-foreground));
+  border: 1px solid rgb(var(--color-border));
+}
+
+/* Button improvements */
+.btn-primary {
+  background-color: rgb(var(--color-primary));
+  color: rgb(var(--color-primary-foreground));
+}
+
+.btn-secondary {
+  background-color: rgb(var(--color-secondary));
+  color: rgb(var(--color-secondary-foreground));
+}
+
+/* Input improvements */
+input, textarea {
+  background-color: #58308d66;
+  color: rgb(var(--color-foreground));
+  border: 1px solid rgb(var(--color-border));
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgb(var(--color-muted-foreground));
+}
+
+/* Link improvements */
+a {
+  color: rgb(var(--color-primary));
+}
+
+a:hover {
+  color: rgb(var(--color-primary));
+  opacity: 0.8;
 }
