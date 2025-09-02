@@ -1,0 +1,271 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # Code Quality and Testing Job
+  quality-and-test:
+    name: Code Quality & Testing
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Type checking
+        run: npm run type-check
+        
+      - name: Lint code
+        run: npm run lint
+        
+      - name: Format check
+        run: npm run format:check
+        
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+          VITE_TMDB_BASE_URL: https://api.themoviedb.org/3
+          VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
+          VITE_APP_NAME: Movie Recommendation App
+          VITE_APP_VERSION: 1.0.0
+          
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: |
+            coverage/
+            test-results/
+          retention-days: 7
+
+  # End-to-End Testing Job
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: quality-and-test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+          VITE_TMDB_BASE_URL: https://api.themoviedb.org/3
+          VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
+          VITE_APP_NAME: Movie Recommendation App
+          VITE_APP_VERSION: 1.0.0
+          
+      - name: Start preview server
+        run: npm run preview &
+        
+      - name: Wait for server
+        run: npx wait-on http://localhost:4173 --timeout 60000
+        
+      - name: Run E2E tests
+        run: npm run test:e2e:all
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+          VITE_TMDB_BASE_URL: https://api.themoviedb.org/3
+          VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
+          VITE_APP_NAME: Movie Recommendation App
+          VITE_APP_VERSION: 1.0.0
+          
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # Build Job
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: [quality-and-test, e2e-tests]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+          VITE_TMDB_BASE_URL: https://api.themoviedb.org/3
+          VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
+          VITE_APP_NAME: Movie Recommendation App
+          VITE_APP_VERSION: 1.0.0
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+          retention-days: 7
+
+  # Security Audit Job
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+        
+      - name: Check for known vulnerabilities
+        run: npx audit-ci --moderate
+
+  # Deploy to Vercel (Production)
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build, security-audit]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+          
+      - name: Deploy to Vercel
+        uses: vercel/action@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+          VITE_TMDB_BASE_URL: https://api.themoviedb.org/3
+          VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
+          VITE_APP_NAME: Movie Recommendation App
+          VITE_APP_VERSION: 1.0.0
+
+  # Deploy to Vercel (Preview)
+  deploy-preview:
+    name: Deploy Preview
+    runs-on: ubuntu-latest
+    needs: [build, security-audit]
+    if: github.event_name == 'pull_request'
+    environment: preview
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+          
+      - name: Deploy Preview to Vercel
+        uses: vercel/action@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+          VITE_TMDB_BASE_URL: https://api.themoviedb.org/3
+          VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
+          VITE_APP_NAME: Movie Recommendation App
+          VITE_APP_VERSION: 1.0.0
+
+  # Notify on Success/Failure
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [deploy-production, deploy-preview]
+    if: always()
+    
+    steps:
+      - name: Notify Success
+        if: needs.deploy-production.result == 'success' || needs.deploy-preview.result == 'success'
+        run: |
+          echo "✅ Deployment successful!"
+          echo "Production deployment: ${{ needs.deploy-production.result }}"
+          echo "Preview deployment: ${{ needs.deploy-preview.result }}"
+          
+      - name: Notify Failure
+        if: needs.deploy-production.result == 'failure' || needs.deploy-preview.result == 'failure'
+        run: |
+          echo "❌ Deployment failed!"
+          echo "Production deployment: ${{ needs.deploy-production.result }}"
+          echo "Preview deployment: ${{ needs.deploy-preview.result }}"
+          exit 1

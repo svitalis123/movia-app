@@ -43,6 +43,12 @@ vi.mock('../components/ui', () => ({
       {message || 'Loading...'}
     </div>
   )),
+  ToastContainer: vi.fn(() => (
+    <div data-testid="toast-container">Toast Container</div>
+  )),
+  GlobalLoading: vi.fn(() => (
+    <div data-testid="global-loading">Global Loading</div>
+  )),
 }));
 
 // Mock react-router-dom to control routing in tests
@@ -104,5 +110,17 @@ describe('App Component', () => {
     const appContainer = screen.getByTestId('browser-router').querySelector('.min-h-screen');
     expect(appContainer).toBeInTheDocument();
     expect(appContainer).toHaveClass('bg-gray-50');
+  });
+
+  it('renders notification components', () => {
+    renderApp();
+    
+    // Verify ToastContainer is rendered
+    expect(screen.getByTestId('toast-container')).toBeInTheDocument();
+    expect(screen.getByText('Toast Container')).toBeInTheDocument();
+    
+    // Verify GlobalLoading is rendered
+    expect(screen.getByTestId('global-loading')).toBeInTheDocument();
+    expect(screen.getByText('Global Loading')).toBeInTheDocument();
   });
 });

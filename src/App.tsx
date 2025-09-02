@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { ClerkAuthProvider } from './lib/providers/clerk-provider';
 import { ProtectedRoute, SignedIn, SignedOut } from './components/auth';
 import { Header } from './components/layout/header';
-import { ErrorBoundary, LoadingSpinner } from './components/ui';
+import { ErrorBoundary, LoadingSpinner, ToastContainer, GlobalLoading } from './components/ui';
 import { createLazyRoute } from './lib/utils/lazy-loading';
 
 // Lazy load page components for code splitting with route-specific loading messages
@@ -33,8 +33,8 @@ function RouteLoadingFallback() {
 function App() {
   return (
     <ErrorBoundary>
-      <ClerkAuthProvider>
-        <Router>
+      <Router>
+        <ClerkAuthProvider>
           <div className="min-h-screen bg-gray-50">
             {/* Header - only show when signed in */}
             <SignedIn>
@@ -111,9 +111,13 @@ function App() {
                 </Routes>
               </Suspense>
             </main>
+
+            {/* Global UI components */}
+            <ToastContainer />
+            <GlobalLoading />
           </div>
-        </Router>
-      </ClerkAuthProvider>
+        </ClerkAuthProvider>
+      </Router>
     </ErrorBoundary>
   );
 }

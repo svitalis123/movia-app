@@ -6,6 +6,7 @@ export type { HttpClientConfig } from './http-client';
 export { movieService, TMDBMovieService } from './movie-service';
 export { cachedMovieService, CachedMovieService } from './cached-movie-service';
 export { optimizedMovieService } from './optimized-movie-service';
+export { enhancedMovieService, EnhancedMovieService } from './enhanced-movie-service';
 
 // Cache Service
 export { cacheService, InMemoryCacheService, CacheKeyGenerator } from './cache-service';

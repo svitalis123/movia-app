@@ -8,6 +8,18 @@ interface UIState {
   theme: 'light' | 'dark';
   sidebarOpen: boolean;
   isSearching: boolean;
+  // Loading states for async operations
+  loadingStates: {
+    fetchingMovies: boolean;
+    fetchingMovieDetails: boolean;
+    searching: boolean;
+    authenticating: boolean;
+  };
+  // Global loading overlay
+  globalLoading: {
+    isLoading: boolean;
+    message?: string;
+  };
 }
 
 interface UIActions {
@@ -16,6 +28,9 @@ interface UIActions {
   setTheme: (theme: 'light' | 'dark') => void;
   toggleSidebar: () => void;
   setSearching: (isSearching: boolean) => void;
+  // Loading state actions
+  setLoadingState: (operation: keyof UIState['loadingStates'], isLoading: boolean) => void;
+  setGlobalLoading: (isLoading: boolean, message?: string) => void;
 }
 
 interface UIStore extends UIState, UIActions {}
@@ -34,6 +49,16 @@ export const useUIStore = create<UIStore>()(
       theme: 'light',
       sidebarOpen: false,
       isSearching: false,
+      loadingStates: {
+        fetchingMovies: false,
+        fetchingMovieDetails: false,
+        searching: false,
+        authenticating: false,
+      },
+      globalLoading: {
+        isLoading: false,
+        message: undefined,
+      },
 
       // Actions
       setSearchQuery: (query: string) => {
@@ -55,6 +80,24 @@ export const useUIStore = create<UIStore>()(
       setSearching: (isSearching: boolean) => {
         set({ isSearching });
       },
+
+      setLoadingState: (operation: keyof UIState['loadingStates'], isLoading: boolean) => {
+        set((state) => ({
+          loadingStates: {
+            ...state.loadingStates,
+            [operation]: isLoading,
+          },
+        }));
+      },
+
+      setGlobalLoading: (isLoading: boolean, message?: string) => {
+        set({
+          globalLoading: {
+            isLoading,
+            message,
+          },
+        });
+      },
     }),
     {
       name: 'ui-store',
@@ -64,7 +107,7 @@ export const useUIStore = create<UIStore>()(
         viewMode: state.viewMode,
         theme: state.theme,
         sidebarOpen: state.sidebarOpen,
-        // Don't persist isSearching as it's a transient state
+        // Don't persist transient states like loading states
       }),
     }
   )
@@ -78,6 +121,8 @@ export const useViewMode = () => useUIStore((state) => state.viewMode);
 export const useTheme = () => useUIStore((state) => state.theme);
 export const useSidebarOpen = () => useUIStore((state) => state.sidebarOpen);
 export const useIsSearching = () => useUIStore((state) => state.isSearching);
+export const useLoadingStates = () => useUIStore((state) => state.loadingStates);
+export const useGlobalLoading = () => useUIStore((state) => state.globalLoading);
 
 /**
  * Action hooks for UI operations
@@ -88,4 +133,6 @@ export const useUIActions = () => useUIStore((state) => ({
   setTheme: state.setTheme,
   toggleSidebar: state.toggleSidebar,
   setSearching: state.setSearching,
+  setLoadingState: state.setLoadingState,
+  setGlobalLoading: state.setGlobalLoading,
 }));

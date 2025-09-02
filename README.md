@@ -1,5 +1,9 @@
 # Movie Recommendation App
 
+[![CI/CD Pipeline](https://github.com/username/movie-recommendation-app/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/username/movie-recommendation-app/actions/workflows/ci-cd.yml)
+[![Code Quality](https://github.com/username/movie-recommendation-app/actions/workflows/code-quality.yml/badge.svg)](https://github.com/username/movie-recommendation-app/actions/workflows/code-quality.yml)
+[![E2E Tests](https://github.com/username/movie-recommendation-app/actions/workflows/e2e.yml/badge.svg)](https://github.com/username/movie-recommendation-app/actions/workflows/e2e.yml)
+
 A modern React application built with TypeScript, Tailwind CSS, and shadcn/ui for browsing and discovering movies using The Movie Database (TMDB) API.
 
 ## Features
@@ -71,6 +75,11 @@ A modern React application built with TypeScript, Tailwind CSS, and shadcn/ui fo
 - `npm run format` - Format code with Prettier
 - `npm run format:check` - Check code formatting
 - `npm run type-check` - Run TypeScript type checking
+- `npm run test` - Run unit tests
+- `npm run test:coverage` - Run tests with coverage
+- `npm run test:e2e` - Run end-to-end tests
+- `npm run ci` - Run all quality checks
+- `npm run audit:security` - Run security audit
 
 ## Project Structure
 
@@ -101,13 +110,39 @@ src/
 | `VITE_TMDB_BASE_URL` | TMDB API base URL | No (has default) |
 | `VITE_TMDB_IMAGE_BASE_URL` | TMDB image base URL | No (has default) |
 
+## CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+- **Automated Testing**: Unit tests, E2E tests, and code quality checks
+- **Code Quality**: ESLint, Prettier, and TypeScript checks
+- **Security**: Dependency vulnerability scanning
+- **Deployment**: Automatic deployment to Vercel on main branch
+- **Preview Deployments**: Automatic preview deployments for pull requests
+
+### Required Secrets
+
+For the CI/CD pipeline to work, configure these secrets in your GitHub repository:
+
+- `VITE_CLERK_PUBLISHABLE_KEY`: Clerk authentication key
+- `VITE_TMDB_API_KEY`: TMDB API key
+- `VERCEL_TOKEN`: Vercel deployment token
+- `VERCEL_ORG_ID`: Vercel organization ID
+- `VERCEL_PROJECT_ID`: Vercel project ID
+
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes and ensure all tests pass locally:
+   ```bash
+   npm run ci
+   ```
+4. Commit your changes (`git commit -m 'Add some amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+The CI/CD pipeline will automatically run tests and create a preview deployment for your PR.
 
 ## License
 

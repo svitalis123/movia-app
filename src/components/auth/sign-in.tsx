@@ -14,11 +14,11 @@ export function SignIn({ redirectUrl = '/', className }: SignInProps) {
     <div className={`flex items-center justify-center min-h-screen bg-gray-50 ${className || ''}`}>
       <div className="w-full max-w-md">
         <ClerkSignIn
-          redirectUrl={redirectUrl}
           routing="path"
           path="/sign-in"
           signUpUrl="/sign-up"
-          afterSignInUrl="/"
+          afterSignInUrl={redirectUrl}
+          forceRedirectUrl={redirectUrl}
           appearance={{
             elements: {
               rootBox: 'w-full',
