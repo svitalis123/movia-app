@@ -102,7 +102,9 @@ describe('TMDBMovieService', () => {
       const apiError = new APIError('API Error', 500, 'getPopularMovies');
       mockedHttpClient.get.mockRejectedValue(apiError);
 
-      await expect(movieService.getPopularMovies()).rejects.toThrow(APIError);
+      await expect(movieService.getPopularMovies()).rejects.toBeInstanceOf(
+        APIError
+      );
     });
   });
 
@@ -151,8 +153,12 @@ describe('TMDBMovieService', () => {
     });
 
     it('should throw error for invalid movie ID', async () => {
-      await expect(movieService.getMovieDetails(0)).rejects.toThrow(APIError);
-      await expect(movieService.getMovieDetails(-1)).rejects.toThrow(APIError);
+      await expect(movieService.getMovieDetails(0)).rejects.toBeInstanceOf(
+        APIError
+      );
+      await expect(movieService.getMovieDetails(-1)).rejects.toBeInstanceOf(
+        APIError
+      );
     });
   });
 
@@ -206,8 +212,12 @@ describe('TMDBMovieService', () => {
     });
 
     it('should throw error for invalid movie ID', async () => {
-      await expect(movieService.getMovieCredits(0)).rejects.toThrow(APIError);
-      await expect(movieService.getMovieCredits(-1)).rejects.toThrow(APIError);
+      await expect(movieService.getMovieCredits(0)).rejects.toBeInstanceOf(
+        APIError
+      );
+      await expect(movieService.getMovieCredits(-1)).rejects.toBeInstanceOf(
+        APIError
+      );
     });
   });
 
@@ -268,12 +278,18 @@ describe('TMDBMovieService', () => {
     });
 
     it('should throw error for empty query', async () => {
-      await expect(movieService.searchMovies('')).rejects.toThrow(APIError);
-      await expect(movieService.searchMovies('   ')).rejects.toThrow(APIError);
+      await expect(movieService.searchMovies('')).rejects.toBeInstanceOf(
+        APIError
+      );
+      await expect(movieService.searchMovies('   ')).rejects.toBeInstanceOf(
+        APIError
+      );
     });
 
     it('should throw error for query too short', async () => {
-      await expect(movieService.searchMovies('a')).rejects.toThrow(APIError);
+      await expect(movieService.searchMovies('a')).rejects.toBeInstanceOf(
+        APIError
+      );
     });
 
     it('should trim query string', async () => {
@@ -358,8 +374,12 @@ describe('TMDBMovieService', () => {
     });
 
     it('should throw error for invalid genre ID', async () => {
-      await expect(movieService.getMoviesByGenre(0)).rejects.toThrow(APIError);
-      await expect(movieService.getMoviesByGenre(-1)).rejects.toThrow(APIError);
+      await expect(movieService.getMoviesByGenre(0)).rejects.toBeInstanceOf(
+        APIError
+      );
+      await expect(movieService.getMoviesByGenre(-1)).rejects.toBeInstanceOf(
+        APIError
+      );
     });
   });
 
@@ -416,8 +436,12 @@ describe('TMDBMovieService', () => {
     });
 
     it('should throw error for invalid movie ID', async () => {
-      await expect(movieService.getSimilarMovies(0)).rejects.toThrow(APIError);
-      await expect(movieService.getSimilarMovies(-1)).rejects.toThrow(APIError);
+      await expect(movieService.getSimilarMovies(0)).rejects.toBeInstanceOf(
+        APIError
+      );
+      await expect(movieService.getSimilarMovies(-1)).rejects.toBeInstanceOf(
+        APIError
+      );
     });
   });
 
@@ -480,12 +504,12 @@ describe('TMDBMovieService', () => {
     });
 
     it('should throw error for invalid movie ID', async () => {
-      await expect(movieService.getMovieRecommendations(0)).rejects.toThrow(
-        APIError
-      );
-      await expect(movieService.getMovieRecommendations(-1)).rejects.toThrow(
-        APIError
-      );
+      await expect(
+        movieService.getMovieRecommendations(0)
+      ).rejects.toBeInstanceOf(APIError);
+      await expect(
+        movieService.getMovieRecommendations(-1)
+      ).rejects.toBeInstanceOf(APIError);
     });
   });
 
@@ -569,7 +593,7 @@ describe('TMDBMovieService', () => {
 
       for (const query of invalidQueries) {
         if (query.trim().length < 2) {
-          await expect(movieService.searchMovies(query)).rejects.toThrow(
+          await expect(movieService.searchMovies(query)).rejects.toBeInstanceOf(
             APIError
           );
         }
@@ -580,18 +604,18 @@ describe('TMDBMovieService', () => {
       const invalidIds = [0, -1, NaN, Infinity, -Infinity];
 
       for (const id of invalidIds) {
-        await expect(movieService.getMovieDetails(id)).rejects.toThrow(
+        await expect(movieService.getMovieDetails(id)).rejects.toBeInstanceOf(
           APIError
         );
-        await expect(movieService.getMovieCredits(id)).rejects.toThrow(
+        await expect(movieService.getMovieCredits(id)).rejects.toBeInstanceOf(
           APIError
         );
-        await expect(movieService.getSimilarMovies(id)).rejects.toThrow(
+        await expect(movieService.getSimilarMovies(id)).rejects.toBeInstanceOf(
           APIError
         );
-        await expect(movieService.getMovieRecommendations(id)).rejects.toThrow(
-          APIError
-        );
+        await expect(
+          movieService.getMovieRecommendations(id)
+        ).rejects.toBeInstanceOf(APIError);
       }
     });
 
@@ -599,9 +623,9 @@ describe('TMDBMovieService', () => {
       const invalidGenreIds = [0, -1, NaN, Infinity];
 
       for (const genreId of invalidGenreIds) {
-        await expect(movieService.getMoviesByGenre(genreId)).rejects.toThrow(
-          APIError
-        );
+        await expect(
+          movieService.getMoviesByGenre(genreId)
+        ).rejects.toBeInstanceOf(APIError);
       }
     });
   });

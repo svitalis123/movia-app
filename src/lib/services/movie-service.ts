@@ -1,4 +1,5 @@
 import { httpClient } from './http-client';
+import { APIError } from '../types';
 
 // Define all types locally to avoid import issues
 interface TMDBMovie {
@@ -111,17 +112,6 @@ interface TMDBResponse<T> {
 }
 
 // Custom Error Classes
-class APIError extends Error {
-  constructor(
-    message: string,
-    public status: number,
-    public endpoint: string,
-    public code?: string
-  ) {
-    super(message);
-    this.name = 'APIError';
-  }
-}
 
 class _NetworkError extends Error {
   constructor(

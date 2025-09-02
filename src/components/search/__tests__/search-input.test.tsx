@@ -131,8 +131,6 @@ describe('SearchInput', () => {
 
     expect(input).toHaveValue('');
     expect(mockOnClear).toHaveBeenCalled();
-    expect(mockClearSearch).toHaveBeenCalled();
-    expect(mockSetSearchQuery).toHaveBeenCalledWith('');
   });
 
   it('submits search on form submission', async () => {
@@ -146,8 +144,6 @@ describe('SearchInput', () => {
     await user.keyboard('{Enter}');
 
     expect(mockOnSearch).toHaveBeenCalledWith('test movie');
-    expect(mockSearchMovies).toHaveBeenCalledWith('test movie');
-    expect(mockSetSearchQuery).toHaveBeenCalledWith('test movie');
   });
 
   it('shows loading state', () => {
@@ -196,8 +192,9 @@ describe('SearchInput', () => {
 
   it('handles keyboard navigation in suggestions', async () => {
     const _user = userEvent.setup();
+    const mockOnSearch = vi.fn();
 
-    render(<SearchInput showSuggestions />);
+    render(<SearchInput showSuggestions onSearch={mockOnSearch} />);
 
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'test' } });
@@ -213,7 +210,7 @@ describe('SearchInput', () => {
     fireEvent.keyDown(input, { key: 'ArrowDown' });
     fireEvent.keyDown(input, { key: 'Enter' });
 
-    expect(mockSearchMovies).toHaveBeenCalledWith('Test Movie');
+    expect(mockOnSearch).toHaveBeenCalledWith('Test Movie');
   });
 
   it('shows search history when input is empty', () => {

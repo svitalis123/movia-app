@@ -4,15 +4,26 @@ import { SignUp } from '../sign-up';
 
 // Mock Clerk's SignUp component
 vi.mock('@clerk/clerk-react', () => ({
-  SignUp: vi.fn(({ redirectUrl, routing, path, signInUrl, appearance }) => (
-    <div data-testid="clerk-signup">
-      <div data-testid="redirect-url">{redirectUrl}</div>
-      <div data-testid="routing">{routing}</div>
-      <div data-testid="path">{path}</div>
-      <div data-testid="signin-url">{signInUrl}</div>
-      <div data-testid="appearance">{JSON.stringify(appearance)}</div>
-    </div>
-  )),
+  SignUp: vi.fn(
+    ({
+      afterSignUpUrl,
+      forceRedirectUrl,
+      routing,
+      path,
+      signInUrl,
+      appearance,
+    }) => (
+      <div data-testid="clerk-signup">
+        <div data-testid="redirect-url">
+          {afterSignUpUrl || forceRedirectUrl}
+        </div>
+        <div data-testid="routing">{routing}</div>
+        <div data-testid="path">{path}</div>
+        <div data-testid="signin-url">{signInUrl}</div>
+        <div data-testid="appearance">{JSON.stringify(appearance)}</div>
+      </div>
+    )
+  ),
 }));
 
 describe('SignUp Component', () => {
