@@ -16,6 +16,9 @@ A modern React application built with TypeScript, Tailwind CSS, and shadcn/ui fo
 - ⚡ Fast development with Vite
 - 📦 State management with Zustand
 - 🧪 Type-safe development with TypeScript
+- 🔔 **NEW**: Comprehensive notification system with toast messages
+- ⏳ **NEW**: Enhanced loading states for all async operations
+- 🚨 **NEW**: User-friendly error handling and recovery
 
 ## Tech Stack
 
@@ -81,24 +84,80 @@ A modern React application built with TypeScript, Tailwind CSS, and shadcn/ui fo
 - `npm run ci` - Run all quality checks
 - `npm run audit:security` - Run security audit
 
+## 📚 Documentation
+
+- **[Changelog](./CHANGELOG.md)** - Recent updates and changes
+- **[Notification System](./docs/NOTIFICATIONS.md)** - Complete guide to the notification system
+- **[CI/CD Setup](./docs/CI-CD.md)** - Continuous integration and deployment guide
+- **[GitHub Setup](./.github/SETUP.md)** - GitHub Actions configuration
+
+## 🆕 Recent Updates
+
+### Notification System (Task 13.2) ✅
+We've implemented a comprehensive notification system that provides users with immediate feedback for all actions:
+
+#### Key Features:
+- **Toast Notifications**: Success, error, warning, and info messages with smooth animations
+- **Loading States**: Global and operation-specific loading indicators for all async operations
+- **Enhanced Error Handling**: User-friendly error messages with actionable guidance
+- **Async Operation Hooks**: Simplified hooks for handling async operations with automatic notifications
+
+#### Quick Example:
+```typescript
+import { useToast } from './lib/stores/toast-store';
+import { useAsyncOperation } from './lib/hooks/use-async-operation';
+
+function MyComponent() {
+  const { showSuccess, showError } = useToast();
+  
+  const { execute, loading } = useAsyncOperation(
+    movieService.getMovieDetails,
+    {
+      showSuccessToast: true,
+      successMessage: 'Movie loaded successfully!',
+    }
+  );
+
+  return (
+    <button onClick={() => execute(movieId)} disabled={loading}>
+      {loading ? 'Loading...' : 'Load Movie'}
+    </button>
+  );
+}
+```
+
+#### Authentication Fixes:
+- ✅ Fixed redirect loop after login/signup
+- ✅ Proper navigation to home page after authentication
+- ✅ Improved Clerk integration with React Router
+
+For complete documentation, see [NOTIFICATIONS.md](./docs/NOTIFICATIONS.md).
+
 ## Project Structure
 
 ```
 src/
 ├── components/          # React components
-│   ├── ui/             # shadcn/ui components
+│   ├── ui/             # UI components (including new notification system)
+│   │   ├── toast.tsx           # Toast notification components
+│   │   ├── global-loading.tsx  # Global loading overlay
+│   │   └── ...                 # Other UI components
 │   ├── layout/         # Layout components
 │   ├── movie/          # Movie-related components
-│   └── auth/           # Authentication components
+│   ├── auth/           # Authentication components
+│   └── search/         # Search components
 ├── lib/                # Utilities and configuration
 │   ├── config/         # Environment and constants
-│   ├── services/       # API services
-│   ├── stores/         # Zustand stores
+│   ├── services/       # API services (enhanced with user-friendly errors)
+│   ├── stores/         # Zustand stores (including toast and enhanced UI store)
+│   ├── hooks/          # Custom hooks (including async operation hooks)
 │   ├── types/          # TypeScript type definitions
-│   └── utils.ts        # Utility functions
+│   └── utils/          # Utility functions
 ├── pages/              # Page components
-├── hooks/              # Custom React hooks
-└── utils/              # General utilities
+├── docs/               # Documentation
+│   ├── NOTIFICATIONS.md    # Notification system guide
+│   └── CI-CD.md           # CI/CD documentation
+└── __tests__/          # Test files (35+ new tests for notifications)
 ```
 
 ## Environment Variables
