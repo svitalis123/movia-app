@@ -6,7 +6,13 @@
     "@typescript-eslint/recommended",
     "eslint-config-prettier"
   ],
-  "ignorePatterns": ["dist", ".eslintrc.cjs"],
+  "ignorePatterns": [
+    "dist",
+    ".eslintrc.cjs",
+    "coverage",
+    "playwright-report",
+    "test-results"
+  ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["react-refresh"],
   "rules": {
