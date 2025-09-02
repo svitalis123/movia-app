@@ -4,3 +4,7 @@ node_modules
 .env.local
 .env.production.local
 .env.test.local
+eslint-report.json
+coverage
+playwright-report
+test-results

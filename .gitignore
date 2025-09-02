@@ -31,3 +31,9 @@ tsconfig.app.tsbuildinfo
 *.njsproj
 *.sln
 *.sw?
+
+# Test and lint reports
+coverage/
+test-results/
+playwright-report/
+eslint-report.json
