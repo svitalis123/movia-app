@@ -18,9 +18,7 @@ vi.mock('@clerk/clerk-react', () => ({
 // Mock the clerk-provider module to avoid environment variable issues
 vi.mock('../clerk-provider', () => ({
   ClerkAuthProvider: vi.fn(({ children }) => (
-    <div data-testid="mocked-clerk-auth-provider">
-      {children}
-    </div>
+    <div data-testid="mocked-clerk-auth-provider">{children}</div>
   )),
 }));
 
@@ -39,7 +37,9 @@ describe('ClerkAuthProvider Component', () => {
       </ClerkAuthProvider>
     );
 
-    expect(screen.getByTestId('mocked-clerk-auth-provider')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('mocked-clerk-auth-provider')
+    ).toBeInTheDocument();
     expect(screen.getByText(testContent)).toBeInTheDocument();
   });
 
@@ -76,12 +76,16 @@ describe('ClerkAuthProvider Component', () => {
 
     expect(screen.getByTestId('wrapper')).toBeInTheDocument();
     expect(screen.getByTestId('nested-content')).toBeInTheDocument();
-    expect(screen.getByTestId('mocked-clerk-auth-provider')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('mocked-clerk-auth-provider')
+    ).toBeInTheDocument();
   });
 
   it('handles empty children gracefully', () => {
     render(<ClerkAuthProvider>{null}</ClerkAuthProvider>);
 
-    expect(screen.getByTestId('mocked-clerk-auth-provider')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('mocked-clerk-auth-provider')
+    ).toBeInTheDocument();
   });
 });
