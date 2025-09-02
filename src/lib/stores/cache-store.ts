@@ -139,7 +139,7 @@ export const useCacheStore = create<CacheStore>()((set, get) => ({
     if (isExpired) {
       // Remove expired cache entry
       set((state) => {
-        const { [key]: removed, ...rest } = state.movies;
+        const { [key]: _removed, ...rest } = state.movies;
         return { movies: rest };
       });
       return null;
@@ -172,7 +172,7 @@ export const useCacheStore = create<CacheStore>()((set, get) => ({
     if (isExpired) {
       // Remove expired cache entry
       set((state) => {
-        const { [movieId]: removed, ...rest } = state.movieDetails;
+        const { [movieId]: _removed, ...rest } = state.movieDetails;
         return { movieDetails: rest };
       });
       return null;

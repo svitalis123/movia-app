@@ -37,7 +37,7 @@ interface AuthStore extends AuthState, AuthActions {}
  */
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       // Initial state
       user: null,
       isAuthenticated: false,

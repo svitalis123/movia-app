@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect } from 'react';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import React, { createContext, useContext } from 'react';
+import { useAuth } from '@clerk/clerk-react';
 import { useAuthStore } from '../stores/auth-store';
 import { useClerkAuthIntegration } from '../hooks/use-clerk-auth-integration';
 

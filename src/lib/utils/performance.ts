@@ -5,7 +5,7 @@
 /**
  * Debounce function to limit the rate of function calls
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number,
   immediate = false
@@ -30,7 +30,7 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle function to limit function calls to once per specified time period
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
@@ -38,7 +38,7 @@ export function throttle<T extends (...args: any[]) => any>(
   
   return function executedFunction(...args: Parameters<T>) {
     if (!inThrottle) {
-      func.apply(null as any, args);
+      func(...args);
       inThrottle = true;
       setTimeout(() => inThrottle = false, limit);
     }
@@ -48,7 +48,7 @@ export function throttle<T extends (...args: any[]) => any>(
 /**
  * Memoization utility for expensive computations
  */
-export function memoize<T extends (...args: any[]) => any>(
+export function memoize<T extends (...args: unknown[]) => unknown>(
   fn: T,
   getKey?: (...args: Parameters<T>) => string
 ): T {
@@ -298,7 +298,7 @@ export const bundleOptimization = {
   /**
    * Preload critical modules
    */
-  preloadModules(importFns: Array<() => Promise<any>>): void {
+  preloadModules(importFns: Array<() => Promise<unknown>>): void {
     importFns.forEach((importFn) => {
       // Use requestIdleCallback if available, otherwise setTimeout
       if ('requestIdleCallback' in window) {
@@ -312,7 +312,7 @@ export const bundleOptimization = {
   /**
    * Tree shaking helper - mark functions as side-effect free
    */
-  pure<T extends (...args: any[]) => any>(fn: T): T {
+  pure<T extends (...args: unknown[]) => unknown>(fn: T): T {
     return fn;
   }
 };

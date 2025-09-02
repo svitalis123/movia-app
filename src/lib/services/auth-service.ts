@@ -78,17 +78,20 @@ export function useClerkAuthService() {
   /**
    * Transforms Clerk user to our User type
    */
-  const transformClerkUser = (clerkUser: any): User | null => {
-    if (!clerkUser) return null;
+  const transformClerkUser = (clerkUser: unknown): User | null => {
+    if (!clerkUser || typeof clerkUser !== 'object') return null;
+    
+    const user = clerkUser as Record<string, unknown>;
+    const primaryEmail = user.primaryEmailAddress as Record<string, unknown> | undefined;
 
     return {
-      id: clerkUser.id,
-      email: clerkUser.primaryEmailAddress?.emailAddress || '',
-      firstName: clerkUser.firstName || undefined,
-      lastName: clerkUser.lastName || undefined,
-      imageUrl: clerkUser.imageUrl || undefined,
-      createdAt: clerkUser.createdAt ? new Date(clerkUser.createdAt).toISOString() : undefined,
-      lastLoginAt: clerkUser.lastSignInAt ? new Date(clerkUser.lastSignInAt).toISOString() : undefined,
+      id: String(user.id || ''),
+      email: String(primaryEmail?.emailAddress || ''),
+      firstName: user.firstName ? String(user.firstName) : undefined,
+      lastName: user.lastName ? String(user.lastName) : undefined,
+      imageUrl: user.imageUrl ? String(user.imageUrl) : undefined,
+      createdAt: user.createdAt ? new Date(user.createdAt as string).toISOString() : undefined,
+      lastLoginAt: user.lastSignInAt ? new Date(user.lastSignInAt as string).toISOString() : undefined,
     };
   };
 

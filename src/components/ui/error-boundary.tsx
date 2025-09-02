@@ -30,20 +30,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(_error: Error, errorInfo: ErrorInfo) {
     this.setState({
-      error,
+      error: _error,
       errorInfo,
     });
 
     // Call the onError callback if provided
     if (this.props.onError) {
-      this.props.onError(error, errorInfo);
+      this.props.onError(_error, errorInfo);
     }
 
     // Log error to console in development
     if (process.env.NODE_ENV === 'development') {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
+      console.error('ErrorBoundary caught an error:', _error, errorInfo);
     }
   }
 
@@ -135,7 +135,7 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
 /**
  * Compact error fallback for smaller components
  */
-export function CompactErrorFallback({ error, resetError }: ErrorFallbackProps) {
+export function CompactErrorFallback({ error: _error, resetError }: ErrorFallbackProps) {
   return (
     <div className="flex flex-col items-center justify-center p-4 text-center">
       <AlertTriangle className="h-8 w-8 text-destructive mb-2" />

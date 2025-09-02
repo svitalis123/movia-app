@@ -44,7 +44,7 @@ export function usePerformanceMonitor(componentName: string) {
 /**
  * Hook for debounced callbacks
  */
-export function useDebounce<T extends (...args: any[]) => any>(
+export function useDebounce<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number,
   deps: React.DependencyList = []
@@ -53,6 +53,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
 
   useEffect(() => {
     debouncedCallback.current = debounce(callback, delay) as T;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callback, delay, ...deps]);
 
   return debouncedCallback.current || callback;
@@ -61,7 +62,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
 /**
  * Hook for throttled callbacks
  */
-export function useThrottle<T extends (...args: any[]) => any>(
+export function useThrottle<T extends (...args: unknown[]) => unknown>(
   callback: T,
   limit: number,
   deps: React.DependencyList = []
@@ -70,6 +71,7 @@ export function useThrottle<T extends (...args: any[]) => any>(
 
   useEffect(() => {
     throttledCallback.current = throttle(callback, limit) as T;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callback, limit, ...deps]);
 
   return throttledCallback.current || callback;
@@ -161,7 +163,7 @@ export function useMemoryMonitor(componentName: string, interval = 5000) {
     }
 
     const checkMemory = () => {
-      const memory = (performance as any).memory;
+      const memory = (performance as unknown as { memory?: { usedJSHeapSize: number; totalJSHeapSize: number } }).memory;
       if (memory) {
         performanceMonitor.recordMetric(`${componentName}-memory-used`, memory.usedJSHeapSize);
         performanceMonitor.recordMetric(`${componentName}-memory-total`, memory.totalJSHeapSize);

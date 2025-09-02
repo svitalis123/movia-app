@@ -11,7 +11,7 @@ vi.mock('import.meta', () => ({
 }));
 
 // Mock IntersectionObserver
-global.IntersectionObserver = vi.fn().mockImplementation((callback) => ({
+global.IntersectionObserver = vi.fn().mockImplementation((_callback) => ({
   observe: vi.fn(),
   disconnect: vi.fn(),
   unobserve: vi.fn(),

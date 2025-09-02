@@ -123,10 +123,10 @@ class APIError extends Error {
   }
 }
 
-class NetworkError extends Error {
+class _NetworkError extends Error {
   constructor(message: string, public code?: string) {
     super(message);
-    this.name = 'NetworkError';
+    this.name = '_NetworkError';
   }
 }
 
@@ -459,7 +459,7 @@ class TMDBMovieService implements MovieService {
   /**
    * Handles and transforms service errors
    */
-  private handleServiceError(error: any, method: string): Error {
+  private handleServiceError(error: unknown, method: string): Error {
     console.error(`[MovieService.${method}] Error:`, error);
 
     // If it's already our custom error, re-throw it
@@ -468,14 +468,15 @@ class TMDBMovieService implements MovieService {
     }
 
     // Handle network errors
-    if (error.name === 'NetworkError') {
+    if (error instanceof Error && error.name === '_NetworkError') {
       return error;
     }
 
     // Handle unknown errors
+    const errorObj = error as { message?: string; status?: number };
     return new APIError(
-      error.message || 'An unexpected error occurred',
-      error.status || 500,
+      errorObj.message || 'An unexpected error occurred',
+      errorObj.status || 500,
       method
     );
   }

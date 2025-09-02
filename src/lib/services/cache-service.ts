@@ -34,7 +34,7 @@ interface CacheStats {
  * - Memory-efficient storage
  */
 class InMemoryCacheService implements CacheService {
-  private cache: Map<string, CacheEntry<any>>;
+  private cache: Map<string, CacheEntry<unknown>>;
   private maxSize: number;
   private defaultTtl: number;
   private stats: CacheStats;
@@ -294,7 +294,7 @@ class InMemoryCacheService implements CacheService {
   /**
    * Checks if a cache entry has expired
    */
-  private isExpired(entry: CacheEntry<any>): boolean {
+  private isExpired(entry: CacheEntry<unknown>): boolean {
     return Date.now() - entry.timestamp > entry.ttl;
   }
 

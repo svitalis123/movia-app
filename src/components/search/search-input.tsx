@@ -3,7 +3,7 @@ import { Search, X, Clock, TrendingUp } from 'lucide-react';
 import { movieService } from '../../lib/services/movie-service';
 
 // Define types locally to avoid import issues
-interface Movie {
+interface _Movie {
   id: number;
   title: string;
   overview: string;

@@ -448,10 +448,10 @@ export interface StorageService {
 
 export interface HttpService {
   get<T>(url: string, config?: RequestConfig): Promise<T>;
-  post<T>(url: string, data?: any, config?: RequestConfig): Promise<T>;
-  put<T>(url: string, data?: any, config?: RequestConfig): Promise<T>;
+  post<T>(url: string, data?: unknown, config?: RequestConfig): Promise<T>;
+  put<T>(url: string, data?: unknown, config?: RequestConfig): Promise<T>;
   delete<T>(url: string, config?: RequestConfig): Promise<T>;
-  patch<T>(url: string, data?: any, config?: RequestConfig): Promise<T>;
+  patch<T>(url: string, data?: unknown, config?: RequestConfig): Promise<T>;
 }
 
 export interface ImageService {
@@ -483,7 +483,7 @@ export interface ApiError {
   message: string;
   status: number;
   code?: string;
-  details?: any;
+  details?: unknown;
 }
 
 export type ImageSize = 

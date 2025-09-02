@@ -14,7 +14,7 @@ interface LazyLoadOptions {
 /**
  * Enhanced lazy loading utility with error handling and retry logic
  */
-export function createLazyComponent<T extends ComponentType<any>>(
+export function createLazyComponent<T extends ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyLoadOptions = {}
 ): LazyExoticComponent<T> {
@@ -88,7 +88,7 @@ export function withLazyLoading<P extends object>(
 /**
  * Preload a lazy component to improve perceived performance
  */
-export function preloadComponent<T extends ComponentType<any>>(
+export function preloadComponent<T extends ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>
 ): Promise<{ default: T }> {
   return importFn();
@@ -97,7 +97,7 @@ export function preloadComponent<T extends ComponentType<any>>(
 /**
  * Utility to create route-based lazy components with consistent loading states
  */
-export function createLazyRoute<T extends ComponentType<any>>(
+export function createLazyRoute<T extends ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>,
   routeName?: string
 ): LazyExoticComponent<T> {
