@@ -20,7 +20,7 @@ export function NotificationDemo() {
     error: movieError,
     data: movieData
   } = useAsyncOperation(
-    (id: string) => enhancedMovieService.getMovieDetails(parseInt(id)),
+    (...args: unknown[]) => enhancedMovieService.getMovieDetails(parseInt(args[0] as string)),
     {
       loadingKey: 'fetchingMovieDetails',
       showSuccessToast: true,

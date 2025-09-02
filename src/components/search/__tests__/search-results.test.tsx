@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
@@ -29,7 +29,7 @@ vi.mock('react-router-dom', async () => {
 
 // Mock components
 vi.mock('../search-input', () => ({
-  SearchInput: ({ onSearch, onClear, value, loading }: any) => (
+  SearchInput: ({ onSearch, onClear, value, loading }: unknown) => (
     <div data-testid="search-input">
       <input
         data-testid="search-input-field"
@@ -45,13 +45,13 @@ vi.mock('../search-input', () => ({
 }));
 
 vi.mock('../../movie/movie-list', () => ({
-  MovieList: ({ movies, onMovieSelect, onPageChange, currentPage, totalPages }: any) => (
+  MovieList: ({ movies, onMovieSelect, onPageChange, currentPage, totalPages }: unknown) => (
     <div data-testid="movie-list">
       <div data-testid="movie-count">{movies.length} movies</div>
       <div data-testid="pagination-info">
         Page {currentPage} of {totalPages}
       </div>
-      {movies.map((movie: any) => (
+      {movies.map((movie: unknown) => (
         <button
           key={movie.id}
           data-testid={`movie-${movie.id}`}
@@ -71,13 +71,13 @@ vi.mock('../../movie/movie-list', () => ({
 }));
 
 vi.mock('../../ui/loading-spinner', () => ({
-  LoadingSpinner: ({ message }: any) => (
+  LoadingSpinner: ({ message }: unknown) => (
     <div data-testid="loading-spinner">{message}</div>
   ),
 }));
 
 vi.mock('../../ui/error-message', () => ({
-  ErrorMessage: ({ message, onRetry }: any) => (
+  ErrorMessage: ({ message, onRetry }: unknown) => (
     <div data-testid="error-message">
       <span>{message}</span>
       <button data-testid="retry-button" onClick={onRetry}>
@@ -130,7 +130,7 @@ describe('SearchResults', () => {
     mockSearchParams.delete('page');
 
     // Mock movie store
-    (useMovieStore as any).mockReturnValue({
+    (useMovieStore as unknown).mockReturnValue({
       searchResults: mockMovies,
       loading: false,
       error: null,
@@ -149,13 +149,13 @@ describe('SearchResults', () => {
     });
 
     // Mock UI store
-    (useUIStore as any).mockReturnValue({
+    (useUIStore as unknown).mockReturnValue({
       searchQuery: '',
       viewMode: 'grid',
     });
 
     // Mock UI actions
-    (useUIActions as any).mockReturnValue({
+    (useUIActions as unknown).mockReturnValue({
       setSearchQuery: mockSetSearchQuery,
     });
   });
@@ -184,7 +184,7 @@ describe('SearchResults', () => {
   });
 
   it('shows loading state', () => {
-    (useMovieStore as any).mockReturnValue({
+    (useMovieStore as unknown).mockReturnValue({
       searchResults: [],
       loading: true,
       error: null,
@@ -211,7 +211,7 @@ describe('SearchResults', () => {
   it('shows error state with retry button', async () => {
     const user = userEvent.setup();
     
-    (useMovieStore as any).mockReturnValue({
+    (useMovieStore as unknown).mockReturnValue({
       searchResults: [],
       loading: false,
       error: 'Failed to search movies',
@@ -241,7 +241,7 @@ describe('SearchResults', () => {
   });
 
   it('shows no results state when search returns empty', () => {
-    (useMovieStore as any).mockReturnValue({
+    (useMovieStore as unknown).mockReturnValue({
       searchResults: [],
       loading: false,
       error: null,

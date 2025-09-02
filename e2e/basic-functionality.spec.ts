@@ -65,7 +65,7 @@ test.describe('Basic Application Functionality', () => {
     
     // Should be able to focus on elements
     const focusedElement = page.locator(':focus');
-    const hasFocus = await focusedElement.count() > 0;
+    const _hasFocus = await focusedElement.count() > 0;
     
     // Note: Focus might not work in all headless environments, so we'll be lenient
     // The main goal is to ensure no JavaScript errors occur during keyboard navigation

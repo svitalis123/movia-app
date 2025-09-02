@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from 'lucide-react';
 import { useToastStore } from '../../lib/stores/toast-store';
 
@@ -22,6 +22,13 @@ function ToastItem({ id, title, message, type, duration = 5000, dismissible = tr
   const [isVisible, setIsVisible] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
 
+  const handleDismiss = useCallback(() => {
+    setIsLeaving(true);
+    setTimeout(() => {
+      onDismiss(id);
+    }, 300); // Match animation duration
+  }, [id, onDismiss]);
+
   useEffect(() => {
     // Trigger entrance animation
     const timer = setTimeout(() => setIsVisible(true), 10);
@@ -35,14 +42,7 @@ function ToastItem({ id, title, message, type, duration = 5000, dismissible = tr
       }, duration);
       return () => clearTimeout(timer);
     }
-  }, [duration]);
-
-  const handleDismiss = () => {
-    setIsLeaving(true);
-    setTimeout(() => {
-      onDismiss(id);
-    }, 300); // Match animation duration
-  };
+  }, [duration, handleDismiss]);
 
   const typeConfig = {
     success: {

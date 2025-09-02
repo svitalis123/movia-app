@@ -224,7 +224,7 @@ export function ProfileImage({
 export function ResponsiveImage({
   src,
   alt,
-  sizes,
+  sizes: _sizes,
   className,
   ...props
 }: {

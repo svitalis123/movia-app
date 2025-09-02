@@ -48,7 +48,7 @@ export function VirtualMovieList({
     [skeletonCount]
   );
 
-  const renderMovieItem = useCallback((movie: Movie, index: number) => (
+  const renderMovieItem = useCallback((movie: Movie, _index: number) => (
     <MovieCard
       key={movie.id}
       movie={movie}
@@ -57,7 +57,7 @@ export function VirtualMovieList({
     />
   ), [onMovieSelect]);
 
-  const renderSkeletonItem = useCallback((item: { id: string }, index: number) => (
+  const renderSkeletonItem = useCallback((item: { id: string }, _index: number) => (
     <MovieCardSkeleton key={item.id} className="w-full h-full" />
   ), []);
 

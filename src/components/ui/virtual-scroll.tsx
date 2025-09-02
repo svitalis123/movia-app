@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 
 interface VirtualScrollProps<T> {
@@ -157,7 +157,7 @@ export function VirtualGrid<T>({
     }
     
     return result;
-  }, [items, visibleRange, columnsPerRow, itemWidth, itemHeight, gap, rowHeight]);
+  }, [items, visibleRange, columnsPerRow, itemWidth, gap, rowHeight]);
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     setScrollTop(e.currentTarget.scrollTop);

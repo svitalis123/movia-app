@@ -14,7 +14,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   
-  const { viewMode, searchQuery, setSearchQuery, setViewMode } = useUIStore();
+  const { viewMode, searchQuery: _searchQuery, setSearchQuery, setViewMode } = useUIStore();
   const { searchMovies, clearSearch } = useMovieStore();
 
   const handleSearch = async (e: React.FormEvent) => {

@@ -37,22 +37,22 @@ describe('SearchInput', () => {
     localStorageMock.getItem.mockReturnValue(null);
 
     // Mock store hooks
-    (useMovieStore as any).mockReturnValue({
+    (useMovieStore as unknown).mockReturnValue({
       searchMovies: mockSearchMovies,
       clearSearch: mockClearSearch,
     });
 
-    (useUIStore as any).mockReturnValue({
+    (useUIStore as unknown).mockReturnValue({
       searchQuery: '',
     });
 
     // Mock UI actions
-    (useUIActions as any).mockReturnValue({
+    (useUIActions as unknown).mockReturnValue({
       setSearchQuery: mockSetSearchQuery,
     });
 
     // Mock movie service
-    (movieService.searchMovies as any) = mockMovieServiceSearch;
+    (movieService.searchMovies as unknown) = mockMovieServiceSearch;
     mockMovieServiceSearch.mockResolvedValue({
       results: [
         {
@@ -189,7 +189,7 @@ describe('SearchInput', () => {
   });
 
   it('handles keyboard navigation in suggestions', async () => {
-    const user = userEvent.setup();
+    const _user = userEvent.setup();
     
     render(<SearchInput showSuggestions />);
     

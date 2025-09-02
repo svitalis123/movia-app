@@ -35,7 +35,7 @@ export function MovieCard({
   onClick,
   loading = false,
   variant = 'default',
-  showGenres = false,
+  showGenres: _showGenres = false,
   className
 }: MovieCardProps) {
   const handleClick = () => {

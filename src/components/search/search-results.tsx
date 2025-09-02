@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, X, Filter, SortAsc, SortDesc } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { MovieList } from '../movie/movie-list';
 import { SearchInput } from './search-input';
 import { LoadingSpinner } from '../ui/loading-spinner';
@@ -59,7 +59,7 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
   const { searchResults, loading, error, pagination } = useMovieStore();
   const { searchQuery, viewMode } = useUIStore();
   const { setSearchQuery } = useUIActions();
-  const { searchMovies, clearSearch, goToNextPage, goToPreviousPage, goToPage } = useMovieStore();
+  const { searchMovies, clearSearch, goToNextPage: _goToNextPage, goToPreviousPage: _goToPreviousPage, goToPage: _goToPage } = useMovieStore();
 
   // Get query from URL params
   const queryParam = searchParams.get('q') || '';

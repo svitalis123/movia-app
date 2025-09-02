@@ -72,7 +72,7 @@ test.describe('Authentication Flow', () => {
     if (await firstInput.count() > 0) {
       await firstInput.click();
       // Basic interaction test - just ensure we can focus the input
-      const isFocused = await firstInput.evaluate(el => document.activeElement === el);
+      const _isFocused = await firstInput.evaluate(el => document.activeElement === el);
       // Note: Focus might not work in headless mode, so we'll just check that no error occurred
     }
   });

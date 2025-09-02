@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Movie Browsing Structure', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page: _page }) => {
     // These tests focus on the application structure and routing
     // without requiring complex authentication mocking
   });

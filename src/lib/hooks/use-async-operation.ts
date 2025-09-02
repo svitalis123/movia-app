@@ -13,7 +13,7 @@ interface AsyncOperationOptions {
 }
 
 interface AsyncOperationResult<T> {
-  execute: (...args: any[]) => Promise<T | undefined>;
+  execute: (...args: unknown[]) => Promise<T | undefined>;
   loading: boolean;
   error: string | null;
   data: T | null;
@@ -25,7 +25,7 @@ interface AsyncOperationResult<T> {
  * Provides consistent UX patterns for all async operations in the app
  */
 export function useAsyncOperation<T>(
-  asyncFunction: (...args: any[]) => Promise<T>,
+  asyncFunction: (...args: unknown[]) => Promise<T>,
   options: AsyncOperationOptions = {}
 ): AsyncOperationResult<T> {
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ export function useAsyncOperation<T>(
   const { showSuccess, showError } = useToast();
   const { setLoadingState, setGlobalLoading } = useUIActions();
 
-  const execute = useCallback(async (...args: any[]): Promise<T | undefined> => {
+  const execute = useCallback(async (...args: unknown[]): Promise<T | undefined> => {
     try {
       setLoading(true);
       setError(null);
@@ -101,7 +101,7 @@ export function useAsyncOperation<T>(
  * Useful for actions like login, logout, delete operations, etc.
  */
 export function useAsyncAction(
-  asyncFunction: (...args: any[]) => Promise<void>,
+  asyncFunction: (...args: unknown[]) => Promise<void>,
   options: AsyncOperationOptions = {}
 ) {
   const [loading, setLoading] = useState(false);
@@ -110,7 +110,7 @@ export function useAsyncAction(
   const { showSuccess, showError } = useToast();
   const { setLoadingState, setGlobalLoading } = useUIActions();
 
-  const execute = useCallback(async (...args: any[]): Promise<boolean> => {
+  const execute = useCallback(async (...args: unknown[]): Promise<boolean> => {
     try {
       setLoading(true);
       setError(null);

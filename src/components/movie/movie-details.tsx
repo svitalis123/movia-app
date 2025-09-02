@@ -97,7 +97,7 @@ export function MovieDetails({
   loading,
   error,
   onBack,
-  onRelatedMovieClick,
+  onRelatedMovieClick: _onRelatedMovieClick,
   className
 }: MovieDetailsProps) {
   const formatCurrency = (amount: number) => {
