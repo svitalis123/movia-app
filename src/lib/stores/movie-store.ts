@@ -110,7 +110,10 @@ interface MovieActions {
   updatePagination: (pagination: Partial<PaginationState>) => void;
   fetchMoviesByGenre: (genreId: number, page?: number) => Promise<void>;
   fetchSimilarMovies: (movieId: number, page?: number) => Promise<Movie[]>;
-  fetchMovieRecommendations: (movieId: number, page?: number) => Promise<Movie[]>;
+  fetchMovieRecommendations: (
+    movieId: number,
+    page?: number
+  ) => Promise<Movie[]>;
   goToNextPage: (searchQuery?: string) => Promise<void>;
   goToPreviousPage: (searchQuery?: string) => Promise<void>;
   goToPage: (page: number, searchQuery?: string) => Promise<void>;
@@ -211,7 +214,7 @@ export const useMovieStore = create<MovieStore>()(
       // Actions
       fetchPopularMovies: async (page = 1) => {
         const cacheKey = `popular-movies-page-${page}`;
-        
+
         // Check cache first
         const cachedMovies = useCacheStore.getState().getCachedMovies(cacheKey);
         if (cachedMovies) {
@@ -222,25 +225,25 @@ export const useMovieStore = create<MovieStore>()(
             hasNextPage: page < Math.ceil(cachedMovies.length / 20),
             hasPreviousPage: page > 1,
           };
-          
-          set({ 
+
+          set({
             popular: cachedMovies,
             pagination,
             loading: false,
-            error: null 
+            error: null,
           });
           return;
         }
 
         set({ loading: true, error: null });
-        
+
         try {
           const response = await movieService.getPopularMovies(page);
           const transformedMovies = response.results.map(transformTMDBMovie);
-          
+
           // Cache the results
           useCacheStore.getState().setCachedMovies(cacheKey, transformedMovies);
-          
+
           const pagination: PaginationState = {
             currentPage: response.page,
             totalPages: response.total_pages,
@@ -249,16 +252,19 @@ export const useMovieStore = create<MovieStore>()(
             hasPreviousPage: response.page > 1,
           };
 
-          set({ 
+          set({
             popular: transformedMovies,
             pagination,
             loading: false,
-            error: null 
+            error: null,
           });
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Failed to fetch popular movies';
-          set({ 
-            loading: false, 
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : 'Failed to fetch popular movies';
+          set({
+            loading: false,
             error: errorMessage,
             popular: [],
             pagination: {
@@ -267,47 +273,57 @@ export const useMovieStore = create<MovieStore>()(
               totalResults: 0,
               hasNextPage: false,
               hasPreviousPage: false,
-            }
+            },
           });
         }
       },
 
       fetchMovieDetails: async (movieId: number) => {
         // Check cache first
-        const cachedDetails = useCacheStore.getState().getCachedMovieDetails(movieId);
+        const cachedDetails = useCacheStore
+          .getState()
+          .getCachedMovieDetails(movieId);
         if (cachedDetails) {
-          set({ 
+          set({
             selectedMovie: cachedDetails,
             loading: false,
-            error: null 
+            error: null,
           });
           return;
         }
 
         set({ loading: true, error: null });
-        
+
         try {
           const [movieDetails, credits] = await Promise.all([
             movieService.getMovieDetails(movieId),
-            movieService.getMovieCredits(movieId)
+            movieService.getMovieCredits(movieId),
           ]);
-          
-          const transformedMovie = transformTMDBMovieDetails(movieDetails, credits);
-          
+
+          const transformedMovie = transformTMDBMovieDetails(
+            movieDetails,
+            credits
+          );
+
           // Cache the movie details
-          useCacheStore.getState().setCachedMovieDetails(movieId, transformedMovie);
-          
-          set({ 
+          useCacheStore
+            .getState()
+            .setCachedMovieDetails(movieId, transformedMovie);
+
+          set({
             selectedMovie: transformedMovie,
             loading: false,
-            error: null 
+            error: null,
           });
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Failed to fetch movie details';
-          set({ 
-            loading: false, 
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : 'Failed to fetch movie details';
+          set({
+            loading: false,
             error: errorMessage,
-            selectedMovie: null 
+            selectedMovie: null,
           });
         }
       },
@@ -319,9 +335,11 @@ export const useMovieStore = create<MovieStore>()(
         }
 
         const cacheKey = `search-${query.toLowerCase()}-page-${page}`;
-        
+
         // Check cache first
-        const cachedResults = useCacheStore.getState().getCachedMovies(cacheKey);
+        const cachedResults = useCacheStore
+          .getState()
+          .getCachedMovies(cacheKey);
         if (cachedResults) {
           const pagination: PaginationState = {
             currentPage: page,
@@ -330,25 +348,25 @@ export const useMovieStore = create<MovieStore>()(
             hasNextPage: page < Math.ceil(cachedResults.length / 20),
             hasPreviousPage: page > 1,
           };
-          
-          set({ 
+
+          set({
             searchResults: cachedResults,
             pagination,
             loading: false,
-            error: null 
+            error: null,
           });
           return;
         }
 
         set({ loading: true, error: null });
-        
+
         try {
           const response = await movieService.searchMovies(query, page);
           const transformedMovies = response.results.map(transformTMDBMovie);
-          
+
           // Cache the search results
           useCacheStore.getState().setCachedMovies(cacheKey, transformedMovies);
-          
+
           const pagination: PaginationState = {
             currentPage: response.page,
             totalPages: response.total_pages,
@@ -357,16 +375,17 @@ export const useMovieStore = create<MovieStore>()(
             hasPreviousPage: response.page > 1,
           };
 
-          set({ 
+          set({
             searchResults: transformedMovies,
             pagination,
             loading: false,
-            error: null 
+            error: null,
           });
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Failed to search movies';
-          set({ 
-            loading: false, 
+          const errorMessage =
+            error instanceof Error ? error.message : 'Failed to search movies';
+          set({
+            loading: false,
             error: errorMessage,
             searchResults: [],
             pagination: {
@@ -375,13 +394,13 @@ export const useMovieStore = create<MovieStore>()(
               totalResults: 0,
               hasNextPage: false,
               hasPreviousPage: false,
-            }
+            },
           });
         }
       },
 
       clearSearch: () => {
-        set({ 
+        set({
           searchResults: [],
           pagination: {
             currentPage: 1,
@@ -390,7 +409,7 @@ export const useMovieStore = create<MovieStore>()(
             hasNextPage: false,
             hasPreviousPage: false,
           },
-          error: null 
+          error: null,
         });
       },
 
@@ -412,14 +431,14 @@ export const useMovieStore = create<MovieStore>()(
 
       updatePagination: (pagination: Partial<PaginationState>) => {
         set((state) => ({
-          pagination: { ...state.pagination, ...pagination }
+          pagination: { ...state.pagination, ...pagination },
         }));
       },
 
       // Additional movie state management methods
       fetchMoviesByGenre: async (genreId: number, page = 1) => {
         const cacheKey = `genre-${genreId}-page-${page}`;
-        
+
         // Check cache first
         const cachedMovies = useCacheStore.getState().getCachedMovies(cacheKey);
         if (cachedMovies) {
@@ -430,25 +449,25 @@ export const useMovieStore = create<MovieStore>()(
             hasNextPage: page < Math.ceil(cachedMovies.length / 20),
             hasPreviousPage: page > 1,
           };
-          
-          set({ 
+
+          set({
             popular: cachedMovies,
             pagination,
             loading: false,
-            error: null 
+            error: null,
           });
           return;
         }
 
         set({ loading: true, error: null });
-        
+
         try {
           const response = await movieService.getMoviesByGenre(genreId, page);
           const transformedMovies = response.results.map(transformTMDBMovie);
-          
+
           // Cache the results
           useCacheStore.getState().setCachedMovies(cacheKey, transformedMovies);
-          
+
           const pagination: PaginationState = {
             currentPage: response.page,
             totalPages: response.total_pages,
@@ -457,16 +476,19 @@ export const useMovieStore = create<MovieStore>()(
             hasPreviousPage: response.page > 1,
           };
 
-          set({ 
+          set({
             popular: transformedMovies,
             pagination,
             loading: false,
-            error: null 
+            error: null,
           });
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Failed to fetch movies by genre';
-          set({ 
-            loading: false, 
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : 'Failed to fetch movies by genre';
+          set({
+            loading: false,
             error: errorMessage,
             popular: [],
             pagination: {
@@ -475,14 +497,14 @@ export const useMovieStore = create<MovieStore>()(
               totalResults: 0,
               hasNextPage: false,
               hasPreviousPage: false,
-            }
+            },
           });
         }
       },
 
       fetchSimilarMovies: async (movieId: number, page = 1) => {
         const cacheKey = `similar-${movieId}-page-${page}`;
-        
+
         // Check cache first
         const cachedMovies = useCacheStore.getState().getCachedMovies(cacheKey);
         if (cachedMovies) {
@@ -492,10 +514,10 @@ export const useMovieStore = create<MovieStore>()(
         try {
           const response = await movieService.getSimilarMovies(movieId, page);
           const transformedMovies = response.results.map(transformTMDBMovie);
-          
+
           // Cache the results
           useCacheStore.getState().setCachedMovies(cacheKey, transformedMovies);
-          
+
           return transformedMovies;
         } catch (error) {
           console.error('Failed to fetch similar movies:', error);
@@ -505,7 +527,7 @@ export const useMovieStore = create<MovieStore>()(
 
       fetchMovieRecommendations: async (movieId: number, page = 1) => {
         const cacheKey = `recommendations-${movieId}-page-${page}`;
-        
+
         // Check cache first
         const cachedMovies = useCacheStore.getState().getCachedMovies(cacheKey);
         if (cachedMovies) {
@@ -513,12 +535,15 @@ export const useMovieStore = create<MovieStore>()(
         }
 
         try {
-          const response = await movieService.getMovieRecommendations(movieId, page);
+          const response = await movieService.getMovieRecommendations(
+            movieId,
+            page
+          );
           const transformedMovies = response.results.map(transformTMDBMovie);
-          
+
           // Cache the results
           useCacheStore.getState().setCachedMovies(cacheKey, transformedMovies);
-          
+
           return transformedMovies;
         } catch (error) {
           console.error('Failed to fetch movie recommendations:', error);
@@ -531,7 +556,7 @@ export const useMovieStore = create<MovieStore>()(
         const { pagination } = get();
         if (pagination.hasNextPage) {
           const nextPage = pagination.currentPage + 1;
-          
+
           if (searchQuery) {
             await get().searchMovies(searchQuery, nextPage);
           } else {
@@ -544,7 +569,7 @@ export const useMovieStore = create<MovieStore>()(
         const { pagination } = get();
         if (pagination.hasPreviousPage) {
           const prevPage = pagination.currentPage - 1;
-          
+
           if (searchQuery) {
             await get().searchMovies(searchQuery, prevPage);
           } else {
@@ -595,7 +620,7 @@ function transformTMDBMovie(tmdbMovie: TMDBMovie): Movie {
  * Transform TMDB movie details and credits to application movie details format
  */
 function transformTMDBMovieDetails(
-  tmdbDetails: TMDBMovieDetails, 
+  tmdbDetails: TMDBMovieDetails,
   tmdbCredits: TMDBCredits
 ): MovieDetails {
   return {
@@ -607,20 +632,20 @@ function transformTMDBMovieDetails(
     release_date: tmdbDetails.release_date,
     vote_average: tmdbDetails.vote_average,
     vote_count: tmdbDetails.vote_count,
-    genre_ids: tmdbDetails.genres.map(g => g.id),
+    genre_ids: tmdbDetails.genres.map((g) => g.id),
     popularity: tmdbDetails.popularity,
     original_language: tmdbDetails.original_language,
     runtime: tmdbDetails.runtime,
     genres: tmdbDetails.genres,
     production_companies: tmdbDetails.production_companies,
-    cast: tmdbCredits.cast.map(member => ({
+    cast: tmdbCredits.cast.map((member) => ({
       id: member.id,
       name: member.name,
       character: member.character,
       profile_path: member.profile_path,
       order: member.order,
     })),
-    crew: tmdbCredits.crew.map(member => ({
+    crew: tmdbCredits.crew.map((member) => ({
       id: member.id,
       name: member.name,
       job: member.job,
@@ -643,39 +668,44 @@ function transformTMDBMovieDetails(
  * Selector hooks for specific movie state
  */
 export const usePopularMovies = () => useMovieStore((state) => state.popular);
-export const useSearchResults = () => useMovieStore((state) => state.searchResults);
-export const useSelectedMovie = () => useMovieStore((state) => state.selectedMovie);
+export const useSearchResults = () =>
+  useMovieStore((state) => state.searchResults);
+export const useSelectedMovie = () =>
+  useMovieStore((state) => state.selectedMovie);
 export const useMovieLoading = () => useMovieStore((state) => state.loading);
 export const useMovieError = () => useMovieStore((state) => state.error);
-export const useMoviePagination = () => useMovieStore((state) => state.pagination);
+export const useMoviePagination = () =>
+  useMovieStore((state) => state.pagination);
 
 /**
  * Action hooks for movie operations
  */
-export const useMovieActions = () => useMovieStore((state) => ({
-  fetchPopularMovies: state.fetchPopularMovies,
-  fetchMovieDetails: state.fetchMovieDetails,
-  searchMovies: state.searchMovies,
-  clearSearch: state.clearSearch,
-  setSelectedMovie: state.setSelectedMovie,
-  setLoading: state.setLoading,
-  setError: state.setError,
-  clearError: state.clearError,
-  updatePagination: state.updatePagination,
-  fetchMoviesByGenre: state.fetchMoviesByGenre,
-  fetchSimilarMovies: state.fetchSimilarMovies,
-  fetchMovieRecommendations: state.fetchMovieRecommendations,
-  goToNextPage: state.goToNextPage,
-  goToPreviousPage: state.goToPreviousPage,
-  goToPage: state.goToPage,
-}));
+export const useMovieActions = () =>
+  useMovieStore((state) => ({
+    fetchPopularMovies: state.fetchPopularMovies,
+    fetchMovieDetails: state.fetchMovieDetails,
+    searchMovies: state.searchMovies,
+    clearSearch: state.clearSearch,
+    setSelectedMovie: state.setSelectedMovie,
+    setLoading: state.setLoading,
+    setError: state.setError,
+    clearError: state.clearError,
+    updatePagination: state.updatePagination,
+    fetchMoviesByGenre: state.fetchMoviesByGenre,
+    fetchSimilarMovies: state.fetchSimilarMovies,
+    fetchMovieRecommendations: state.fetchMovieRecommendations,
+    goToNextPage: state.goToNextPage,
+    goToPreviousPage: state.goToPreviousPage,
+    goToPage: state.goToPage,
+  }));
 
 /**
  * Pagination action hooks
  */
-export const usePaginationActions = () => useMovieStore((state) => ({
-  goToNextPage: state.goToNextPage,
-  goToPreviousPage: state.goToPreviousPage,
-  goToPage: state.goToPage,
-  updatePagination: state.updatePagination,
-}));
+export const usePaginationActions = () =>
+  useMovieStore((state) => ({
+    goToNextPage: state.goToNextPage,
+    goToPreviousPage: state.goToPreviousPage,
+    goToPage: state.goToPage,
+    updatePagination: state.updatePagination,
+  }));

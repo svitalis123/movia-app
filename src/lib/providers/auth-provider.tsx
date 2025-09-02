@@ -20,15 +20,15 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  
+
   // Clerk-specific data
   isLoaded: boolean;
   sessionId: string | null;
-  
+
   // Actions
   logout: () => Promise<void>;
   clearError: () => void;
-  
+
   // Utilities
   hasCompleteProfile: () => boolean;
   getUserDisplayName: () => string;
@@ -48,7 +48,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const { sessionId } = useAuth();
   const { isLoaded, logout } = useClerkAuthIntegration();
-  
+
   // Get state from Zustand store
   const { user, isAuthenticated, loading, error, clearError } = useAuthStore();
 
@@ -61,37 +61,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const getUserDisplayName = (): string => {
     if (!user) return 'Guest';
-    
+
     if (user.firstName && user.lastName) {
       return `${user.firstName} ${user.lastName}`;
     }
-    
+
     if (user.firstName) {
       return user.firstName;
     }
-    
+
     if (user.email) {
       return user.email.split('@')[0];
     }
-    
+
     return 'User';
   };
 
   const getUserInitials = (): string => {
     if (!user) return 'G';
-    
+
     if (user.firstName && user.lastName) {
       return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
     }
-    
+
     if (user.firstName) {
       return user.firstName[0].toUpperCase();
     }
-    
+
     if (user.email) {
       return user.email[0].toUpperCase();
     }
-    
+
     return 'U';
   };
 
@@ -101,15 +101,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isAuthenticated,
     isLoading: loading,
     error,
-    
+
     // Clerk-specific data
     isLoaded,
     sessionId: sessionId || null,
-    
+
     // Actions
     logout,
     clearError,
-    
+
     // Utilities
     hasCompleteProfile,
     getUserDisplayName,
@@ -117,9 +117,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
 
@@ -128,11 +126,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
  */
 export function useAuthContext(): AuthContextValue {
   const context = useContext(AuthContext);
-  
+
   if (!context) {
     throw new Error('useAuthContext must be used within an AuthProvider');
   }
-  
+
   return context;
 }
 
@@ -155,7 +153,10 @@ export function useIsUserAuthenticated(): boolean {
 /**
  * Hook for components that need loading state
  */
-export function useAuthLoadingState(): { isLoading: boolean; isLoaded: boolean } {
+export function useAuthLoadingState(): {
+  isLoading: boolean;
+  isLoaded: boolean;
+} {
   const { isLoading, isLoaded } = useAuthContext();
   return { isLoading, isLoaded };
 }
@@ -172,6 +173,7 @@ export function useAuthContextActions() {
  * Hook for user utility functions
  */
 export function useUserUtils() {
-  const { hasCompleteProfile, getUserDisplayName, getUserInitials } = useAuthContext();
+  const { hasCompleteProfile, getUserDisplayName, getUserInitials } =
+    useAuthContext();
   return { hasCompleteProfile, getUserDisplayName, getUserInitials };
 }

@@ -23,7 +23,7 @@ describe('Toast Store', () => {
 
     it('should add a toast with generated id', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.addToast({
           type: 'success',
@@ -43,7 +43,7 @@ describe('Toast Store', () => {
 
     it('should remove a toast by id', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.addToast({
           type: 'info',
@@ -62,7 +62,7 @@ describe('Toast Store', () => {
 
     it('should clear all toasts', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.addToast({ type: 'success', message: 'Toast 1' });
         result.current.addToast({ type: 'error', message: 'Toast 2' });
@@ -79,7 +79,7 @@ describe('Toast Store', () => {
 
     it('should auto-remove toast after duration', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.addToast({
           type: 'success',
@@ -99,7 +99,7 @@ describe('Toast Store', () => {
 
     it('should not auto-remove toast with duration 0', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.addToast({
           type: 'error',
@@ -121,7 +121,7 @@ describe('Toast Store', () => {
   describe('Convenience methods', () => {
     it('should show success toast', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.showSuccess('Success message', 'Success Title');
       });
@@ -137,7 +137,7 @@ describe('Toast Store', () => {
 
     it('should show error toast with no auto-dismiss', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.showError('Error message', 'Error Title');
       });
@@ -153,7 +153,7 @@ describe('Toast Store', () => {
 
     it('should show warning toast', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.showWarning('Warning message');
       });
@@ -168,7 +168,7 @@ describe('Toast Store', () => {
 
     it('should show info toast', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.showInfo('Info message');
       });
@@ -183,7 +183,7 @@ describe('Toast Store', () => {
 
     it('should allow overriding default options', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.showError('Error message', 'Error Title', {
           duration: 3000,
@@ -204,7 +204,7 @@ describe('Toast Store', () => {
   describe('useToast hook', () => {
     it('should provide toast actions', () => {
       const { result } = renderHook(() => useToast());
-      
+
       expect(result.current).toHaveProperty('showSuccess');
       expect(result.current).toHaveProperty('showError');
       expect(result.current).toHaveProperty('showWarning');
@@ -215,7 +215,7 @@ describe('Toast Store', () => {
     it('should work with toast actions', () => {
       const { result: toastResult } = renderHook(() => useToast());
       const { result: storeResult } = renderHook(() => useToastStore());
-      
+
       act(() => {
         toastResult.current.showSuccess('Test success');
       });
@@ -234,7 +234,7 @@ describe('Toast Store', () => {
   describe('Multiple toasts', () => {
     it('should handle multiple toasts correctly', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.showSuccess('Toast 1');
         result.current.showError('Toast 2');
@@ -242,12 +242,16 @@ describe('Toast Store', () => {
       });
 
       expect(result.current.toasts).toHaveLength(3);
-      expect(result.current.toasts.map(t => t.type)).toEqual(['success', 'error', 'warning']);
+      expect(result.current.toasts.map((t) => t.type)).toEqual([
+        'success',
+        'error',
+        'warning',
+      ]);
     });
 
     it('should remove specific toasts while keeping others', () => {
       const { result } = renderHook(() => useToastStore());
-      
+
       act(() => {
         result.current.showSuccess('Toast 1');
         result.current.showError('Toast 2');
@@ -261,7 +265,10 @@ describe('Toast Store', () => {
       });
 
       expect(result.current.toasts).toHaveLength(2);
-      expect(result.current.toasts.map(t => t.message)).toEqual(['Toast 1', 'Toast 3']);
+      expect(result.current.toasts.map((t) => t.message)).toEqual([
+        'Toast 1',
+        'Toast 3',
+      ]);
     });
   });
 });

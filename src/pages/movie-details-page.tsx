@@ -13,7 +13,7 @@ const MovieDetails = createLazyComponent(
       <div className="flex justify-center items-center min-h-[400px]">
         <LoadingSpinner size="large" message="Loading movie details..." />
       </div>
-    )
+    ),
   }
 );
 
@@ -24,13 +24,8 @@ const MovieDetails = createLazyComponent(
 export function MovieDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const {
-    selectedMovie,
-    loading,
-    error,
-    fetchMovieDetails,
-    setSelectedMovie,
-  } = useMovieStore();
+  const { selectedMovie, loading, error, fetchMovieDetails, setSelectedMovie } =
+    useMovieStore();
 
   const movieId = isValidMovieId(id) ? parseInt(id!, 10) : null;
 
@@ -38,7 +33,7 @@ export function MovieDetailsPage() {
     if (movieId) {
       fetchMovieDetails(movieId);
     }
-    
+
     // Cleanup when component unmounts
     return () => {
       setSelectedMovie(null);
@@ -56,10 +51,7 @@ export function MovieDetailsPage() {
   if (!movieId) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <ErrorMessage 
-          message="Invalid movie ID" 
-          onRetry={handleBack}
-        />
+        <ErrorMessage message="Invalid movie ID" onRetry={handleBack} />
       </div>
     );
   }
@@ -75,8 +67,8 @@ export function MovieDetailsPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <ErrorMessage 
-          message={error} 
+        <ErrorMessage
+          message={error}
           onRetry={() => fetchMovieDetails(movieId)}
         />
       </div>
@@ -86,10 +78,7 @@ export function MovieDetailsPage() {
   if (!selectedMovie) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <ErrorMessage 
-          message="Movie not found" 
-          onRetry={handleBack}
-        />
+        <ErrorMessage message="Movie not found" onRetry={handleBack} />
       </div>
     );
   }

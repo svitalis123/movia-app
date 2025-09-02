@@ -33,7 +33,7 @@ describe('Navigation Utilities', () => {
     it('parses search parameters correctly', () => {
       const params = new URLSearchParams('?q=test&page=2');
       const result = parseSearchParams(params);
-      
+
       expect(result).toEqual({
         query: 'test',
         page: 2,
@@ -43,7 +43,7 @@ describe('Navigation Utilities', () => {
     it('returns defaults for missing parameters', () => {
       const params = new URLSearchParams('');
       const result = parseSearchParams(params);
-      
+
       expect(result).toEqual({
         query: '',
         page: 1,
@@ -53,7 +53,7 @@ describe('Navigation Utilities', () => {
     it('handles invalid page number', () => {
       const params = new URLSearchParams('?q=test&page=invalid');
       const result = parseSearchParams(params);
-      
+
       expect(result).toEqual({
         query: 'test',
         page: 1,
@@ -69,7 +69,7 @@ describe('Navigation Utilities', () => {
     it('pushes and pops history entries', () => {
       NavigationHistory.push('/page1');
       NavigationHistory.push('/page2');
-      
+
       expect(NavigationHistory.pop()).toBe('/page2');
       expect(NavigationHistory.pop()).toBe('/page1');
     });
@@ -77,7 +77,7 @@ describe('Navigation Utilities', () => {
     it('gets previous entry without removing it', () => {
       NavigationHistory.push('/page1');
       NavigationHistory.push('/page2');
-      
+
       expect(NavigationHistory.getPrevious()).toBe('/page2');
       expect(NavigationHistory.getHistory()).toHaveLength(2);
     });
@@ -87,7 +87,7 @@ describe('Navigation Utilities', () => {
       for (let i = 0; i < 15; i++) {
         NavigationHistory.push(`/page${i}`);
       }
-      
+
       const history = NavigationHistory.getHistory();
       expect(history).toHaveLength(10);
       expect(history[0]).toBe('/page5'); // First 5 should be removed
@@ -96,7 +96,7 @@ describe('Navigation Utilities', () => {
     it('clears history', () => {
       NavigationHistory.push('/page1');
       NavigationHistory.clear();
-      
+
       expect(NavigationHistory.getHistory()).toHaveLength(0);
     });
   });

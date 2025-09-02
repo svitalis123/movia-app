@@ -18,7 +18,7 @@ interface ClerkAuthProviderProps {
  */
 export function ClerkAuthProvider({ children }: ClerkAuthProviderProps) {
   return (
-    <ClerkProvider 
+    <ClerkProvider
       publishableKey={PUBLISHABLE_KEY}
       appearance={{
         baseTheme: undefined,

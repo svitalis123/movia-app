@@ -25,7 +25,7 @@ interface CacheStats {
 
 /**
  * In-memory cache service with TTL (Time To Live) support
- * 
+ *
  * Features:
  * - TTL-based expiration
  * - LRU eviction when max size is reached
@@ -40,7 +40,8 @@ class InMemoryCacheService implements CacheService {
   private stats: CacheStats;
   private cleanupInterval: NodeJS.Timeout | null;
 
-  constructor(maxSize: number = 1000, defaultTtl: number = 5 * 60 * 1000) { // 5 minutes default
+  constructor(maxSize: number = 1000, defaultTtl: number = 5 * 60 * 1000) {
+    // 5 minutes default
     this.cache = new Map();
     this.maxSize = maxSize;
     this.defaultTtl = defaultTtl;
@@ -54,7 +55,7 @@ class InMemoryCacheService implements CacheService {
       hitRate: 0,
     };
     this.cleanupInterval = null;
-    
+
     // Start automatic cleanup of expired entries
     this.startCleanupInterval();
   }
@@ -66,7 +67,7 @@ class InMemoryCacheService implements CacheService {
    */
   get<T>(key: string): T | null {
     const entry = this.cache.get(key);
-    
+
     if (!entry) {
       this.stats.misses++;
       this.updateHitRate();
@@ -85,10 +86,10 @@ class InMemoryCacheService implements CacheService {
     // Move to end (LRU behavior)
     this.cache.delete(key);
     this.cache.set(key, entry);
-    
+
     this.stats.hits++;
     this.updateHitRate();
-    
+
     return entry.data as T;
   }
 
@@ -133,7 +134,7 @@ class InMemoryCacheService implements CacheService {
    */
   has(key: string): boolean {
     const entry = this.cache.get(key);
-    
+
     if (!entry) {
       return false;
     }
@@ -221,7 +222,7 @@ class InMemoryCacheService implements CacheService {
       }
     }
 
-    expiredKeys.forEach(key => {
+    expiredKeys.forEach((key) => {
       this.cache.delete(key);
       this.stats.deletes++;
     });
@@ -238,12 +239,12 @@ class InMemoryCacheService implements CacheService {
    * @returns Cached or newly generated value
    */
   async getOrSet<T>(
-    key: string, 
-    factory: () => Promise<T> | T, 
+    key: string,
+    factory: () => Promise<T> | T,
     ttl?: number
   ): Promise<T> {
     const cached = this.get<T>(key);
-    
+
     if (cached !== null) {
       return cached;
     }
@@ -260,7 +261,7 @@ class InMemoryCacheService implements CacheService {
   updateConfig(config: { maxSize?: number; defaultTtl?: number }): void {
     if (config.maxSize !== undefined) {
       this.maxSize = config.maxSize;
-      
+
       // If new max size is smaller, remove excess entries
       while (this.cache.size > this.maxSize) {
         const firstKey = this.cache.keys().next().value;
@@ -319,9 +320,12 @@ class InMemoryCacheService implements CacheService {
    */
   private startCleanupInterval(): void {
     // Run cleanup every 2 minutes
-    this.cleanupInterval = setInterval(() => {
-      this.cleanup();
-    }, 2 * 60 * 1000);
+    this.cleanupInterval = setInterval(
+      () => {
+        this.cleanup();
+      },
+      2 * 60 * 1000
+    );
   }
 }
 

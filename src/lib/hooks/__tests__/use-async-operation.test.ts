@@ -27,9 +27,7 @@ describe('useAsyncOperation', () => {
   });
 
   it('should initialize with correct default state', () => {
-    const { result } = renderHook(() => 
-      useAsyncOperation(mockAsyncFunction)
-    );
+    const { result } = renderHook(() => useAsyncOperation(mockAsyncFunction));
 
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(null);
@@ -40,9 +38,7 @@ describe('useAsyncOperation', () => {
     const testData = { id: 1, name: 'Test' };
     mockAsyncFunction.mockResolvedValue(testData);
 
-    const { result } = renderHook(() => 
-      useAsyncOperation(mockAsyncFunction)
-    );
+    const { result } = renderHook(() => useAsyncOperation(mockAsyncFunction));
 
     let executePromise: Promise<any>;
     act(() => {
@@ -69,9 +65,7 @@ describe('useAsyncOperation', () => {
     const errorMessage = 'Test error';
     mockAsyncFunction.mockRejectedValue(new Error(errorMessage));
 
-    const { result } = renderHook(() => 
-      useAsyncOperation(mockAsyncFunction)
-    );
+    const { result } = renderHook(() => useAsyncOperation(mockAsyncFunction));
 
     let executePromise: Promise<any>;
     act(() => {
@@ -92,9 +86,7 @@ describe('useAsyncOperation', () => {
   it('should handle non-Error exceptions', async () => {
     mockAsyncFunction.mockRejectedValue('String error');
 
-    const { result } = renderHook(() => 
-      useAsyncOperation(mockAsyncFunction)
-    );
+    const { result } = renderHook(() => useAsyncOperation(mockAsyncFunction));
 
     let executePromise: Promise<any>;
     act(() => {
@@ -109,9 +101,7 @@ describe('useAsyncOperation', () => {
   });
 
   it('should reset state correctly', () => {
-    const { result } = renderHook(() => 
-      useAsyncOperation(mockAsyncFunction)
-    );
+    const { result } = renderHook(() => useAsyncOperation(mockAsyncFunction));
 
     // Set some state
     act(() => {
@@ -140,7 +130,7 @@ describe('useAsyncOperation', () => {
       globalLoadingMessage: 'Loading...',
     };
 
-    const { result } = renderHook(() => 
+    const { result } = renderHook(() =>
       useAsyncOperation(mockAsyncFunction, options)
     );
 
@@ -160,9 +150,7 @@ describe('useAsyncAction', () => {
   });
 
   it('should initialize with correct default state', () => {
-    const { result } = renderHook(() => 
-      useAsyncAction(mockAsyncAction)
-    );
+    const { result } = renderHook(() => useAsyncAction(mockAsyncAction));
 
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(null);
@@ -171,9 +159,7 @@ describe('useAsyncAction', () => {
   it('should handle successful async action', async () => {
     mockAsyncAction.mockResolvedValue(undefined);
 
-    const { result } = renderHook(() => 
-      useAsyncAction(mockAsyncAction)
-    );
+    const { result } = renderHook(() => useAsyncAction(mockAsyncAction));
 
     let executePromise: Promise<boolean>;
     act(() => {
@@ -199,9 +185,7 @@ describe('useAsyncAction', () => {
     const errorMessage = 'Action failed';
     mockAsyncAction.mockRejectedValue(new Error(errorMessage));
 
-    const { result } = renderHook(() => 
-      useAsyncAction(mockAsyncAction)
-    );
+    const { result } = renderHook(() => useAsyncAction(mockAsyncAction));
 
     let executePromise: Promise<boolean>;
     act(() => {
@@ -219,9 +203,7 @@ describe('useAsyncAction', () => {
   });
 
   it('should reset state correctly', () => {
-    const { result } = renderHook(() => 
-      useAsyncAction(mockAsyncAction)
-    );
+    const { result } = renderHook(() => useAsyncAction(mockAsyncAction));
 
     // Set some state
     act(() => {
@@ -248,7 +230,7 @@ describe('useAsyncAction', () => {
       globalLoadingMessage: 'Processing...',
     };
 
-    const { result } = renderHook(() => 
+    const { result } = renderHook(() =>
       useAsyncAction(mockAsyncAction, options)
     );
 
@@ -267,7 +249,7 @@ describe('useAsyncAction', () => {
       errorMessage: 'Custom error message',
     };
 
-    const { result } = renderHook(() => 
+    const { result } = renderHook(() =>
       useAsyncAction(mockAsyncAction, options)
     );
 

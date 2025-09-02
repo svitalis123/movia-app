@@ -1,5 +1,11 @@
 import { movieService } from './movie-service';
-import type { TMDBResponse, TMDBMovie, TMDBMovieDetails, TMDBCredits, TMDBGenre } from '../types';
+import type {
+  TMDBResponse,
+  TMDBMovie,
+  TMDBMovieDetails,
+  TMDBCredits,
+  TMDBGenre,
+} from '../types';
 
 /**
  * Enhanced movie service that wraps the base movie service with user feedback
@@ -35,10 +41,17 @@ export class EnhancedMovieService {
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes('404')) {
-          throw new Error('Movie not found. It may have been removed or the link is invalid.');
+          throw new Error(
+            'Movie not found. It may have been removed or the link is invalid.'
+          );
         }
-        if (error.message.includes('network') || error.message.includes('fetch')) {
-          throw new Error('Unable to load movie details. Please check your internet connection and try again.');
+        if (
+          error.message.includes('network') ||
+          error.message.includes('fetch')
+        ) {
+          throw new Error(
+            'Unable to load movie details. Please check your internet connection and try again.'
+          );
         }
       }
       throw new Error('Failed to load movie details. Please try again later.');
@@ -48,7 +61,10 @@ export class EnhancedMovieService {
   /**
    * Search movies with user-friendly feedback
    */
-  async searchMovies(query: string, page?: number): Promise<TMDBResponse<TMDBMovie>> {
+  async searchMovies(
+    query: string,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>> {
     if (!query.trim()) {
       throw new Error('Please enter a search term to find movies.');
     }
@@ -58,11 +74,18 @@ export class EnhancedMovieService {
       return result;
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes('network') || error.message.includes('fetch')) {
-          throw new Error('Unable to search movies. Please check your internet connection and try again.');
+        if (
+          error.message.includes('network') ||
+          error.message.includes('fetch')
+        ) {
+          throw new Error(
+            'Unable to search movies. Please check your internet connection and try again.'
+          );
         }
       }
-      throw new Error('Search failed. Please try again with a different search term.');
+      throw new Error(
+        'Search failed. Please try again with a different search term.'
+      );
     }
   }
 
@@ -76,13 +99,22 @@ export class EnhancedMovieService {
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes('404')) {
-          throw new Error('Cast and crew information not available for this movie.');
+          throw new Error(
+            'Cast and crew information not available for this movie.'
+          );
         }
-        if (error.message.includes('network') || error.message.includes('fetch')) {
-          throw new Error('Unable to load cast information. Please check your internet connection and try again.');
+        if (
+          error.message.includes('network') ||
+          error.message.includes('fetch')
+        ) {
+          throw new Error(
+            'Unable to load cast information. Please check your internet connection and try again.'
+          );
         }
       }
-      throw new Error('Failed to load cast and crew information. Please try again later.');
+      throw new Error(
+        'Failed to load cast and crew information. Please try again later.'
+      );
     }
   }
 
@@ -95,8 +127,13 @@ export class EnhancedMovieService {
       return result;
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes('network') || error.message.includes('fetch')) {
-          throw new Error('Unable to load movie genres. Please check your internet connection and try again.');
+        if (
+          error.message.includes('network') ||
+          error.message.includes('fetch')
+        ) {
+          throw new Error(
+            'Unable to load movie genres. Please check your internet connection and try again.'
+          );
         }
       }
       throw new Error('Failed to load movie genres. Please try again later.');
@@ -106,24 +143,37 @@ export class EnhancedMovieService {
   /**
    * Fetch movies by genre with error handling
    */
-  async getMoviesByGenre(genreId: number, page?: number): Promise<TMDBResponse<TMDBMovie>> {
+  async getMoviesByGenre(
+    genreId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>> {
     try {
       const result = await movieService.getMoviesByGenre(genreId, page);
       return result;
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes('network') || error.message.includes('fetch')) {
-          throw new Error('Unable to load movies for this genre. Please check your internet connection and try again.');
+        if (
+          error.message.includes('network') ||
+          error.message.includes('fetch')
+        ) {
+          throw new Error(
+            'Unable to load movies for this genre. Please check your internet connection and try again.'
+          );
         }
       }
-      throw new Error('Failed to load movies for this genre. Please try again later.');
+      throw new Error(
+        'Failed to load movies for this genre. Please try again later.'
+      );
     }
   }
 
   /**
    * Fetch similar movies with error handling
    */
-  async getSimilarMovies(movieId: number, page?: number): Promise<TMDBResponse<TMDBMovie>> {
+  async getSimilarMovies(
+    movieId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>> {
     try {
       const result = await movieService.getSimilarMovies(movieId, page);
       return result;
@@ -132,8 +182,13 @@ export class EnhancedMovieService {
         if (error.message.includes('404')) {
           throw new Error('No similar movies found for this title.');
         }
-        if (error.message.includes('network') || error.message.includes('fetch')) {
-          throw new Error('Unable to load similar movies. Please check your internet connection and try again.');
+        if (
+          error.message.includes('network') ||
+          error.message.includes('fetch')
+        ) {
+          throw new Error(
+            'Unable to load similar movies. Please check your internet connection and try again.'
+          );
         }
       }
       throw new Error('Failed to load similar movies. Please try again later.');
@@ -143,7 +198,10 @@ export class EnhancedMovieService {
   /**
    * Fetch movie recommendations with error handling
    */
-  async getMovieRecommendations(movieId: number, page?: number): Promise<TMDBResponse<TMDBMovie>> {
+  async getMovieRecommendations(
+    movieId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>> {
     try {
       const result = await movieService.getMovieRecommendations(movieId, page);
       return result;
@@ -152,11 +210,18 @@ export class EnhancedMovieService {
         if (error.message.includes('404')) {
           throw new Error('No recommendations available for this movie.');
         }
-        if (error.message.includes('network') || error.message.includes('fetch')) {
-          throw new Error('Unable to load movie recommendations. Please check your internet connection and try again.');
+        if (
+          error.message.includes('network') ||
+          error.message.includes('fetch')
+        ) {
+          throw new Error(
+            'Unable to load movie recommendations. Please check your internet connection and try again.'
+          );
         }
       }
-      throw new Error('Failed to load movie recommendations. Please try again later.');
+      throw new Error(
+        'Failed to load movie recommendations. Please try again later.'
+      );
     }
   }
 }

@@ -13,7 +13,10 @@ interface ErrorBoundaryState {
  * Error boundary component that catches JavaScript errors anywhere in the child component tree
  * Displays a fallback UI and provides error recovery options
  */
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -59,8 +62,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback || DefaultErrorFallback;
       return (
-        <FallbackComponent 
-          error={this.state.error!} 
+        <FallbackComponent
+          error={this.state.error!}
           resetError={this.resetError}
         />
       );
@@ -91,13 +94,16 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
             Something went wrong
           </h2>
           <p className="text-muted-foreground mb-4">
-            We're sorry, but something unexpected happened. Please try refreshing the page or go back to the home page.
+            We're sorry, but something unexpected happened. Please try
+            refreshing the page or go back to the home page.
           </p>
         </div>
 
         {process.env.NODE_ENV === 'development' && (
           <div className="mb-6 p-4 bg-muted rounded-md text-left">
-            <h3 className="font-semibold text-sm mb-2">Error Details (Development):</h3>
+            <h3 className="font-semibold text-sm mb-2">
+              Error Details (Development):
+            </h3>
             <pre className="text-xs text-muted-foreground overflow-auto">
               {error.message}
             </pre>
@@ -135,13 +141,14 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
 /**
  * Compact error fallback for smaller components
  */
-export function CompactErrorFallback({ error: _error, resetError }: ErrorFallbackProps) {
+export function CompactErrorFallback({
+  error: _error,
+  resetError,
+}: ErrorFallbackProps) {
   return (
     <div className="flex flex-col items-center justify-center p-4 text-center">
       <AlertTriangle className="h-8 w-8 text-destructive mb-2" />
-      <p className="text-sm text-muted-foreground mb-3">
-        Something went wrong
-      </p>
+      <p className="text-sm text-muted-foreground mb-3">Something went wrong</p>
       <button
         onClick={resetError}
         className="flex items-center gap-1 px-3 py-1 text-xs bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"

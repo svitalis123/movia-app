@@ -7,6 +7,7 @@ The Movie Recommendation App now includes a comprehensive notification system th
 ## 🎯 Features
 
 ### Toast Notifications
+
 - **4 Types**: Success, Error, Warning, Info
 - **Auto-dismiss**: Configurable duration (default: 5s for success/warning/info, persistent for errors)
 - **Manual dismiss**: Click X button to close
@@ -14,11 +15,13 @@ The Movie Recommendation App now includes a comprehensive notification system th
 - **Animations**: Smooth slide-in/slide-out transitions
 
 ### Loading States
+
 - **Global Loading**: Full-screen overlay for long operations
 - **Operation-specific**: Granular loading states for different async operations
 - **Consistent UX**: All async operations provide loading feedback
 
 ### Enhanced Error Handling
+
 - **User-friendly messages**: Technical errors converted to actionable messages
 - **Contextual feedback**: Different error types get appropriate messaging
 - **Recovery guidance**: Clear next steps for users when errors occur
@@ -104,7 +107,7 @@ function DataProcessor() {
 
   const handleLongOperation = async () => {
     setGlobalLoading(true, 'Processing your data...');
-    
+
     try {
       await performLongOperation();
       showSuccess('Data processed successfully!');
@@ -129,9 +132,21 @@ function DataProcessor() {
 
 ```typescript
 interface ToastActions {
-  showSuccess: (message: string, title?: string, options?: Partial<Toast>) => void;
-  showError: (message: string, title?: string, options?: Partial<Toast>) => void;
-  showWarning: (message: string, title?: string, options?: Partial<Toast>) => void;
+  showSuccess: (
+    message: string,
+    title?: string,
+    options?: Partial<Toast>
+  ) => void;
+  showError: (
+    message: string,
+    title?: string,
+    options?: Partial<Toast>
+  ) => void;
+  showWarning: (
+    message: string,
+    title?: string,
+    options?: Partial<Toast>
+  ) => void;
   showInfo: (message: string, title?: string, options?: Partial<Toast>) => void;
   clearAllToasts: () => void;
 }
@@ -145,8 +160,8 @@ interface Toast {
   title?: string;
   message: string;
   type: 'success' | 'error' | 'warning' | 'info';
-  duration?: number;  // 0 = no auto-dismiss, >0 = auto-dismiss after ms
-  dismissible?: boolean;  // Show/hide X button
+  duration?: number; // 0 = no auto-dismiss, >0 = auto-dismiss after ms
+  dismissible?: boolean; // Show/hide X button
 }
 ```
 
@@ -154,7 +169,11 @@ interface Toast {
 
 ```typescript
 interface AsyncOperationOptions {
-  loadingKey?: 'fetchingMovies' | 'fetchingMovieDetails' | 'searching' | 'authenticating';
+  loadingKey?:
+    | 'fetchingMovies'
+    | 'fetchingMovieDetails'
+    | 'searching'
+    | 'authenticating';
   showSuccessToast?: boolean;
   showErrorToast?: boolean;
   successMessage?: string;
@@ -232,18 +251,18 @@ import { useToastStore } from '../toast-store';
 
 test('should add and remove toasts', () => {
   const { result } = renderHook(() => useToastStore());
-  
+
   act(() => {
     result.current.showSuccess('Test message');
   });
-  
+
   expect(result.current.toasts).toHaveLength(1);
   expect(result.current.toasts[0].message).toBe('Test message');
-  
+
   act(() => {
     result.current.clearAllToasts();
   });
-  
+
   expect(result.current.toasts).toHaveLength(0);
 });
 ```
@@ -257,12 +276,12 @@ import { useAsyncOperation } from '../use-async-operation';
 test('should handle async operation success', async () => {
   const mockFn = vi.fn().mockResolvedValue('success');
   const { result } = renderHook(() => useAsyncOperation(mockFn));
-  
+
   await act(async () => {
     const data = await result.current.execute();
     expect(data).toBe('success');
   });
-  
+
   expect(result.current.loading).toBe(false);
   expect(result.current.error).toBe(null);
   expect(result.current.data).toBe('success');
@@ -274,12 +293,14 @@ test('should handle async operation success', async () => {
 ### Adding to Existing Components
 
 1. **Import the hooks**:
+
 ```typescript
 import { useToast } from '../lib/stores/toast-store';
 import { useAsyncOperation } from '../lib/hooks/use-async-operation';
 ```
 
 2. **Replace manual loading states**:
+
 ```typescript
 // Before
 const [loading, setLoading] = useState(false);
@@ -288,11 +309,12 @@ const [error, setError] = useState(null);
 // After
 const { execute, loading, error } = useAsyncOperation(apiCall, {
   showSuccessToast: true,
-  successMessage: 'Operation completed!'
+  successMessage: 'Operation completed!',
 });
 ```
 
 3. **Add user feedback**:
+
 ```typescript
 // Before
 try {
@@ -368,4 +390,4 @@ if (process.env.NODE_ENV === 'development') {
 
 ---
 
-*For more examples, see the `NotificationDemo` component in `src/components/ui/notification-demo.tsx`*
+_For more examples, see the `NotificationDemo` component in `src/components/ui/notification-demo.tsx`_

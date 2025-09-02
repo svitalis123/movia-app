@@ -5,12 +5,12 @@ import { SearchInput } from '../components/search';
 import { LoadingSpinner } from '../components/ui';
 import { useMovieStore } from '../lib/stores/movie-store';
 import { useUIStore } from '../lib/stores/ui-store';
-import { 
-  parseSearchParams, 
-  validateSearchQuery, 
+import {
+  parseSearchParams,
+  validateSearchQuery,
   validatePageNumber,
   createSearchUrl,
-  createMovieUrl 
+  createMovieUrl,
 } from '../lib/utils';
 
 /**
@@ -32,7 +32,7 @@ export function SearchPage() {
     searchMovies,
     clearSearch,
   } = useMovieStore();
-  
+
   const { searchQuery, setSearchQuery } = useUIStore();
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export function SearchPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
           Search Results for "{validatedQuery}"
         </h1>
-        
+
         <SearchInput
           value={searchQuery}
           onChange={setSearchQuery}

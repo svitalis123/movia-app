@@ -14,7 +14,7 @@ export function useVirtualScroll({
   itemCount,
   getItemHeight,
   containerHeight,
-  overscan = 5
+  overscan = 5,
 }: UseVirtualScrollOptions) {
   const [scrollTop, setScrollTop] = useState(0);
   const scrollElementRef = useRef<HTMLDivElement>(null);
@@ -28,7 +28,7 @@ export function useVirtualScroll({
       positions.push({
         index: i,
         top: totalHeight,
-        height: getItemHeight(i)
+        height: getItemHeight(i),
       });
       totalHeight += getItemHeight(i);
     }
@@ -39,7 +39,7 @@ export function useVirtualScroll({
   // Find visible range
   const visibleRange = useMemo(() => {
     const { positions } = itemPositions;
-    
+
     let start = 0;
     let end = positions.length - 1;
 
@@ -61,7 +61,7 @@ export function useVirtualScroll({
 
     return {
       start: Math.max(0, start - overscan),
-      end: Math.min(positions.length - 1, end + overscan)
+      end: Math.min(positions.length - 1, end + overscan),
     };
   }, [itemPositions, scrollTop, containerHeight, overscan]);
 
@@ -74,6 +74,6 @@ export function useVirtualScroll({
     visibleRange,
     totalHeight: itemPositions.totalHeight,
     getItemPosition: (index: number) => itemPositions.positions[index],
-    handleScroll
+    handleScroll,
   };
 }

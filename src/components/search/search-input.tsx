@@ -46,10 +46,10 @@ export function SearchInput({
   onChange,
   onSearch,
   onClear,
-  placeholder = "Search movies...",
+  placeholder = 'Search movies...',
   loading = false,
   disabled = false,
-  className = "",
+  className = '',
   showSuggestions = true,
   showHistory = true,
 }: SearchInputProps) {
@@ -58,7 +58,7 @@ export function SearchInput({
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
-  
+
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -82,7 +82,7 @@ export function SearchInput({
     'Avengers',
     'Disney',
     'Horror',
-    'Comedy'
+    'Comedy',
   ];
 
   // Update input value when controlled value changes
@@ -102,7 +102,7 @@ export function SearchInput({
     setIsLoadingSuggestions(true);
     try {
       const response = await movieService.searchMovies(query, 1);
-      const suggestionData = response.results.slice(0, 5).map(movie => ({
+      const suggestionData = response.results.slice(0, 5).map((movie) => ({
         id: movie.id,
         title: movie.title,
         release_date: movie.release_date,
@@ -122,7 +122,7 @@ export function SearchInput({
     const newValue = e.target.value;
     setInputValue(newValue);
     setSelectedIndex(-1);
-    
+
     // Call controlled onChange if provided
     onChange?.(newValue);
 
@@ -134,7 +134,7 @@ export function SearchInput({
     // Show dropdown when typing
     if (newValue.trim()) {
       setShowDropdown(true);
-      
+
       // Debounce suggestions fetch
       if (showSuggestions) {
         debounceRef.current = setTimeout(() => {
@@ -150,19 +150,19 @@ export function SearchInput({
   // Handle search submission
   const handleSearch = (query?: string) => {
     const searchTerm = query || inputValue.trim();
-    
+
     if (!searchTerm) return;
 
     // Add to search history
     addToSearchHistory(searchTerm);
-    
+
     // Call custom onSearch if provided
     onSearch?.(searchTerm);
-    
+
     // Hide dropdown
     setShowDropdown(false);
     setSelectedIndex(-1);
-    
+
     // Blur input on mobile
     if (inputRef.current) {
       inputRef.current.blur();
@@ -182,7 +182,7 @@ export function SearchInput({
     setShowDropdown(false);
     setSelectedIndex(-1);
     onClear?.();
-    
+
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -190,9 +190,12 @@ export function SearchInput({
 
   // Add search term to history
   const addToSearchHistory = (term: string) => {
-    const newHistory = [term, ...searchHistory.filter(h => h !== term)].slice(0, 10);
+    const newHistory = [term, ...searchHistory.filter((h) => h !== term)].slice(
+      0,
+      10
+    );
     setSearchHistory(newHistory);
-    
+
     try {
       localStorage.setItem('movie-search-history', JSON.stringify(newHistory));
     } catch (error) {
@@ -202,9 +205,9 @@ export function SearchInput({
 
   // Remove item from search history
   const removeFromHistory = (term: string) => {
-    const newHistory = searchHistory.filter(h => h !== term);
+    const newHistory = searchHistory.filter((h) => h !== term);
     setSearchHistory(newHistory);
-    
+
     try {
       localStorage.setItem('movie-search-history', JSON.stringify(newHistory));
     } catch (error) {
@@ -216,17 +219,20 @@ export function SearchInput({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!showDropdown) return;
 
-    const totalItems = suggestions.length + 
-      (showHistory && !inputValue.trim() ? searchHistory.length + popularSearches.length : 0);
+    const totalItems =
+      suggestions.length +
+      (showHistory && !inputValue.trim()
+        ? searchHistory.length + popularSearches.length
+        : 0);
 
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedIndex(prev => (prev + 1) % totalItems);
+        setSelectedIndex((prev) => (prev + 1) % totalItems);
         break;
       case 'ArrowUp':
         e.preventDefault();
-        setSelectedIndex(prev => prev <= 0 ? totalItems - 1 : prev - 1);
+        setSelectedIndex((prev) => (prev <= 0 ? totalItems - 1 : prev - 1));
         break;
       case 'Enter':
         e.preventDefault();
@@ -280,7 +286,11 @@ export function SearchInput({
 
   // Show dropdown on focus if there's content to show
   const handleFocus = () => {
-    if (showHistory && (!inputValue.trim() && (searchHistory.length > 0 || popularSearches.length > 0))) {
+    if (
+      showHistory &&
+      !inputValue.trim() &&
+      (searchHistory.length > 0 || popularSearches.length > 0)
+    ) {
       setShowDropdown(true);
     } else if (inputValue.trim() && suggestions.length > 0) {
       setShowDropdown(true);
@@ -302,7 +312,9 @@ export function SearchInput({
                 <button
                   key={`history-${term}`}
                   className={`w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center justify-between group ${
-                    selectedIndex === suggestions.length + index ? 'bg-muted' : ''
+                    selectedIndex === suggestions.length + index
+                      ? 'bg-muted'
+                      : ''
                   }`}
                   onClick={() => handleSearch(term)}
                 >
@@ -323,7 +335,7 @@ export function SearchInput({
               ))}
             </div>
           )}
-          
+
           {popularSearches.length > 0 && (
             <div className="py-2 border-t">
               <div className="px-3 py-1 text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -333,7 +345,10 @@ export function SearchInput({
                 <button
                   key={`popular-${term}`}
                   className={`w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center space-x-2 ${
-                    selectedIndex === suggestions.length + searchHistory.length + index ? 'bg-muted' : ''
+                    selectedIndex ===
+                    suggestions.length + searchHistory.length + index
+                      ? 'bg-muted'
+                      : ''
                   }`}
                   onClick={() => handleSearch(term)}
                 >
@@ -426,7 +441,7 @@ export function SearchInput({
           className="w-full pl-10 pr-10 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
           autoComplete="off"
         />
-        
+
         {/* Loading spinner or clear button */}
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
           {loading ? (

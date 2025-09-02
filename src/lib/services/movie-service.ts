@@ -124,7 +124,10 @@ class APIError extends Error {
 }
 
 class _NetworkError extends Error {
-  constructor(message: string, public code?: string) {
+  constructor(
+    message: string,
+    public code?: string
+  ) {
     super(message);
     this.name = '_NetworkError';
   }
@@ -137,14 +140,23 @@ interface MovieService {
   getMovieCredits(movieId: number): Promise<TMDBCredits>;
   searchMovies(query: string, page?: number): Promise<TMDBResponse<TMDBMovie>>;
   getGenres(): Promise<{ genres: TMDBGenre[] }>;
-  getMoviesByGenre(genreId: number, page?: number): Promise<TMDBResponse<TMDBMovie>>;
-  getSimilarMovies(movieId: number, page?: number): Promise<TMDBResponse<TMDBMovie>>;
-  getMovieRecommendations(movieId: number, page?: number): Promise<TMDBResponse<TMDBMovie>>;
+  getMoviesByGenre(
+    genreId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>>;
+  getSimilarMovies(
+    movieId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>>;
+  getMovieRecommendations(
+    movieId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>>;
 }
 
 /**
  * TMDB API Service Implementation
- * 
+ *
  * This service provides methods to interact with The Movie Database (TMDB) API.
  * It handles all movie-related API calls including fetching popular movies,
  * movie details, search functionality, and genre information.
@@ -153,7 +165,8 @@ class TMDBMovieService implements MovieService {
   private readonly baseImageUrl: string;
 
   constructor() {
-    this.baseImageUrl = import.meta.env.VITE_TMDB_IMAGE_BASE_URL || 'https://image.tmdb.org/t/p';
+    this.baseImageUrl =
+      import.meta.env.VITE_TMDB_IMAGE_BASE_URL || 'https://image.tmdb.org/t/p';
   }
 
   /**
@@ -163,16 +176,19 @@ class TMDBMovieService implements MovieService {
    */
   async getPopularMovies(page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
     try {
-      const response = await httpClient.get<TMDBResponse<TMDBMovie>>('/movie/popular', {
-        params: {
-          page: Math.max(1, Math.min(page, 1000)), // TMDB limits to 1000 pages
-          language: 'en-US',
-        },
-      });
+      const response = await httpClient.get<TMDBResponse<TMDBMovie>>(
+        '/movie/popular',
+        {
+          params: {
+            page: Math.max(1, Math.min(page, 1000)), // TMDB limits to 1000 pages
+            language: 'en-US',
+          },
+        }
+      );
 
       // Validate response structure
       this.validatePaginatedResponse(response);
-      
+
       return response;
     } catch (error) {
       throw this.handleServiceError(error, 'getPopularMovies');
@@ -190,12 +206,15 @@ class TMDBMovieService implements MovieService {
         throw new APIError('Invalid movie ID', 400, 'getMovieDetails');
       }
 
-      const response = await httpClient.get<TMDBMovieDetails>(`/movie/${movieId}`, {
-        params: {
-          language: 'en-US',
-          append_to_response: 'videos,images', // Get additional data in one request
-        },
-      });
+      const response = await httpClient.get<TMDBMovieDetails>(
+        `/movie/${movieId}`,
+        {
+          params: {
+            language: 'en-US',
+            append_to_response: 'videos,images', // Get additional data in one request
+          },
+        }
+      );
 
       // Validate response structure
       this.validateMovieDetails(response);
@@ -217,11 +236,14 @@ class TMDBMovieService implements MovieService {
         throw new APIError('Invalid movie ID', 400, 'getMovieCredits');
       }
 
-      const response = await httpClient.get<TMDBCredits>(`/movie/${movieId}/credits`, {
-        params: {
-          language: 'en-US',
-        },
-      });
+      const response = await httpClient.get<TMDBCredits>(
+        `/movie/${movieId}/credits`,
+        {
+          params: {
+            language: 'en-US',
+          },
+        }
+      );
 
       // Validate response structure
       this.validateCredits(response);
@@ -238,24 +260,34 @@ class TMDBMovieService implements MovieService {
    * @param page - Page number (default: 1)
    * @returns Promise with paginated search results
    */
-  async searchMovies(query: string, page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
+  async searchMovies(
+    query: string,
+    page: number = 1
+  ): Promise<TMDBResponse<TMDBMovie>> {
     try {
       if (!query || query.trim().length === 0) {
         throw new APIError('Search query cannot be empty', 400, 'searchMovies');
       }
 
       if (query.trim().length < 2) {
-        throw new APIError('Search query must be at least 2 characters long', 400, 'searchMovies');
+        throw new APIError(
+          'Search query must be at least 2 characters long',
+          400,
+          'searchMovies'
+        );
       }
 
-      const response = await httpClient.get<TMDBResponse<TMDBMovie>>('/search/movie', {
-        params: {
-          query: query.trim(),
-          page: Math.max(1, Math.min(page, 1000)), // TMDB limits to 1000 pages
-          language: 'en-US',
-          include_adult: false, // Filter out adult content
-        },
-      });
+      const response = await httpClient.get<TMDBResponse<TMDBMovie>>(
+        '/search/movie',
+        {
+          params: {
+            query: query.trim(),
+            page: Math.max(1, Math.min(page, 1000)), // TMDB limits to 1000 pages
+            language: 'en-US',
+            include_adult: false, // Filter out adult content
+          },
+        }
+      );
 
       // Validate response structure
       this.validatePaginatedResponse(response);
@@ -272,11 +304,14 @@ class TMDBMovieService implements MovieService {
    */
   async getGenres(): Promise<{ genres: TMDBGenre[] }> {
     try {
-      const response = await httpClient.get<{ genres: TMDBGenre[] }>('/genre/movie/list', {
-        params: {
-          language: 'en-US',
-        },
-      });
+      const response = await httpClient.get<{ genres: TMDBGenre[] }>(
+        '/genre/movie/list',
+        {
+          params: {
+            language: 'en-US',
+          },
+        }
+      );
 
       // Validate response structure
       this.validateGenres(response);
@@ -293,21 +328,27 @@ class TMDBMovieService implements MovieService {
    * @param page - Page number (default: 1)
    * @returns Promise with paginated movies by genre
    */
-  async getMoviesByGenre(genreId: number, page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
+  async getMoviesByGenre(
+    genreId: number,
+    page: number = 1
+  ): Promise<TMDBResponse<TMDBMovie>> {
     try {
       if (!genreId || genreId <= 0) {
         throw new APIError('Invalid genre ID', 400, 'getMoviesByGenre');
       }
 
-      const response = await httpClient.get<TMDBResponse<TMDBMovie>>('/discover/movie', {
-        params: {
-          with_genres: genreId,
-          page: Math.max(1, Math.min(page, 1000)),
-          language: 'en-US',
-          sort_by: 'popularity.desc',
-          include_adult: false,
-        },
-      });
+      const response = await httpClient.get<TMDBResponse<TMDBMovie>>(
+        '/discover/movie',
+        {
+          params: {
+            with_genres: genreId,
+            page: Math.max(1, Math.min(page, 1000)),
+            language: 'en-US',
+            sort_by: 'popularity.desc',
+            include_adult: false,
+          },
+        }
+      );
 
       // Validate response structure
       this.validatePaginatedResponse(response);
@@ -324,18 +365,24 @@ class TMDBMovieService implements MovieService {
    * @param page - Page number (default: 1)
    * @returns Promise with paginated similar movies
    */
-  async getSimilarMovies(movieId: number, page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
+  async getSimilarMovies(
+    movieId: number,
+    page: number = 1
+  ): Promise<TMDBResponse<TMDBMovie>> {
     try {
       if (!movieId || movieId <= 0) {
         throw new APIError('Invalid movie ID', 400, 'getSimilarMovies');
       }
 
-      const response = await httpClient.get<TMDBResponse<TMDBMovie>>(`/movie/${movieId}/similar`, {
-        params: {
-          page: Math.max(1, Math.min(page, 1000)),
-          language: 'en-US',
-        },
-      });
+      const response = await httpClient.get<TMDBResponse<TMDBMovie>>(
+        `/movie/${movieId}/similar`,
+        {
+          params: {
+            page: Math.max(1, Math.min(page, 1000)),
+            language: 'en-US',
+          },
+        }
+      );
 
       // Validate response structure
       this.validatePaginatedResponse(response);
@@ -352,18 +399,24 @@ class TMDBMovieService implements MovieService {
    * @param page - Page number (default: 1)
    * @returns Promise with paginated movie recommendations
    */
-  async getMovieRecommendations(movieId: number, page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
+  async getMovieRecommendations(
+    movieId: number,
+    page: number = 1
+  ): Promise<TMDBResponse<TMDBMovie>> {
     try {
       if (!movieId || movieId <= 0) {
         throw new APIError('Invalid movie ID', 400, 'getMovieRecommendations');
       }
 
-      const response = await httpClient.get<TMDBResponse<TMDBMovie>>(`/movie/${movieId}/recommendations`, {
-        params: {
-          page: Math.max(1, Math.min(page, 1000)),
-          language: 'en-US',
-        },
-      });
+      const response = await httpClient.get<TMDBResponse<TMDBMovie>>(
+        `/movie/${movieId}/recommendations`,
+        {
+          params: {
+            page: Math.max(1, Math.min(page, 1000)),
+            language: 'en-US',
+          },
+        }
+      );
 
       // Validate response structure
       this.validatePaginatedResponse(response);
@@ -391,7 +444,10 @@ class TMDBMovieService implements MovieService {
    * @param size - Image size (default: 'w1280')
    * @returns Full backdrop URL or null if no path provided
    */
-  getBackdropUrl(backdropPath: string | null, size: string = 'w1280'): string | null {
+  getBackdropUrl(
+    backdropPath: string | null,
+    size: string = 'w1280'
+  ): string | null {
     if (!backdropPath) return null;
     return `${this.baseImageUrl}/${size}${backdropPath}`;
   }
@@ -410,9 +466,11 @@ class TMDBMovieService implements MovieService {
       throw new APIError('Invalid results format', 500, 'validateResponse');
     }
 
-    if (typeof response.page !== 'number' || 
-        typeof response.total_pages !== 'number' || 
-        typeof response.total_results !== 'number') {
+    if (
+      typeof response.page !== 'number' ||
+      typeof response.total_pages !== 'number' ||
+      typeof response.total_results !== 'number'
+    ) {
       throw new APIError('Invalid pagination format', 500, 'validateResponse');
     }
   }
@@ -422,11 +480,19 @@ class TMDBMovieService implements MovieService {
    */
   private validateMovieDetails(response: TMDBMovieDetails): void {
     if (!response || typeof response !== 'object') {
-      throw new APIError('Invalid movie details format', 500, 'validateMovieDetails');
+      throw new APIError(
+        'Invalid movie details format',
+        500,
+        'validateMovieDetails'
+      );
     }
 
     if (typeof response.id !== 'number' || !response.title) {
-      throw new APIError('Invalid movie details structure', 500, 'validateMovieDetails');
+      throw new APIError(
+        'Invalid movie details structure',
+        500,
+        'validateMovieDetails'
+      );
     }
   }
 

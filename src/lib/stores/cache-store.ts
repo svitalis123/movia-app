@@ -80,14 +80,21 @@ interface MovieDetails extends Movie {
 
 interface CacheState {
   movies: Record<string, { data: Movie[]; timestamp: number; ttl: number }>;
-  movieDetails: Record<number, { data: MovieDetails; timestamp: number; ttl: number }>;
+  movieDetails: Record<
+    number,
+    { data: MovieDetails; timestamp: number; ttl: number }
+  >;
   genres: { data: Genre[]; timestamp: number; ttl: number } | null;
 }
 
 interface CacheActions {
   setCachedMovies: (key: string, movies: Movie[], ttl?: number) => void;
   getCachedMovies: (key: string) => Movie[] | null;
-  setCachedMovieDetails: (movieId: number, details: MovieDetails, ttl?: number) => void;
+  setCachedMovieDetails: (
+    movieId: number,
+    details: MovieDetails,
+    ttl?: number
+  ) => void;
   getCachedMovieDetails: (movieId: number) => MovieDetails | null;
   setCachedGenres: (genres: Genre[], ttl?: number) => void;
   getCachedGenres: () => Genre[] | null;
@@ -135,7 +142,7 @@ export const useCacheStore = create<CacheStore>()((set, get) => ({
 
     const now = Date.now();
     const isExpired = now - cached.timestamp > cached.ttl;
-    
+
     if (isExpired) {
       // Remove expired cache entry
       set((state) => {
@@ -148,7 +155,11 @@ export const useCacheStore = create<CacheStore>()((set, get) => ({
     return cached.data;
   },
 
-  setCachedMovieDetails: (movieId: number, details: MovieDetails, ttl = DEFAULT_TTL.MOVIE_DETAILS) => {
+  setCachedMovieDetails: (
+    movieId: number,
+    details: MovieDetails,
+    ttl = DEFAULT_TTL.MOVIE_DETAILS
+  ) => {
     const timestamp = Date.now();
     set((state) => ({
       movieDetails: {
@@ -168,7 +179,7 @@ export const useCacheStore = create<CacheStore>()((set, get) => ({
 
     const now = Date.now();
     const isExpired = now - cached.timestamp > cached.ttl;
-    
+
     if (isExpired) {
       // Remove expired cache entry
       set((state) => {
@@ -198,7 +209,7 @@ export const useCacheStore = create<CacheStore>()((set, get) => ({
 
     const now = Date.now();
     const isExpired = now - cached.timestamp > cached.ttl;
-    
+
     if (isExpired) {
       // Remove expired cache entry
       set({ genres: null });
@@ -242,7 +253,9 @@ export const useCachedMovies = (key: string) => {
 };
 
 export const useCachedMovieDetails = (movieId: number) => {
-  const getCachedMovieDetails = useCacheStore((state) => state.getCachedMovieDetails);
+  const getCachedMovieDetails = useCacheStore(
+    (state) => state.getCachedMovieDetails
+  );
   return getCachedMovieDetails(movieId);
 };
 
@@ -254,20 +267,24 @@ export const useCachedGenres = () => {
 /**
  * Action hooks for cache operations
  */
-export const useCacheActions = () => useCacheStore((state) => ({
-  setCachedMovies: state.setCachedMovies,
-  getCachedMovies: state.getCachedMovies,
-  setCachedMovieDetails: state.setCachedMovieDetails,
-  getCachedMovieDetails: state.getCachedMovieDetails,
-  setCachedGenres: state.setCachedGenres,
-  getCachedGenres: state.getCachedGenres,
-  clearCache: state.clearCache,
-}));
+export const useCacheActions = () =>
+  useCacheStore((state) => ({
+    setCachedMovies: state.setCachedMovies,
+    getCachedMovies: state.getCachedMovies,
+    setCachedMovieDetails: state.setCachedMovieDetails,
+    getCachedMovieDetails: state.getCachedMovieDetails,
+    setCachedGenres: state.setCachedGenres,
+    getCachedGenres: state.getCachedGenres,
+    clearCache: state.clearCache,
+  }));
 
 /**
  * Utility hook to check if cache is available for a specific key
  */
-export const useIsCached = (type: 'movies' | 'movieDetails' | 'genres', key?: string | number) => {
+export const useIsCached = (
+  type: 'movies' | 'movieDetails' | 'genres',
+  key?: string | number
+) => {
   return useCacheStore((state) => {
     switch (type) {
       case 'movies':
@@ -275,17 +292,17 @@ export const useIsCached = (type: 'movies' | 'movieDetails' | 'genres', key?: st
         const movieCache = state.movies[key];
         if (!movieCache) return false;
         return Date.now() - movieCache.timestamp <= movieCache.ttl;
-      
+
       case 'movieDetails':
         if (typeof key !== 'number') return false;
         const detailsCache = state.movieDetails[key];
         if (!detailsCache) return false;
         return Date.now() - detailsCache.timestamp <= detailsCache.ttl;
-      
+
       case 'genres':
         if (!state.genres) return false;
         return Date.now() - state.genres.timestamp <= state.genres.ttl;
-      
+
       default:
         return false;
     }

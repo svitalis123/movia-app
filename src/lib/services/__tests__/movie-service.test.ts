@@ -451,12 +451,15 @@ describe('TMDBMovieService', () => {
 
       const result = await movieService.getMovieRecommendations(1);
 
-      expect(mockedHttpClient.get).toHaveBeenCalledWith('/movie/1/recommendations', {
-        params: {
-          page: 1,
-          language: 'en-US',
-        },
-      });
+      expect(mockedHttpClient.get).toHaveBeenCalledWith(
+        '/movie/1/recommendations',
+        {
+          params: {
+            page: 1,
+            language: 'en-US',
+          },
+        }
+      );
       expect(result).toEqual(mockRecommendationsResponse);
     });
 
@@ -465,39 +468,60 @@ describe('TMDBMovieService', () => {
 
       await movieService.getMovieRecommendations(1, 2);
 
-      expect(mockedHttpClient.get).toHaveBeenCalledWith('/movie/1/recommendations', {
-        params: {
-          page: 2,
-          language: 'en-US',
-        },
-      });
+      expect(mockedHttpClient.get).toHaveBeenCalledWith(
+        '/movie/1/recommendations',
+        {
+          params: {
+            page: 2,
+            language: 'en-US',
+          },
+        }
+      );
     });
 
     it('should throw error for invalid movie ID', async () => {
-      await expect(movieService.getMovieRecommendations(0)).rejects.toThrow(APIError);
-      await expect(movieService.getMovieRecommendations(-1)).rejects.toThrow(APIError);
+      await expect(movieService.getMovieRecommendations(0)).rejects.toThrow(
+        APIError
+      );
+      await expect(movieService.getMovieRecommendations(-1)).rejects.toThrow(
+        APIError
+      );
     });
   });
 
   describe('error handling and retries', () => {
     it('should handle rate limiting errors', async () => {
-      const rateLimitError = new APIError('Rate limit exceeded', 429, 'getPopularMovies');
+      const rateLimitError = new APIError(
+        'Rate limit exceeded',
+        429,
+        'getPopularMovies'
+      );
       mockedHttpClient.get.mockRejectedValue(rateLimitError);
 
-      await expect(movieService.getPopularMovies()).rejects.toThrow('Rate limit exceeded');
+      await expect(movieService.getPopularMovies()).rejects.toThrow(
+        'Rate limit exceeded'
+      );
     });
 
     it('should handle server errors', async () => {
-      const serverError = new APIError('Internal server error', 500, 'getPopularMovies');
+      const serverError = new APIError(
+        'Internal server error',
+        500,
+        'getPopularMovies'
+      );
       mockedHttpClient.get.mockRejectedValue(serverError);
 
-      await expect(movieService.getPopularMovies()).rejects.toThrow('Internal server error');
+      await expect(movieService.getPopularMovies()).rejects.toThrow(
+        'Internal server error'
+      );
     });
 
     it('should handle malformed responses', async () => {
       mockedHttpClient.get.mockResolvedValue(null);
 
-      await expect(movieService.getPopularMovies()).rejects.toThrow('Invalid response format');
+      await expect(movieService.getPopularMovies()).rejects.toThrow(
+        'Invalid response format'
+      );
     });
 
     it('should handle empty response arrays', async () => {
@@ -524,8 +548,13 @@ describe('TMDBMovieService', () => {
       for (const page of invalidPages) {
         if (page <= 0 || page > 1000 || !Number.isFinite(page)) {
           // These should be normalized to valid ranges
-          mockedHttpClient.get.mockResolvedValue({ page: 1, results: [], total_pages: 1, total_results: 0 });
-          
+          mockedHttpClient.get.mockResolvedValue({
+            page: 1,
+            results: [],
+            total_pages: 1,
+            total_results: 0,
+          });
+
           await movieService.getPopularMovies(page);
           await movieService.searchMovies('test', page);
           await movieService.getMoviesByGenre(28, page);
@@ -540,7 +569,9 @@ describe('TMDBMovieService', () => {
 
       for (const query of invalidQueries) {
         if (query.trim().length < 2) {
-          await expect(movieService.searchMovies(query)).rejects.toThrow(APIError);
+          await expect(movieService.searchMovies(query)).rejects.toThrow(
+            APIError
+          );
         }
       }
     });
@@ -549,10 +580,18 @@ describe('TMDBMovieService', () => {
       const invalidIds = [0, -1, NaN, Infinity, -Infinity];
 
       for (const id of invalidIds) {
-        await expect(movieService.getMovieDetails(id)).rejects.toThrow(APIError);
-        await expect(movieService.getMovieCredits(id)).rejects.toThrow(APIError);
-        await expect(movieService.getSimilarMovies(id)).rejects.toThrow(APIError);
-        await expect(movieService.getMovieRecommendations(id)).rejects.toThrow(APIError);
+        await expect(movieService.getMovieDetails(id)).rejects.toThrow(
+          APIError
+        );
+        await expect(movieService.getMovieCredits(id)).rejects.toThrow(
+          APIError
+        );
+        await expect(movieService.getSimilarMovies(id)).rejects.toThrow(
+          APIError
+        );
+        await expect(movieService.getMovieRecommendations(id)).rejects.toThrow(
+          APIError
+        );
       }
     });
 
@@ -560,7 +599,9 @@ describe('TMDBMovieService', () => {
       const invalidGenreIds = [0, -1, NaN, Infinity];
 
       for (const genreId of invalidGenreIds) {
-        await expect(movieService.getMoviesByGenre(genreId)).rejects.toThrow(APIError);
+        await expect(movieService.getMoviesByGenre(genreId)).rejects.toThrow(
+          APIError
+        );
       }
     });
   });
@@ -597,7 +638,9 @@ describe('TMDBMovieService', () => {
     it('should generate backdrop URLs with custom size', () => {
       const backdropPath = '/test-backdrop.jpg';
       const result = movieService.getBackdropUrl(backdropPath, 'original');
-      expect(result).toBe('https://image.tmdb.org/t/p/original/test-backdrop.jpg');
+      expect(result).toBe(
+        'https://image.tmdb.org/t/p/original/test-backdrop.jpg'
+      );
     });
 
     it('should return null for null backdrop path', () => {

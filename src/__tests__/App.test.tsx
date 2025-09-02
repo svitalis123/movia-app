@@ -23,9 +23,13 @@ vi.mock('../components/auth', () => ({
 
 vi.mock('../pages', () => ({
   HomePage: vi.fn(() => <div data-testid="home-page">Home Page</div>),
-  MovieDetailsPage: vi.fn(() => <div data-testid="movie-details-page">Movie Details Page</div>),
+  MovieDetailsPage: vi.fn(() => (
+    <div data-testid="movie-details-page">Movie Details Page</div>
+  )),
   SearchPage: vi.fn(() => <div data-testid="search-page">Search Page</div>),
-  NotFoundPage: vi.fn(() => <div data-testid="not-found-page">Not Found Page</div>),
+  NotFoundPage: vi.fn(() => (
+    <div data-testid="not-found-page">Not Found Page</div>
+  )),
   SignInPage: vi.fn(() => <div data-testid="sign-in-page">Sign In Page</div>),
   SignUpPage: vi.fn(() => <div data-testid="sign-up-page">Sign Up Page</div>),
 }));
@@ -56,7 +60,9 @@ vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    BrowserRouter: vi.fn(({ children }) => <div data-testid="browser-router">{children}</div>),
+    BrowserRouter: vi.fn(({ children }) => (
+      <div data-testid="browser-router">{children}</div>
+    )),
     Routes: vi.fn(({ children }) => <div data-testid="routes">{children}</div>),
     Route: vi.fn(({ element }) => <div data-testid="route">{element}</div>),
     Navigate: vi.fn(() => <div data-testid="navigate">Navigate</div>),
@@ -77,28 +83,28 @@ describe('App Component', () => {
 
   it('renders with ClerkAuthProvider wrapper', () => {
     renderApp();
-    
+
     expect(screen.getByTestId('clerk-auth-provider')).toBeInTheDocument();
     expect(screen.getByTestId('error-boundary')).toBeInTheDocument();
   });
 
   it('renders router components', () => {
     renderApp();
-    
+
     expect(screen.getByTestId('browser-router')).toBeInTheDocument();
     expect(screen.getByTestId('routes')).toBeInTheDocument();
   });
 
   it('renders SignedIn and SignedOut components', () => {
     renderApp();
-    
+
     expect(screen.getAllByTestId('signed-in').length).toBeGreaterThan(0);
     expect(screen.getAllByTestId('signed-out').length).toBeGreaterThan(0);
   });
 
   it('renders route components', () => {
     renderApp();
-    
+
     // Should render multiple Route components
     const routes = screen.getAllByTestId('route');
     expect(routes.length).toBeGreaterThan(0);
@@ -106,19 +112,21 @@ describe('App Component', () => {
 
   it('has proper app structure with min-h-screen', () => {
     renderApp();
-    
-    const appContainer = screen.getByTestId('browser-router').querySelector('.min-h-screen');
+
+    const appContainer = screen
+      .getByTestId('browser-router')
+      .querySelector('.min-h-screen');
     expect(appContainer).toBeInTheDocument();
     expect(appContainer).toHaveClass('bg-gray-50');
   });
 
   it('renders notification components', () => {
     renderApp();
-    
+
     // Verify ToastContainer is rendered
     expect(screen.getByTestId('toast-container')).toBeInTheDocument();
     expect(screen.getByText('Toast Container')).toBeInTheDocument();
-    
+
     // Verify GlobalLoading is rendered
     expect(screen.getByTestId('global-loading')).toBeInTheDocument();
     expect(screen.getByText('Global Loading')).toBeInTheDocument();

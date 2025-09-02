@@ -43,7 +43,11 @@ describe('Clerk Auth Integration Utils', () => {
   describe('Authentication Status Logic', () => {
     it('should determine authenticated state correctly', () => {
       // Test authentication logic
-      const isAuthenticated = (isLoaded: boolean, isSignedIn: boolean, sessionId: string | null) => {
+      const isAuthenticated = (
+        isLoaded: boolean,
+        isSignedIn: boolean,
+        sessionId: string | null
+      ) => {
         return isLoaded && !!isSignedIn && !!sessionId;
       };
 
@@ -71,8 +75,6 @@ describe('Clerk Auth Integration Utils', () => {
     });
   });
 
-
-
   describe('User Transformation', () => {
     it('should transform Clerk user correctly', () => {
       const transformClerkUser = (clerkUser: any): User | null => {
@@ -84,8 +86,12 @@ describe('Clerk Auth Integration Utils', () => {
           firstName: clerkUser.firstName || undefined,
           lastName: clerkUser.lastName || undefined,
           imageUrl: clerkUser.imageUrl || undefined,
-          createdAt: clerkUser.createdAt ? new Date(clerkUser.createdAt).toISOString() : undefined,
-          lastLoginAt: clerkUser.lastSignInAt ? new Date(clerkUser.lastSignInAt).toISOString() : undefined,
+          createdAt: clerkUser.createdAt
+            ? new Date(clerkUser.createdAt).toISOString()
+            : undefined,
+          lastLoginAt: clerkUser.lastSignInAt
+            ? new Date(clerkUser.lastSignInAt).toISOString()
+            : undefined,
         };
       };
 
@@ -121,8 +127,12 @@ describe('Clerk Auth Integration Utils', () => {
           firstName: clerkUser.firstName || undefined,
           lastName: clerkUser.lastName || undefined,
           imageUrl: clerkUser.imageUrl || undefined,
-          createdAt: clerkUser.createdAt ? new Date(clerkUser.createdAt).toISOString() : undefined,
-          lastLoginAt: clerkUser.lastSignInAt ? new Date(clerkUser.lastSignInAt).toISOString() : undefined,
+          createdAt: clerkUser.createdAt
+            ? new Date(clerkUser.createdAt).toISOString()
+            : undefined,
+          lastLoginAt: clerkUser.lastSignInAt
+            ? new Date(clerkUser.lastSignInAt).toISOString()
+            : undefined,
         };
       };
 
@@ -156,8 +166,12 @@ describe('Clerk Auth Integration Utils', () => {
       };
 
       expect(hasCompleteProfile(mockUser)).toBe(true);
-      expect(hasCompleteProfile({ ...mockUser, firstName: undefined })).toBe(false);
-      expect(hasCompleteProfile({ ...mockUser, lastName: undefined })).toBe(false);
+      expect(hasCompleteProfile({ ...mockUser, firstName: undefined })).toBe(
+        false
+      );
+      expect(hasCompleteProfile({ ...mockUser, lastName: undefined })).toBe(
+        false
+      );
       expect(hasCompleteProfile({ ...mockUser, email: '' })).toBe(false);
       expect(hasCompleteProfile(null)).toBe(false);
     });

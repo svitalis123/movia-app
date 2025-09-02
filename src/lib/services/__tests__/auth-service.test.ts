@@ -55,7 +55,9 @@ describe('AuthService', () => {
 
       it('should return first name when only first name is available', () => {
         const userWithFirstNameOnly = { ...mockUser, lastName: undefined };
-        expect(authUtils.getUserDisplayName(userWithFirstNameOnly)).toBe('John');
+        expect(authUtils.getUserDisplayName(userWithFirstNameOnly)).toBe(
+          'John'
+        );
       });
 
       it('should return email username when no names are available', () => {
@@ -111,8 +113,12 @@ describe('AuthService', () => {
       // Since we can't easily test the class methods without mocking Clerk extensively,
       // we'll focus on testing the utility functions and integration patterns
       expect(() => {
-        throw new Error('Login should be handled by Clerk components (SignIn, SignUp)');
-      }).toThrow('Login should be handled by Clerk components (SignIn, SignUp)');
+        throw new Error(
+          'Login should be handled by Clerk components (SignIn, SignUp)'
+        );
+      }).toThrow(
+        'Login should be handled by Clerk components (SignIn, SignUp)'
+      );
     });
 
     it('should throw error for direct logout call', () => {
@@ -129,7 +135,9 @@ describe('AuthService', () => {
 
     it('should throw error for direct isAuthenticated call', () => {
       expect(() => {
-        throw new Error('isAuthenticated should be called through useAuth hook');
+        throw new Error(
+          'isAuthenticated should be called through useAuth hook'
+        );
       }).toThrow('isAuthenticated should be called through useAuth hook');
     });
   });
@@ -157,8 +165,12 @@ describe('Clerk Integration Patterns', () => {
       firstName: mockClerkUser.firstName || undefined,
       lastName: mockClerkUser.lastName || undefined,
       imageUrl: mockClerkUser.imageUrl || undefined,
-      createdAt: mockClerkUser.createdAt ? new Date(mockClerkUser.createdAt).toISOString() : undefined,
-      lastLoginAt: mockClerkUser.lastSignInAt ? new Date(mockClerkUser.lastSignInAt).toISOString() : undefined,
+      createdAt: mockClerkUser.createdAt
+        ? new Date(mockClerkUser.createdAt).toISOString()
+        : undefined,
+      lastLoginAt: mockClerkUser.lastSignInAt
+        ? new Date(mockClerkUser.lastSignInAt).toISOString()
+        : undefined,
     };
 
     expect(transformedUser).toEqual({
@@ -196,8 +208,12 @@ describe('Clerk Integration Patterns', () => {
       firstName: mockClerkUser.firstName || undefined,
       lastName: mockClerkUser.lastName || undefined,
       imageUrl: mockClerkUser.imageUrl || undefined,
-      createdAt: mockClerkUser.createdAt ? new Date(mockClerkUser.createdAt).toISOString() : undefined,
-      lastLoginAt: mockClerkUser.lastSignInAt ? new Date(mockClerkUser.lastSignInAt).toISOString() : undefined,
+      createdAt: mockClerkUser.createdAt
+        ? new Date(mockClerkUser.createdAt).toISOString()
+        : undefined,
+      lastLoginAt: mockClerkUser.lastSignInAt
+        ? new Date(mockClerkUser.lastSignInAt).toISOString()
+        : undefined,
     };
 
     expect(transformedUser).toEqual({
@@ -228,8 +244,12 @@ describe('Clerk Integration Patterns', () => {
       firstName: mockClerkUser.firstName || undefined,
       lastName: mockClerkUser.lastName || undefined,
       imageUrl: mockClerkUser.imageUrl || undefined,
-      createdAt: mockClerkUser.createdAt ? new Date(mockClerkUser.createdAt).toISOString() : undefined,
-      lastLoginAt: mockClerkUser.lastSignInAt ? new Date(mockClerkUser.lastSignInAt).toISOString() : undefined,
+      createdAt: mockClerkUser.createdAt
+        ? new Date(mockClerkUser.createdAt).toISOString()
+        : undefined,
+      lastLoginAt: mockClerkUser.lastSignInAt
+        ? new Date(mockClerkUser.lastSignInAt).toISOString()
+        : undefined,
     };
 
     expect(transformedUser).toEqual({
@@ -287,7 +307,7 @@ describe('Authentication Error Scenarios', () => {
   it('should handle network errors during authentication', () => {
     // Mock network error scenario
     const networkError = new Error('Network connection failed');
-    
+
     expect(() => {
       throw networkError;
     }).toThrow('Network connection failed');
@@ -296,7 +316,7 @@ describe('Authentication Error Scenarios', () => {
   it('should handle invalid credentials', () => {
     // Mock invalid credentials scenario
     const authError = new Error('Invalid credentials');
-    
+
     expect(() => {
       throw authError;
     }).toThrow('Invalid credentials');
@@ -305,7 +325,7 @@ describe('Authentication Error Scenarios', () => {
   it('should handle session expiration', () => {
     // Mock session expiration scenario
     const sessionError = new Error('Session expired');
-    
+
     expect(() => {
       throw sessionError;
     }).toThrow('Session expired');

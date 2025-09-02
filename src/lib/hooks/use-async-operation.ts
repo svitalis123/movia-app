@@ -3,7 +3,11 @@ import { useToast } from '../stores/toast-store';
 import { useUIActions } from '../stores/ui-store';
 
 interface AsyncOperationOptions {
-  loadingKey?: 'fetchingMovies' | 'fetchingMovieDetails' | 'searching' | 'authenticating';
+  loadingKey?:
+    | 'fetchingMovies'
+    | 'fetchingMovieDetails'
+    | 'searching'
+    | 'authenticating';
   showSuccessToast?: boolean;
   showErrorToast?: boolean;
   successMessage?: string;
@@ -31,55 +35,66 @@ export function useAsyncOperation<T>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<T | null>(null);
-  
+
   const { showSuccess, showError } = useToast();
   const { setLoadingState, setGlobalLoading } = useUIActions();
 
-  const execute = useCallback(async (...args: unknown[]): Promise<T | undefined> => {
-    try {
-      setLoading(true);
-      setError(null);
+  const execute = useCallback(
+    async (...args: unknown[]): Promise<T | undefined> => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      // Set loading states
-      if (options.loadingKey) {
-        setLoadingState(options.loadingKey, true);
+        // Set loading states
+        if (options.loadingKey) {
+          setLoadingState(options.loadingKey, true);
+        }
+        if (options.useGlobalLoading) {
+          setGlobalLoading(true, options.globalLoadingMessage);
+        }
+
+        const result = await asyncFunction(...args);
+        setData(result);
+
+        // Show success toast if configured
+        if (options.showSuccessToast && options.successMessage) {
+          showSuccess(options.successMessage);
+        }
+
+        return result;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'An unexpected error occurred';
+        setError(errorMessage);
+
+        // Show error toast if configured
+        if (options.showErrorToast !== false) {
+          const displayMessage = options.errorMessage || errorMessage;
+          showError(displayMessage, 'Operation Failed');
+        }
+
+        return undefined;
+      } finally {
+        setLoading(false);
+
+        // Clear loading states
+        if (options.loadingKey) {
+          setLoadingState(options.loadingKey, false);
+        }
+        if (options.useGlobalLoading) {
+          setGlobalLoading(false);
+        }
       }
-      if (options.useGlobalLoading) {
-        setGlobalLoading(true, options.globalLoadingMessage);
-      }
-
-      const result = await asyncFunction(...args);
-      setData(result);
-
-      // Show success toast if configured
-      if (options.showSuccessToast && options.successMessage) {
-        showSuccess(options.successMessage);
-      }
-
-      return result;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
-      setError(errorMessage);
-
-      // Show error toast if configured
-      if (options.showErrorToast !== false) {
-        const displayMessage = options.errorMessage || errorMessage;
-        showError(displayMessage, 'Operation Failed');
-      }
-
-      return undefined;
-    } finally {
-      setLoading(false);
-
-      // Clear loading states
-      if (options.loadingKey) {
-        setLoadingState(options.loadingKey, false);
-      }
-      if (options.useGlobalLoading) {
-        setGlobalLoading(false);
-      }
-    }
-  }, [asyncFunction, options, showSuccess, showError, setLoadingState, setGlobalLoading]);
+    },
+    [
+      asyncFunction,
+      options,
+      showSuccess,
+      showError,
+      setLoadingState,
+      setGlobalLoading,
+    ]
+  );
 
   const reset = useCallback(() => {
     setLoading(false);
@@ -106,54 +121,65 @@ export function useAsyncAction(
 ) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const { showSuccess, showError } = useToast();
   const { setLoadingState, setGlobalLoading } = useUIActions();
 
-  const execute = useCallback(async (...args: unknown[]): Promise<boolean> => {
-    try {
-      setLoading(true);
-      setError(null);
+  const execute = useCallback(
+    async (...args: unknown[]): Promise<boolean> => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      // Set loading states
-      if (options.loadingKey) {
-        setLoadingState(options.loadingKey, true);
+        // Set loading states
+        if (options.loadingKey) {
+          setLoadingState(options.loadingKey, true);
+        }
+        if (options.useGlobalLoading) {
+          setGlobalLoading(true, options.globalLoadingMessage);
+        }
+
+        await asyncFunction(...args);
+
+        // Show success toast if configured
+        if (options.showSuccessToast && options.successMessage) {
+          showSuccess(options.successMessage);
+        }
+
+        return true;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'An unexpected error occurred';
+        setError(errorMessage);
+
+        // Show error toast if configured
+        if (options.showErrorToast !== false) {
+          const displayMessage = options.errorMessage || errorMessage;
+          showError(displayMessage, 'Action Failed');
+        }
+
+        return false;
+      } finally {
+        setLoading(false);
+
+        // Clear loading states
+        if (options.loadingKey) {
+          setLoadingState(options.loadingKey, false);
+        }
+        if (options.useGlobalLoading) {
+          setGlobalLoading(false);
+        }
       }
-      if (options.useGlobalLoading) {
-        setGlobalLoading(true, options.globalLoadingMessage);
-      }
-
-      await asyncFunction(...args);
-
-      // Show success toast if configured
-      if (options.showSuccessToast && options.successMessage) {
-        showSuccess(options.successMessage);
-      }
-
-      return true;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
-      setError(errorMessage);
-
-      // Show error toast if configured
-      if (options.showErrorToast !== false) {
-        const displayMessage = options.errorMessage || errorMessage;
-        showError(displayMessage, 'Action Failed');
-      }
-
-      return false;
-    } finally {
-      setLoading(false);
-
-      // Clear loading states
-      if (options.loadingKey) {
-        setLoadingState(options.loadingKey, false);
-      }
-      if (options.useGlobalLoading) {
-        setGlobalLoading(false);
-      }
-    }
-  }, [asyncFunction, options, showSuccess, showError, setLoadingState, setGlobalLoading]);
+    },
+    [
+      asyncFunction,
+      options,
+      showSuccess,
+      showError,
+      setLoadingState,
+      setGlobalLoading,
+    ]
+  );
 
   const reset = useCallback(() => {
     setLoading(false);

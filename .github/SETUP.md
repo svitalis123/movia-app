@@ -27,12 +27,14 @@ VERCEL_PROJECT_ID=your_project_id
 ### How to Get Each Secret
 
 #### VITE_CLERK_PUBLISHABLE_KEY
+
 1. Go to [Clerk Dashboard](https://dashboard.clerk.com)
 2. Select your application
 3. Go to "API Keys" section
 4. Copy the "Publishable key"
 
 #### VITE_TMDB_API_KEY
+
 1. Go to [TMDB](https://www.themoviedb.org)
 2. Create an account and log in
 3. Go to Settings > API
@@ -40,12 +42,14 @@ VERCEL_PROJECT_ID=your_project_id
 5. Copy the API key (v3 auth)
 
 #### VERCEL_TOKEN
+
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Go to Settings > Tokens
 3. Create a new token
 4. Copy the token value
 
 #### VERCEL_ORG_ID and VERCEL_PROJECT_ID
+
 1. Install Vercel CLI: `npm i -g vercel`
 2. Run `vercel link` in your project directory
 3. Follow the prompts to link your project
@@ -54,6 +58,7 @@ VERCEL_PROJECT_ID=your_project_id
 ## 2. Vercel Project Setup
 
 ### Option A: Using Vercel CLI
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -66,6 +71,7 @@ vercel project ls
 ```
 
 ### Option B: Using Vercel Dashboard
+
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Click "New Project"
 3. Import your GitHub repository
@@ -88,7 +94,9 @@ Set up branch protection for the `main` branch:
    - [ ] Include administrators
 
 ### Required Status Checks
+
 Add these status checks:
+
 - `Code Quality Checks / code-quality`
 - `Code Quality & Testing / quality-and-test`
 - `E2E Tests / e2e-tests`
@@ -100,6 +108,7 @@ Add these status checks:
 ### Test Workflow Triggers
 
 1. **Push to main branch**:
+
    ```bash
    git checkout main
    git commit --allow-empty -m "test: trigger CI/CD pipeline"
@@ -107,6 +116,7 @@ Add these status checks:
    ```
 
 2. **Create a pull request**:
+
    ```bash
    git checkout -b test/ci-cd-setup
    echo "# Test" > test.md
@@ -125,6 +135,7 @@ Add these status checks:
 ### Verify Workflow Results
 
 Check that all jobs complete successfully:
+
 - [ ] Code quality checks pass
 - [ ] Unit tests pass with coverage
 - [ ] E2E tests pass
@@ -135,12 +146,14 @@ Check that all jobs complete successfully:
 ## 5. Monitoring Setup (Optional)
 
 ### Codecov Integration
+
 1. Go to [Codecov](https://codecov.io)
 2. Sign up with GitHub
 3. Add your repository
 4. Coverage reports will be automatically uploaded
 
 ### Vercel Analytics
+
 1. Go to your Vercel project dashboard
 2. Enable Analytics in project settings
 3. Monitor performance and usage
@@ -150,21 +163,25 @@ Check that all jobs complete successfully:
 ### Common Issues and Solutions
 
 #### Workflow Fails with "Secret not found"
+
 - Verify all secrets are configured in repository settings
 - Check secret names match exactly (case-sensitive)
 - Ensure secrets are available to the repository (not organization-only)
 
 #### Build Fails with Environment Variables
+
 - Check that all required environment variables are set
 - Verify variable names in workflow files
 - Test build locally with same environment
 
 #### Deployment Fails
+
 - Verify Vercel token has correct permissions
 - Check that project is linked correctly
 - Ensure build output directory is correct (`dist`)
 
 #### Tests Fail in CI but Pass Locally
+
 - Check Node.js version consistency
 - Verify all dependencies are installed
 - Review test environment setup
@@ -179,12 +196,14 @@ Check that all jobs complete successfully:
 ## 7. Maintenance
 
 ### Regular Tasks
+
 - [ ] Review Dependabot PRs weekly
 - [ ] Monitor workflow performance monthly
 - [ ] Update Node.js version quarterly
 - [ ] Review security audit results weekly
 
 ### Updating Workflows
+
 - Keep GitHub Actions up to date
 - Monitor for new security best practices
 - Optimize workflow performance as needed
@@ -192,11 +211,14 @@ Check that all jobs complete successfully:
 ## 8. Advanced Configuration
 
 ### Custom Environments
+
 Add custom environments in repository settings:
+
 - `staging`: For staging deployments
 - `production`: For production deployments
 
 ### Slack Notifications (Optional)
+
 Add Slack webhook for deployment notifications:
 
 ```yaml
@@ -208,6 +230,7 @@ Add Slack webhook for deployment notifications:
 ```
 
 ### Performance Monitoring
+
 Add bundle size monitoring:
 
 ```yaml
@@ -221,6 +244,7 @@ Add bundle size monitoring:
 ## Success Criteria
 
 Your CI/CD setup is complete when:
+
 - [ ] All workflows run successfully
 - [ ] Pull requests trigger preview deployments
 - [ ] Main branch pushes deploy to production
@@ -232,6 +256,7 @@ Your CI/CD setup is complete when:
 ## Next Steps
 
 After setup is complete:
+
 1. Create your first feature branch and PR
 2. Verify the full CI/CD flow works
 3. Set up monitoring and alerts

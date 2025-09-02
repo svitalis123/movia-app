@@ -2,7 +2,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useMovieStore } from '../movie-store';
 import { useCacheStore } from '../cache-store';
 import { movieService } from '../../services/movie-service';
-import type { TMDBResponse, TMDBMovie, TMDBMovieDetails, TMDBCredits } from '../../types';
+import type {
+  TMDBResponse,
+  TMDBMovie,
+  TMDBMovieDetails,
+  TMDBCredits,
+} from '../../types';
 
 // Mock the movie service
 vi.mock('../../services/movie-service', () => ({
@@ -126,7 +131,9 @@ describe('Movie Store', () => {
 
   describe('fetchPopularMovies', () => {
     it('should fetch popular movies successfully', async () => {
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(mockTMDBResponse);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        mockTMDBResponse
+      );
 
       const store = useMovieStore.getState();
       await store.fetchPopularMovies(1);
@@ -142,7 +149,9 @@ describe('Movie Store', () => {
 
     it('should handle fetch popular movies error', async () => {
       const errorMessage = 'Network error';
-      vi.mocked(movieService.getPopularMovies).mockRejectedValue(new Error(errorMessage));
+      vi.mocked(movieService.getPopularMovies).mockRejectedValue(
+        new Error(errorMessage)
+      );
 
       const store = useMovieStore.getState();
       await store.fetchPopularMovies(1);
@@ -180,8 +189,12 @@ describe('Movie Store', () => {
 
   describe('fetchMovieDetails', () => {
     it('should fetch movie details successfully', async () => {
-      vi.mocked(movieService.getMovieDetails).mockResolvedValue(mockTMDBMovieDetails);
-      vi.mocked(movieService.getMovieCredits).mockResolvedValue(mockTMDBCredits);
+      vi.mocked(movieService.getMovieDetails).mockResolvedValue(
+        mockTMDBMovieDetails
+      );
+      vi.mocked(movieService.getMovieCredits).mockResolvedValue(
+        mockTMDBCredits
+      );
 
       const store = useMovieStore.getState();
       await store.fetchMovieDetails(1);
@@ -197,7 +210,9 @@ describe('Movie Store', () => {
 
     it('should handle fetch movie details error', async () => {
       const errorMessage = 'Movie not found';
-      vi.mocked(movieService.getMovieDetails).mockRejectedValue(new Error(errorMessage));
+      vi.mocked(movieService.getMovieDetails).mockRejectedValue(
+        new Error(errorMessage)
+      );
 
       const store = useMovieStore.getState();
       await store.fetchMovieDetails(1);
@@ -246,7 +261,9 @@ describe('Movie Store', () => {
 
     it('should handle search error', async () => {
       const errorMessage = 'Search failed';
-      vi.mocked(movieService.searchMovies).mockRejectedValue(new Error(errorMessage));
+      vi.mocked(movieService.searchMovies).mockRejectedValue(
+        new Error(errorMessage)
+      );
 
       const store = useMovieStore.getState();
       await store.searchMovies('test query', 1);
@@ -377,7 +394,7 @@ describe('Movie Store', () => {
 
     it('should clear error', () => {
       useMovieStore.setState({ error: 'Some error' });
-      
+
       const store = useMovieStore.getState();
       store.clearError();
 

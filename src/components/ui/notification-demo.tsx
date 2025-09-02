@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useToast } from '../../lib/stores/toast-store';
-import { useAsyncOperation, useAsyncAction } from '../../lib/hooks/use-async-operation';
+import {
+  useAsyncOperation,
+  useAsyncAction,
+} from '../../lib/hooks/use-async-operation';
 import { enhancedMovieService } from '../../lib/services/enhanced-movie-service';
 import { useUIActions } from '../../lib/stores/ui-store';
 
@@ -18,9 +21,10 @@ export function NotificationDemo() {
     execute: fetchMovieDetails,
     loading: movieLoading,
     error: movieError,
-    data: movieData
+    data: movieData,
   } = useAsyncOperation(
-    (...args: unknown[]) => enhancedMovieService.getMovieDetails(parseInt(args[0] as string)),
+    (...args: unknown[]) =>
+      enhancedMovieService.getMovieDetails(parseInt(args[0] as string)),
     {
       loadingKey: 'fetchingMovieDetails',
       showSuccessToast: true,
@@ -33,11 +37,11 @@ export function NotificationDemo() {
   const {
     execute: performAction,
     loading: actionLoading,
-    error: actionError
+    error: actionError,
   } = useAsyncAction(
     async () => {
       // Simulate an async action
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       if (Math.random() > 0.5) {
         throw new Error('Random action failed');
       }
@@ -52,15 +56,15 @@ export function NotificationDemo() {
 
   const handleToastExamples = () => {
     showSuccess('This is a success message!', 'Success');
-    
+
     setTimeout(() => {
       showInfo('This is an informational message', 'Info');
     }, 1000);
-    
+
     setTimeout(() => {
       showWarning('This is a warning message', 'Warning');
     }, 2000);
-    
+
     setTimeout(() => {
       showError('This is an error message that persists', 'Error');
     }, 3000);
@@ -79,7 +83,7 @@ export function NotificationDemo() {
       <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
         Notification System Demo
       </h2>
-      
+
       <div className="space-y-4">
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
           <h3 className="text-lg font-semibold mb-3">Toast Notifications</h3>
@@ -102,10 +106,14 @@ export function NotificationDemo() {
         </div>
 
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
-          <h3 className="text-lg font-semibold mb-3">Async Operation with Notifications</h3>
+          <h3 className="text-lg font-semibold mb-3">
+            Async Operation with Notifications
+          </h3>
           <div className="space-y-3">
             <div>
-              <label className="block text-sm font-medium mb-1">Movie ID:</label>
+              <label className="block text-sm font-medium mb-1">
+                Movie ID:
+              </label>
               <input
                 type="text"
                 value={movieId}
@@ -121,19 +129,20 @@ export function NotificationDemo() {
             >
               {movieLoading ? 'Loading...' : 'Fetch Movie Details'}
             </button>
-            {movieError && (
-              <p className="text-red-600 text-sm">{movieError}</p>
-            )}
+            {movieError && <p className="text-red-600 text-sm">{movieError}</p>}
             {movieData && (
               <div className="text-sm text-gray-600 dark:text-gray-300">
-                Loaded: {movieData.title} ({movieData.release_date?.split('-')[0]})
+                Loaded: {movieData.title} (
+                {movieData.release_date?.split('-')[0]})
               </div>
             )}
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
-          <h3 className="text-lg font-semibold mb-3">Async Action with Global Loading</h3>
+          <h3 className="text-lg font-semibold mb-3">
+            Async Action with Global Loading
+          </h3>
           <button
             onClick={() => performAction()}
             disabled={actionLoading}
@@ -150,7 +159,9 @@ export function NotificationDemo() {
       <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
         <h3 className="text-lg font-semibold mb-2">Features Implemented:</h3>
         <ul className="list-disc list-inside space-y-1 text-sm text-gray-600 dark:text-gray-300">
-          <li>Toast notifications for user actions (success, error, warning, info)</li>
+          <li>
+            Toast notifications for user actions (success, error, warning, info)
+          </li>
           <li>Loading states for all async operations</li>
           <li>User-friendly error messages</li>
           <li>Global loading overlay for long operations</li>

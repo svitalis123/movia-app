@@ -15,10 +15,7 @@ export function GlobalLoading() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
       <div className="bg-background border rounded-lg p-6 shadow-lg min-w-64">
-        <LoadingSpinner 
-          size="large" 
-          message={message || 'Loading...'} 
-        />
+        <LoadingSpinner size="large" message={message || 'Loading...'} />
       </div>
     </div>
   );

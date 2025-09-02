@@ -230,7 +230,10 @@ export interface UIState {
 
 export interface CacheState {
   movies: Record<string, { data: Movie[]; timestamp: number; ttl: number }>;
-  movieDetails: Record<number, { data: MovieDetails; timestamp: number; ttl: number }>;
+  movieDetails: Record<
+    number,
+    { data: MovieDetails; timestamp: number; ttl: number }
+  >;
   genres: { data: Genre[]; timestamp: number; ttl: number } | null;
 }
 
@@ -266,7 +269,10 @@ export interface MovieActions {
   updatePagination: (pagination: Partial<PaginationState>) => void;
   fetchMoviesByGenre: (genreId: number, page?: number) => Promise<void>;
   fetchSimilarMovies: (movieId: number, page?: number) => Promise<Movie[]>;
-  fetchMovieRecommendations: (movieId: number, page?: number) => Promise<Movie[]>;
+  fetchMovieRecommendations: (
+    movieId: number,
+    page?: number
+  ) => Promise<Movie[]>;
   goToNextPage: (searchQuery?: string) => Promise<void>;
   goToPreviousPage: (searchQuery?: string) => Promise<void>;
   goToPage: (page: number, searchQuery?: string) => Promise<void>;
@@ -283,14 +289,22 @@ export interface UIActions {
 export interface CacheActions {
   setCachedMovies: (key: string, movies: Movie[], ttl?: number) => void;
   getCachedMovies: (key: string) => Movie[] | null;
-  setCachedMovieDetails: (movieId: number, details: MovieDetails, ttl?: number) => void;
+  setCachedMovieDetails: (
+    movieId: number,
+    details: MovieDetails,
+    ttl?: number
+  ) => void;
   getCachedMovieDetails: (movieId: number) => MovieDetails | null;
   setCachedGenres: (genres: Genre[], ttl?: number) => void;
   getCachedGenres: () => Genre[] | null;
   clearCache: (type?: 'movies' | 'movieDetails' | 'genres') => void;
 }
 
-export interface StoreActions extends AuthActions, MovieActions, UIActions, CacheActions {}
+export interface StoreActions
+  extends AuthActions,
+    MovieActions,
+    UIActions,
+    CacheActions {}
 
 // ============================================================================
 // Component Props Interfaces
@@ -413,9 +427,18 @@ export interface MovieService {
   getMovieCredits(movieId: number): Promise<TMDBCredits>;
   searchMovies(query: string, page?: number): Promise<TMDBResponse<TMDBMovie>>;
   getGenres(): Promise<{ genres: TMDBGenre[] }>;
-  getMoviesByGenre(genreId: number, page?: number): Promise<TMDBResponse<TMDBMovie>>;
-  getSimilarMovies(movieId: number, page?: number): Promise<TMDBResponse<TMDBMovie>>;
-  getMovieRecommendations(movieId: number, page?: number): Promise<TMDBResponse<TMDBMovie>>;
+  getMoviesByGenre(
+    genreId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>>;
+  getSimilarMovies(
+    movieId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>>;
+  getMovieRecommendations(
+    movieId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>>;
 }
 
 export interface AuthService {
@@ -457,7 +480,11 @@ export interface HttpService {
 export interface ImageService {
   getImageUrl(path: string | null, size?: ImageSize): string;
   preloadImage(url: string): Promise<void>;
-  getOptimizedImageUrl(path: string | null, width: number, quality?: number): string;
+  getOptimizedImageUrl(
+    path: string | null,
+    width: number,
+    quality?: number
+  ): string;
 }
 
 // ============================================================================
@@ -486,23 +513,23 @@ export interface ApiError {
   details?: unknown;
 }
 
-export type ImageSize = 
-  | 'w92' 
-  | 'w154' 
-  | 'w185' 
-  | 'w342' 
-  | 'w500' 
-  | 'w780' 
+export type ImageSize =
+  | 'w92'
+  | 'w154'
+  | 'w185'
+  | 'w342'
+  | 'w500'
+  | 'w780'
   | 'original';
 
-export type MovieSortBy = 
-  | 'popularity.desc' 
-  | 'popularity.asc' 
-  | 'release_date.desc' 
-  | 'release_date.asc' 
-  | 'vote_average.desc' 
-  | 'vote_average.asc' 
-  | 'title.asc' 
+export type MovieSortBy =
+  | 'popularity.desc'
+  | 'popularity.asc'
+  | 'release_date.desc'
+  | 'release_date.asc'
+  | 'vote_average.desc'
+  | 'vote_average.asc'
+  | 'title.asc'
   | 'title.desc';
 
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
@@ -537,21 +564,30 @@ export class APIError extends Error {
 }
 
 export class AuthenticationError extends Error {
-  constructor(message: string, public code?: string) {
+  constructor(
+    message: string,
+    public code?: string
+  ) {
     super(message);
     this.name = 'AuthenticationError';
   }
 }
 
 export class NetworkError extends Error {
-  constructor(message: string, public code?: string) {
+  constructor(
+    message: string,
+    public code?: string
+  ) {
     super(message);
     this.name = 'NetworkError';
   }
 }
 
 export class ValidationError extends Error {
-  constructor(message: string, public field?: string) {
+  constructor(
+    message: string,
+    public field?: string
+  ) {
     super(message);
     this.name = 'ValidationError';
   }

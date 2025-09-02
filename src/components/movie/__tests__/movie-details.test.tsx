@@ -6,7 +6,13 @@ import { beforeEach } from 'node:test';
 
 // Mock the image components
 vi.mock('../../ui/image-with-fallback', () => ({
-  MovieBackdrop: ({ title, className }: { title: string; className: string }) => (
+  MovieBackdrop: ({
+    title,
+    className,
+  }: {
+    title: string;
+    className: string;
+  }) => (
     <div className={className} data-testid="movie-backdrop">
       {title} backdrop
     </div>
@@ -17,7 +23,10 @@ vi.mock('../../ui/image-with-fallback', () => ({
     </div>
   ),
   ProfileImage: ({ name, className }: { name: string; className: string }) => (
-    <div className={className} data-testid={`profile-${name.replace(/\s+/g, '-').toLowerCase()}`}>
+    <div
+      className={className}
+      data-testid={`profile-${name.replace(/\s+/g, '-').toLowerCase()}`}
+    >
       {name} profile
     </div>
   ),
@@ -31,10 +40,18 @@ vi.mock('../../ui/loading-spinner', () => ({
 }));
 
 vi.mock('../../ui/error-message', () => ({
-  ErrorMessage: ({ message, onRetry }: { message: string; onRetry: () => void }) => (
+  ErrorMessage: ({
+    message,
+    onRetry,
+  }: {
+    message: string;
+    onRetry: () => void;
+  }) => (
     <div data-testid="error-message">
       <span>{message}</span>
-      <button onClick={onRetry} data-testid="retry-button">Retry</button>
+      <button onClick={onRetry} data-testid="retry-button">
+        Retry
+      </button>
     </div>
   ),
 }));
@@ -42,7 +59,8 @@ vi.mock('../../ui/error-message', () => ({
 const mockMovieDetails: MovieDetailsType = {
   id: 1,
   title: 'Test Movie',
-  overview: 'This is a comprehensive test movie with all the details we need to test.',
+  overview:
+    'This is a comprehensive test movie with all the details we need to test.',
   poster_path: '/test-poster.jpg',
   backdrop_path: '/test-backdrop.jpg',
   release_date: '2023-12-01',
@@ -99,9 +117,7 @@ const mockMovieDetails: MovieDetailsType = {
   tagline: 'The ultimate test movie',
   homepage: 'https://testmovie.com',
   status: 'Released',
-  production_countries: [
-    { iso_3166_1: 'US', name: 'United States' },
-  ],
+  production_countries: [{ iso_3166_1: 'US', name: 'United States' }],
   original_language: 'en',
 };
 
@@ -123,7 +139,9 @@ describe('MovieDetails', () => {
 
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
     expect(screen.getByText('The ultimate test movie')).toBeInTheDocument();
-    expect(screen.getByText(/This is a comprehensive test movie/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/This is a comprehensive test movie/)
+    ).toBeInTheDocument();
     expect(screen.getByTestId('movie-poster')).toBeInTheDocument();
     expect(screen.getByTestId('movie-backdrop')).toBeInTheDocument();
   });
@@ -297,7 +315,11 @@ describe('MovieDetails', () => {
   });
 
   it('shows loss in red when negative', () => {
-    const lossMovie = { ...mockMovieDetails, budget: 200000000, revenue: 50000000 };
+    const lossMovie = {
+      ...mockMovieDetails,
+      budget: 200000000,
+      revenue: 50000000,
+    };
     render(<MovieDetails {...mockProps} movie={lossMovie} />);
 
     const lossElement = screen.getByText('-$150,000,000');

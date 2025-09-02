@@ -18,9 +18,7 @@ export function createLazyComponent<T extends ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyLoadOptions = {}
 ): LazyExoticComponent<T> {
-  const {
-    retryDelay = 1000
-  } = options;
+  const { retryDelay = 1000 } = options;
 
   // Create lazy component with retry logic
   const LazyComponent = lazy(async () => {
@@ -28,10 +26,10 @@ export function createLazyComponent<T extends ComponentType<unknown>>(
       return await importFn();
     } catch (error) {
       console.error('Failed to load component:', error);
-      
+
       // Retry after delay
-      await new Promise(resolve => setTimeout(resolve, retryDelay));
-      
+      await new Promise((resolve) => setTimeout(resolve, retryDelay));
+
       try {
         return await importFn();
       } catch (retryError) {
@@ -52,15 +50,13 @@ interface LazyWrapperProps {
   fallback?: ReactNode;
 }
 
-export function LazyWrapper({ 
-  children, 
-  fallback = <LoadingSpinner size="large" message="Loading..." />
+export function LazyWrapper({
+  children,
+  fallback = <LoadingSpinner size="large" message="Loading..." />,
 }: LazyWrapperProps) {
   return (
     <ErrorBoundary>
-      <Suspense fallback={fallback}>
-        {children}
-      </Suspense>
+      <Suspense fallback={fallback}>{children}</Suspense>
     </ErrorBoundary>
   );
 }
@@ -73,7 +69,7 @@ export function withLazyLoading<P extends object>(
   options: LazyLoadOptions = {}
 ) {
   const {
-    fallback = <LoadingSpinner size="large" message="Loading component..." />
+    fallback = <LoadingSpinner size="large" message="Loading component..." />,
   } = options;
 
   return function LazyLoadedComponent(props: P) {
@@ -104,11 +100,11 @@ export function createLazyRoute<T extends ComponentType<unknown>>(
   return createLazyComponent(importFn, {
     fallback: (
       <div className="flex justify-center items-center min-h-screen">
-        <LoadingSpinner 
-          size="large" 
-          message={routeName ? `Loading ${routeName}...` : "Loading page..."} 
+        <LoadingSpinner
+          size="large"
+          message={routeName ? `Loading ${routeName}...` : 'Loading page...'}
         />
       </div>
-    )
+    ),
   });
 }

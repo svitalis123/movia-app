@@ -14,7 +14,7 @@ vi.mock('../../components/auth', () => ({
 describe('SignInPage', () => {
   it('renders SignIn component with correct redirect URL', () => {
     render(<SignInPage />);
-    
+
     expect(screen.getByTestId('sign-in-component')).toBeInTheDocument();
     expect(screen.getByTestId('redirect-url')).toHaveTextContent('/');
   });

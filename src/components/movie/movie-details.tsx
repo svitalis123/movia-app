@@ -1,5 +1,18 @@
-import { ArrowLeft, Star, Calendar, Clock, DollarSign, Users, Building2, Globe } from 'lucide-react';
-import { MovieBackdrop, MoviePoster, ProfileImage } from '../ui/image-with-fallback';
+import {
+  ArrowLeft,
+  Star,
+  Calendar,
+  Clock,
+  DollarSign,
+  Users,
+  Building2,
+  Globe,
+} from 'lucide-react';
+import {
+  MovieBackdrop,
+  MoviePoster,
+  ProfileImage,
+} from '../ui/image-with-fallback';
 import { LoadingSpinner } from '../ui/loading-spinner';
 import { ErrorMessage } from '../ui/error-message';
 import { cn } from '../../lib/utils';
@@ -98,7 +111,7 @@ export function MovieDetails({
   error,
   onBack,
   onRelatedMovieClick: _onRelatedMovieClick,
-  className
+  className,
 }: MovieDetailsProps) {
   const formatCurrency = (amount: number) => {
     if (amount === 0) return 'N/A';
@@ -114,7 +127,9 @@ export function MovieDetails({
     if (minutes === 0) return 'N/A';
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-    return hours > 0 ? `${hours}h ${remainingMinutes}m` : `${remainingMinutes}m`;
+    return hours > 0
+      ? `${hours}h ${remainingMinutes}m`
+      : `${remainingMinutes}m`;
   };
 
   const formatReleaseDate = (dateString: string) => {
@@ -136,7 +151,7 @@ export function MovieDetails({
   };
 
   const getDirector = () => {
-    return movie?.crew?.find(member => member.job === 'Director');
+    return movie?.crew?.find((member) => member.job === 'Director');
   };
 
   const getMainCast = () => {
@@ -144,13 +159,28 @@ export function MovieDetails({
   };
 
   const getKeyCrewMembers = () => {
-    const keyJobs = ['Director', 'Producer', 'Executive Producer', 'Screenplay', 'Writer'];
-    return movie?.crew?.filter(member => keyJobs.includes(member.job)).slice(0, 8) || [];
+    const keyJobs = [
+      'Director',
+      'Producer',
+      'Executive Producer',
+      'Screenplay',
+      'Writer',
+    ];
+    return (
+      movie?.crew
+        ?.filter((member) => keyJobs.includes(member.job))
+        .slice(0, 8) || []
+    );
   };
 
   if (loading) {
     return (
-      <div className={cn('flex items-center justify-center min-h-[400px]', className)}>
+      <div
+        className={cn(
+          'flex items-center justify-center min-h-[400px]',
+          className
+        )}
+      >
         <LoadingSpinner size="large" message="Loading movie details..." />
       </div>
     );
@@ -158,22 +188,26 @@ export function MovieDetails({
 
   if (error) {
     return (
-      <div className={cn('flex flex-col items-center justify-center min-h-[400px]', className)}>
-        <ErrorMessage 
-          message={error}
-          onRetry={onBack}
-        />
+      <div
+        className={cn(
+          'flex flex-col items-center justify-center min-h-[400px]',
+          className
+        )}
+      >
+        <ErrorMessage message={error} onRetry={onBack} />
       </div>
     );
   }
 
   if (!movie) {
     return (
-      <div className={cn('flex flex-col items-center justify-center min-h-[400px]', className)}>
-        <ErrorMessage 
-          message="Movie not found"
-          onRetry={onBack}
-        />
+      <div
+        className={cn(
+          'flex flex-col items-center justify-center min-h-[400px]',
+          className
+        )}
+      >
+        <ErrorMessage message="Movie not found" onRetry={onBack} />
       </div>
     );
   }
@@ -209,10 +243,14 @@ export function MovieDetails({
         )}
 
         {/* Movie Info Overlay */}
-        <div className={cn(
-          'p-6 md:p-8',
-          movie.backdrop_path ? 'absolute bottom-0 left-0 right-0 text-white' : 'bg-card'
-        )}>
+        <div
+          className={cn(
+            'p-6 md:p-8',
+            movie.backdrop_path
+              ? 'absolute bottom-0 left-0 right-0 text-white'
+              : 'bg-card'
+          )}
+        >
           <div className="flex flex-col md:flex-row gap-6">
             {/* Poster */}
             <div className="flex-shrink-0">
@@ -226,7 +264,9 @@ export function MovieDetails({
             {/* Movie Information */}
             <div className="flex-1 space-y-4">
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">{movie.title}</h1>
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                  {movie.title}
+                </h1>
                 {movie.tagline && (
                   <p className="text-lg italic opacity-90">{movie.tagline}</p>
                 )}
@@ -237,8 +277,12 @@ export function MovieDetails({
                 {movie.vote_average > 0 && (
                   <div className="flex items-center gap-1 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-medium">{formatRating(movie.vote_average)}</span>
-                    <span className="opacity-75">({movie.vote_count} votes)</span>
+                    <span className="font-medium">
+                      {formatRating(movie.vote_average)}
+                    </span>
+                    <span className="opacity-75">
+                      ({movie.vote_count} votes)
+                    </span>
                   </div>
                 )}
 
@@ -287,7 +331,9 @@ export function MovieDetails({
       {movie.overview && (
         <div className="bg-card rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-3">Overview</h2>
-          <p className="text-muted-foreground leading-relaxed">{movie.overview}</p>
+          <p className="text-muted-foreground leading-relaxed">
+            {movie.overview}
+          </p>
         </div>
       )}
 
@@ -302,19 +348,27 @@ export function MovieDetails({
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Budget:</span>
-              <span className="font-medium">{formatCurrency(movie.budget)}</span>
+              <span className="font-medium">
+                {formatCurrency(movie.budget)}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Revenue:</span>
-              <span className="font-medium">{formatCurrency(movie.revenue)}</span>
+              <span className="font-medium">
+                {formatCurrency(movie.revenue)}
+              </span>
             </div>
             {movie.budget > 0 && movie.revenue > 0 && (
               <div className="flex justify-between border-t pt-3">
                 <span className="text-muted-foreground">Profit:</span>
-                <span className={cn(
-                  'font-medium',
-                  movie.revenue - movie.budget > 0 ? 'text-green-600' : 'text-red-600'
-                )}>
+                <span
+                  className={cn(
+                    'font-medium',
+                    movie.revenue - movie.budget > 0
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  )}
+                >
                   {formatCurrency(movie.revenue - movie.budget)}
                 </span>
               </div>
@@ -323,33 +377,36 @@ export function MovieDetails({
         </div>
 
         {/* Production Companies */}
-        {movie.production_companies && movie.production_companies.length > 0 && (
-          <div className="bg-card rounded-lg p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Building2 className="h-5 w-5" />
-              Production Companies
-            </h3>
-            <div className="space-y-2">
-              {movie.production_companies.slice(0, 5).map((company) => (
-                <div key={company.id} className="flex items-center gap-3">
-                  {company.logo_path && (
-                    <img
-                      src={`https://image.tmdb.org/t/p/w92${company.logo_path}`}
-                      alt={`${company.name} logo`}
-                      className="w-8 h-8 object-contain"
-                    />
-                  )}
-                  <div>
-                    <div className="font-medium">{company.name}</div>
-                    {company.origin_country && (
-                      <div className="text-sm text-muted-foreground">{company.origin_country}</div>
+        {movie.production_companies &&
+          movie.production_companies.length > 0 && (
+            <div className="bg-card rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Building2 className="h-5 w-5" />
+                Production Companies
+              </h3>
+              <div className="space-y-2">
+                {movie.production_companies.slice(0, 5).map((company) => (
+                  <div key={company.id} className="flex items-center gap-3">
+                    {company.logo_path && (
+                      <img
+                        src={`https://image.tmdb.org/t/p/w92${company.logo_path}`}
+                        alt={`${company.name} logo`}
+                        className="w-8 h-8 object-contain"
+                      />
                     )}
+                    <div>
+                      <div className="font-medium">{company.name}</div>
+                      {company.origin_country && (
+                        <div className="text-sm text-muted-foreground">
+                          {company.origin_country}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
 
       {/* Cast Section */}
@@ -368,7 +425,9 @@ export function MovieDetails({
                   className="w-20 h-20 mx-auto mb-2"
                 />
                 <div className="text-sm font-medium">{actor.name}</div>
-                <div className="text-xs text-muted-foreground">{actor.character}</div>
+                <div className="text-xs text-muted-foreground">
+                  {actor.character}
+                </div>
               </div>
             ))}
           </div>
@@ -381,15 +440,22 @@ export function MovieDetails({
           <h3 className="text-lg font-semibold mb-4">Key Crew Members</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {keyCrewMembers.map((member, index) => (
-              <div key={`${member.id}-${index}`} className="flex items-center gap-3">
+              <div
+                key={`${member.id}-${index}`}
+                className="flex items-center gap-3"
+              >
                 <ProfileImage
                   profilePath={member.profile_path}
                   name={member.name}
                   className="w-12 h-12 flex-shrink-0"
                 />
                 <div className="min-w-0">
-                  <div className="text-sm font-medium truncate">{member.name}</div>
-                  <div className="text-xs text-muted-foreground">{member.job}</div>
+                  <div className="text-sm font-medium truncate">
+                    {member.name}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {member.job}
+                  </div>
                 </div>
               </div>
             ))}
@@ -411,7 +477,9 @@ export function MovieDetails({
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Original Language:</span>
-              <span className="font-medium">{movie.original_language || 'N/A'}</span>
+              <span className="font-medium">
+                {movie.original_language || 'N/A'}
+              </span>
             </div>
             {movie.homepage && (
               <div className="flex justify-between">
@@ -427,22 +495,25 @@ export function MovieDetails({
               </div>
             )}
           </div>
-          
-          {movie.production_countries && movie.production_countries.length > 0 && (
-            <div>
-              <div className="text-muted-foreground mb-2">Production Countries:</div>
-              <div className="flex flex-wrap gap-1">
-                {movie.production_countries.map((country) => (
-                  <span
-                    key={country.iso_3166_1}
-                    className="px-2 py-1 bg-muted rounded text-sm"
-                  >
-                    {country.name}
-                  </span>
-                ))}
+
+          {movie.production_countries &&
+            movie.production_countries.length > 0 && (
+              <div>
+                <div className="text-muted-foreground mb-2">
+                  Production Countries:
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {movie.production_countries.map((country) => (
+                    <span
+                      key={country.iso_3166_1}
+                      className="px-2 py-1 bg-muted rounded text-sm"
+                    >
+                      {country.name}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
     </div>

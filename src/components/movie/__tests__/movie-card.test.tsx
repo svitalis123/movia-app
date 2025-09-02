@@ -15,7 +15,8 @@ vi.mock('../../ui/image-with-fallback', () => ({
 const mockMovie: Movie = {
   id: 1,
   title: 'Test Movie',
-  overview: 'This is a test movie with a long overview that should be truncated in some variants.',
+  overview:
+    'This is a test movie with a long overview that should be truncated in some variants.',
   poster_path: '/test-poster.jpg',
   backdrop_path: '/test-backdrop.jpg',
   release_date: '2023-12-01',
@@ -109,33 +110,43 @@ describe('MovieCard', () => {
   });
 
   it('renders compact variant correctly', () => {
-    render(<MovieCard movie={mockMovie} onClick={mockOnClick} variant="compact" />);
+    render(
+      <MovieCard movie={mockMovie} onClick={mockOnClick} variant="compact" />
+    );
 
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
     expect(screen.getByText('2023')).toBeInTheDocument();
     expect(screen.getByText('8.5')).toBeInTheDocument();
-    
+
     // Overview should not be visible in compact variant
     expect(screen.queryByText(/This is a test movie/)).not.toBeInTheDocument();
-    
+
     // Should have compact-specific styling
     expect(document.querySelector('.bg-card\\/95')).toBeInTheDocument();
   });
 
   it('renders detailed variant correctly', () => {
-    render(<MovieCard movie={mockMovie} onClick={mockOnClick} variant="detailed" />);
+    render(
+      <MovieCard movie={mockMovie} onClick={mockOnClick} variant="detailed" />
+    );
 
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
     expect(screen.getByText('2023')).toBeInTheDocument();
     expect(screen.getByText('8.5')).toBeInTheDocument();
     expect(screen.getByText(/This is a test movie/)).toBeInTheDocument();
-    
+
     // Should have detailed-specific styling
     expect(document.querySelector('.from-black\\/95')).toBeInTheDocument();
   });
 
   it('applies custom className', () => {
-    render(<MovieCard movie={mockMovie} onClick={mockOnClick} className="custom-class" />);
+    render(
+      <MovieCard
+        movie={mockMovie}
+        onClick={mockOnClick}
+        className="custom-class"
+      />
+    );
 
     const card = screen.getByRole('button');
     expect(card).toHaveClass('custom-class');
@@ -169,7 +180,7 @@ describe('MovieCard', () => {
     render(<MovieCard movie={mockMovie} onClick={mockOnClick} />);
 
     const card = screen.getByRole('button');
-    
+
     // Test Enter key
     fireEvent.keyDown(card, { key: 'Enter', preventDefault: vi.fn() });
     expect(mockOnClick).toHaveBeenCalledWith(1);
@@ -203,9 +214,11 @@ describe('MovieCardSkeleton', () => {
 
     const skeleton = document.querySelector('.animate-pulse');
     expect(skeleton).toBeInTheDocument();
-    
+
     // Detailed variant should have more skeleton elements
-    const skeletonElements = document.querySelectorAll('.bg-muted-foreground\\/20');
+    const skeletonElements = document.querySelectorAll(
+      '.bg-muted-foreground\\/20'
+    );
     expect(skeletonElements.length).toBeGreaterThan(2);
   });
 

@@ -3,23 +3,25 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock environment variable before importing the component
 const mockEnv = {
-  VITE_CLERK_PUBLISHABLE_KEY: 'pk_test_mock_key'
+  VITE_CLERK_PUBLISHABLE_KEY: 'pk_test_mock_key',
 };
 
 vi.stubGlobal('import.meta', {
-  env: mockEnv
+  env: mockEnv,
 });
 
 // Mock Clerk's ClerkProvider
 vi.mock('@clerk/clerk-react', () => ({
-  ClerkProvider: vi.fn(({ children, publishableKey, appearance, localization }) => (
-    <div data-testid="clerk-provider">
-      <div data-testid="publishable-key">{publishableKey}</div>
-      <div data-testid="appearance">{JSON.stringify(appearance)}</div>
-      <div data-testid="localization">{JSON.stringify(localization)}</div>
-      {children}
-    </div>
-  )),
+  ClerkProvider: vi.fn(
+    ({ children, publishableKey, appearance, localization }) => (
+      <div data-testid="clerk-provider">
+        <div data-testid="publishable-key">{publishableKey}</div>
+        <div data-testid="appearance">{JSON.stringify(appearance)}</div>
+        <div data-testid="localization">{JSON.stringify(localization)}</div>
+        {children}
+      </div>
+    )
+  ),
 }));
 
 // Import after mocking
@@ -37,7 +39,7 @@ describe('ClerkAuthProvider Component', () => {
         <div>{testContent}</div>
       </ClerkAuthProvider>
     );
-    
+
     expect(screen.getByTestId('clerk-provider')).toBeInTheDocument();
     expect(screen.getByText(testContent)).toBeInTheDocument();
   });
@@ -48,7 +50,7 @@ describe('ClerkAuthProvider Component', () => {
         <div>Test</div>
       </ClerkAuthProvider>
     );
-    
+
     const publishableKeyElement = screen.getByTestId('publishable-key');
     expect(publishableKeyElement.textContent).toMatch(/^pk_test_/);
   });
@@ -59,15 +61,15 @@ describe('ClerkAuthProvider Component', () => {
         <div>Test</div>
       </ClerkAuthProvider>
     );
-    
+
     const appearanceElement = screen.getByTestId('appearance');
     const appearance = JSON.parse(appearanceElement.textContent || '{}');
-    
+
     expect(appearance.variables).toBeDefined();
     expect(appearance.variables.colorPrimary).toBe('#3b82f6');
     expect(appearance.variables.colorBackground).toBe('#ffffff');
     expect(appearance.variables.borderRadius).toBe('0.5rem');
-    
+
     expect(appearance.elements).toBeDefined();
     expect(appearance.elements.formButtonPrimary).toContain('bg-blue-600');
     expect(appearance.elements.card).toContain('shadow-lg');
@@ -79,14 +81,18 @@ describe('ClerkAuthProvider Component', () => {
         <div>Test</div>
       </ClerkAuthProvider>
     );
-    
+
     const localizationElement = screen.getByTestId('localization');
     const localization = JSON.parse(localizationElement.textContent || '{}');
-    
+
     expect(localization.signIn.start.title).toBe('Sign in to Movie App');
-    expect(localization.signIn.start.subtitle).toBe('Welcome back! Please sign in to continue');
+    expect(localization.signIn.start.subtitle).toBe(
+      'Welcome back! Please sign in to continue'
+    );
     expect(localization.signUp.start.title).toBe('Create your account');
-    expect(localization.signUp.start.subtitle).toBe('Welcome! Please fill in the details to get started');
+    expect(localization.signUp.start.subtitle).toBe(
+      'Welcome! Please fill in the details to get started'
+    );
   });
 
   it('throws error when publishable key is missing', () => {

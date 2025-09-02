@@ -17,9 +17,21 @@ interface ToastActions {
   addToast: (toast: Omit<Toast, 'id'>) => void;
   removeToast: (id: string) => void;
   clearAllToasts: () => void;
-  showSuccess: (message: string, title?: string, options?: Partial<Toast>) => void;
-  showError: (message: string, title?: string, options?: Partial<Toast>) => void;
-  showWarning: (message: string, title?: string, options?: Partial<Toast>) => void;
+  showSuccess: (
+    message: string,
+    title?: string,
+    options?: Partial<Toast>
+  ) => void;
+  showError: (
+    message: string,
+    title?: string,
+    options?: Partial<Toast>
+  ) => void;
+  showWarning: (
+    message: string,
+    title?: string,
+    options?: Partial<Toast>
+  ) => void;
   showInfo: (message: string, title?: string, options?: Partial<Toast>) => void;
 }
 
@@ -35,7 +47,8 @@ export const useToastStore = create<ToastStore>((set, get) => ({
 
   // Actions
   addToast: (toast) => {
-    const id = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    const id =
+      Math.random().toString(36).substring(2) + Date.now().toString(36);
     const newToast: Toast = {
       id,
       duration: 5000,
@@ -108,8 +121,9 @@ export const useToastStore = create<ToastStore>((set, get) => ({
  * Hook to get toast actions
  */
 export const useToast = () => {
-  const { showSuccess, showError, showWarning, showInfo, clearAllToasts } = useToastStore();
-  
+  const { showSuccess, showError, showWarning, showInfo, clearAllToasts } =
+    useToastStore();
+
   return {
     showSuccess,
     showError,

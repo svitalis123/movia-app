@@ -3,14 +3,16 @@ import { useCallback } from 'react';
 /**
  * Hook for responsive virtual movie list dimensions
  */
-export function useResponsiveMovieGrid(containerRef: React.RefObject<HTMLElement>) {
+export function useResponsiveMovieGrid(
+  containerRef: React.RefObject<HTMLElement>
+) {
   const calculateDimensions = useCallback(() => {
     if (!containerRef.current) {
       return {
         containerWidth: 1200,
         containerHeight: 600,
         itemWidth: 280,
-        itemHeight: 420
+        itemHeight: 420,
       };
     }
 
@@ -41,7 +43,7 @@ export function useResponsiveMovieGrid(containerRef: React.RefObject<HTMLElement
       containerWidth,
       containerHeight,
       itemWidth,
-      itemHeight
+      itemHeight,
     };
   }, [containerRef]);
 

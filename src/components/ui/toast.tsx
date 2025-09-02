@@ -18,7 +18,15 @@ interface ToastProps extends Toast {
 /**
  * Individual toast component
  */
-function ToastItem({ id, title, message, type, duration = 5000, dismissible = true, onDismiss }: ToastProps) {
+function ToastItem({
+  id,
+  title,
+  message,
+  type,
+  duration = 5000,
+  dismissible = true,
+  onDismiss,
+}: ToastProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
 
@@ -50,29 +58,29 @@ function ToastItem({ id, title, message, type, duration = 5000, dismissible = tr
       bgColor: 'bg-green-50 dark:bg-green-900/20',
       borderColor: 'border-green-200 dark:border-green-800',
       textColor: 'text-green-800 dark:text-green-200',
-      iconColor: 'text-green-600 dark:text-green-400'
+      iconColor: 'text-green-600 dark:text-green-400',
     },
     error: {
       icon: AlertCircle,
       bgColor: 'bg-red-50 dark:bg-red-900/20',
       borderColor: 'border-red-200 dark:border-red-800',
       textColor: 'text-red-800 dark:text-red-200',
-      iconColor: 'text-red-600 dark:text-red-400'
+      iconColor: 'text-red-600 dark:text-red-400',
     },
     warning: {
       icon: AlertTriangle,
       bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
       borderColor: 'border-yellow-200 dark:border-yellow-800',
       textColor: 'text-yellow-800 dark:text-yellow-200',
-      iconColor: 'text-yellow-600 dark:text-yellow-400'
+      iconColor: 'text-yellow-600 dark:text-yellow-400',
     },
     info: {
       icon: Info,
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
       borderColor: 'border-blue-200 dark:border-blue-800',
       textColor: 'text-blue-800 dark:text-blue-200',
-      iconColor: 'text-blue-600 dark:text-blue-400'
-    }
+      iconColor: 'text-blue-600 dark:text-blue-400',
+    },
   };
 
   const config = typeConfig[type];
@@ -88,17 +96,13 @@ function ToastItem({ id, title, message, type, duration = 5000, dismissible = tr
       `}
     >
       <div className="flex items-start">
-        <IconComponent className={`h-5 w-5 ${config.iconColor} mt-0.5 flex-shrink-0`} />
-        
+        <IconComponent
+          className={`h-5 w-5 ${config.iconColor} mt-0.5 flex-shrink-0`}
+        />
+
         <div className="ml-3 flex-1">
-          {title && (
-            <h4 className="text-sm font-medium mb-1">
-              {title}
-            </h4>
-          )}
-          <p className="text-sm">
-            {message}
-          </p>
+          {title && <h4 className="text-sm font-medium mb-1">{title}</h4>}
+          <p className="text-sm">{message}</p>
         </div>
 
         {dismissible && (
@@ -132,11 +136,7 @@ export function ToastContainer() {
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2">
       {toasts.map((toast) => (
-        <ToastItem
-          key={toast.id}
-          {...toast}
-          onDismiss={removeToast}
-        />
+        <ToastItem key={toast.id} {...toast} onDismiss={removeToast} />
       ))}
     </div>
   );

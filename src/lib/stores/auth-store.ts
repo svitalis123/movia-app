@@ -56,26 +56,26 @@ export const useAuthStore = create<AuthStore>()(
         try {
           // The actual logout will be handled by Clerk's signOut
           // This just clears the local state
-          set({ 
-            user: null, 
-            isAuthenticated: false, 
-            loading: false, 
-            error: null 
+          set({
+            user: null,
+            isAuthenticated: false,
+            loading: false,
+            error: null,
           });
         } catch (error) {
-          set({ 
-            loading: false, 
-            error: error instanceof Error ? error.message : 'Logout failed' 
+          set({
+            loading: false,
+            error: error instanceof Error ? error.message : 'Logout failed',
           });
         }
       },
 
       setUser: (user: User | null) => {
-        set({ 
-          user, 
+        set({
+          user,
           isAuthenticated: !!user,
           loading: false,
-          error: null 
+          error: null,
         });
       },
 
@@ -106,18 +106,20 @@ export const useAuthStore = create<AuthStore>()(
  * Selector hooks for specific auth state
  */
 export const useAuthUser = () => useAuthStore((state) => state.user);
-export const useIsAuthenticated = () => useAuthStore((state) => state.isAuthenticated);
+export const useIsAuthenticated = () =>
+  useAuthStore((state) => state.isAuthenticated);
 export const useAuthLoading = () => useAuthStore((state) => state.loading);
 export const useAuthError = () => useAuthStore((state) => state.error);
 
 /**
  * Action hooks for auth operations
  */
-export const useAuthActions = () => useAuthStore((state) => ({
-  login: state.login,
-  logout: state.logout,
-  setUser: state.setUser,
-  setLoading: state.setLoading,
-  setError: state.setError,
-  clearError: state.clearError,
-}));
+export const useAuthActions = () =>
+  useAuthStore((state) => ({
+    login: state.login,
+    logout: state.logout,
+    setUser: state.setUser,
+    setLoading: state.setLoading,
+    setError: state.setError,
+    clearError: state.clearError,
+  }));

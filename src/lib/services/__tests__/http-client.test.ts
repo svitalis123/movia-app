@@ -17,7 +17,7 @@ describe('HttpClient', () => {
   beforeEach(() => {
     // Reset all mocks
     vi.clearAllMocks();
-    
+
     // Mock axios.create
     mockAxiosInstance = {
       get: vi.fn(),
@@ -51,13 +51,13 @@ describe('HttpClient', () => {
     it('should create axios instance with default configuration', async () => {
       const { HttpClient } = await import('../http-client');
       new HttpClient();
-      
+
       expect(mockedAxios.create).toHaveBeenCalledWith({
         baseURL: 'https://api.themoviedb.org/3',
         timeout: 10000,
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
       });
     });
@@ -65,7 +65,7 @@ describe('HttpClient', () => {
     it('should setup request and response interceptors', async () => {
       const { HttpClient } = await import('../http-client');
       new HttpClient();
-      
+
       expect(mockAxiosInstance.interceptors.request.use).toHaveBeenCalled();
       expect(mockAxiosInstance.interceptors.response.use).toHaveBeenCalled();
     });
@@ -84,7 +84,7 @@ describe('HttpClient', () => {
         timeout: 5000,
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
       });
     });
@@ -94,68 +94,86 @@ describe('HttpClient', () => {
     it('should make GET requests', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const mockData = { id: 1, title: 'Test Movie' };
       mockAxiosInstance.get.mockResolvedValue({ data: mockData });
 
       const result = await httpClient.get('/movies/1');
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/movies/1', undefined);
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+        '/movies/1',
+        undefined
+      );
       expect(result).toEqual(mockData);
     });
 
     it('should make POST requests', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const mockData = { success: true };
       const postData = { title: 'New Movie' };
       mockAxiosInstance.post.mockResolvedValue({ data: mockData });
 
       const result = await httpClient.post('/movies', postData);
 
-      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/movies', postData, undefined);
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith(
+        '/movies',
+        postData,
+        undefined
+      );
       expect(result).toEqual(mockData);
     });
 
     it('should make PUT requests', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const mockData = { success: true };
       const putData = { title: 'Updated Movie' };
       mockAxiosInstance.put.mockResolvedValue({ data: mockData });
 
       const result = await httpClient.put('/movies/1', putData);
 
-      expect(mockAxiosInstance.put).toHaveBeenCalledWith('/movies/1', putData, undefined);
+      expect(mockAxiosInstance.put).toHaveBeenCalledWith(
+        '/movies/1',
+        putData,
+        undefined
+      );
       expect(result).toEqual(mockData);
     });
 
     it('should make DELETE requests', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const mockData = { success: true };
       mockAxiosInstance.delete.mockResolvedValue({ data: mockData });
 
       const result = await httpClient.delete('/movies/1');
 
-      expect(mockAxiosInstance.delete).toHaveBeenCalledWith('/movies/1', undefined);
+      expect(mockAxiosInstance.delete).toHaveBeenCalledWith(
+        '/movies/1',
+        undefined
+      );
       expect(result).toEqual(mockData);
     });
 
     it('should make PATCH requests', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const mockData = { success: true };
       const patchData = { title: 'Patched Movie' };
       mockAxiosInstance.patch.mockResolvedValue({ data: mockData });
 
       const result = await httpClient.patch('/movies/1', patchData);
 
-      expect(mockAxiosInstance.patch).toHaveBeenCalledWith('/movies/1', patchData, undefined);
+      expect(mockAxiosInstance.patch).toHaveBeenCalledWith(
+        '/movies/1',
+        patchData,
+        undefined
+      );
       expect(result).toEqual(mockData);
     });
   });
@@ -164,7 +182,7 @@ describe('HttpClient', () => {
     it('should update configuration', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const newConfig = {
         baseURL: 'https://new-api.com',
         timeout: 15000,
@@ -181,7 +199,7 @@ describe('HttpClient', () => {
     it('should provide access to underlying axios instance', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const instance = httpClient.getAxiosInstance();
       expect(instance).toBe(mockAxiosInstance);
     });
@@ -194,9 +212,10 @@ describe('HttpClient', () => {
 
       // Verify request interceptor was set up
       expect(mockAxiosInstance.interceptors.request.use).toHaveBeenCalled();
-      
-      const requestInterceptor = mockAxiosInstance.interceptors.request.use.mock.calls[0][0];
-      
+
+      const requestInterceptor =
+        mockAxiosInstance.interceptors.request.use.mock.calls[0][0];
+
       // Test the request interceptor function
       const mockConfig = {
         params: {},
@@ -219,8 +238,9 @@ describe('HttpClient', () => {
       const { HttpClient } = await import('../http-client');
       new HttpClient();
 
-      const requestInterceptor = mockAxiosInstance.interceptors.request.use.mock.calls[0][0];
-      
+      const requestInterceptor =
+        mockAxiosInstance.interceptors.request.use.mock.calls[0][0];
+
       const mockConfig = {
         params: {},
         headers: {},
@@ -244,16 +264,17 @@ describe('HttpClient', () => {
       const { HttpClient } = await import('../http-client');
       new HttpClient();
 
-      const responseInterceptor = mockAxiosInstance.interceptors.response.use.mock.calls[0][0];
-      
+      const responseInterceptor =
+        mockAxiosInstance.interceptors.response.use.mock.calls[0][0];
+
       const mockResponse = {
         data: { success: true },
         status: 200,
         statusText: 'OK',
         config: {
           url: '/test',
-          metadata: { startTime: Date.now() - 100 }
-        }
+          metadata: { startTime: Date.now() - 100 },
+        },
       };
 
       const result = responseInterceptor(mockResponse);
@@ -264,8 +285,9 @@ describe('HttpClient', () => {
       const { HttpClient } = await import('../http-client');
       new HttpClient();
 
-      const errorInterceptor = mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
-      
+      const errorInterceptor =
+        mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
+
       const mockError = {
         response: {
           status: 404,
@@ -284,8 +306,9 @@ describe('HttpClient', () => {
       const { HttpClient } = await import('../http-client');
       new HttpClient();
 
-      const errorInterceptor = mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
-      
+      const errorInterceptor =
+        mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
+
       const mockNetworkError = {
         message: 'Network Error',
         code: 'NETWORK_ERROR',
@@ -294,15 +317,18 @@ describe('HttpClient', () => {
         },
       };
 
-      await expect(errorInterceptor(mockNetworkError)).rejects.toThrow(NetworkError);
+      await expect(errorInterceptor(mockNetworkError)).rejects.toThrow(
+        NetworkError
+      );
     });
 
     it('should handle timeout errors', async () => {
       const { HttpClient } = await import('../http-client');
       new HttpClient();
 
-      const errorInterceptor = mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
-      
+      const errorInterceptor =
+        mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
+
       const mockTimeoutError = {
         code: 'ECONNABORTED',
         message: 'timeout of 10000ms exceeded',
@@ -311,7 +337,9 @@ describe('HttpClient', () => {
         },
       };
 
-      await expect(errorInterceptor(mockTimeoutError)).rejects.toThrow(NetworkError);
+      await expect(errorInterceptor(mockTimeoutError)).rejects.toThrow(
+        NetworkError
+      );
     });
   });
 
@@ -319,7 +347,7 @@ describe('HttpClient', () => {
     it('should merge custom config with defaults', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const customConfig = {
         headers: {
           'Custom-Header': 'custom-value',
@@ -337,7 +365,7 @@ describe('HttpClient', () => {
     it('should handle requests with query parameters', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const config = {
         params: {
           page: 1,
@@ -358,8 +386,9 @@ describe('HttpClient', () => {
       const { HttpClient } = await import('../http-client');
       new HttpClient();
 
-      const errorInterceptor = mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
-      
+      const errorInterceptor =
+        mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
+
       const mockError = {
         message: 'Unknown error',
         config: {
@@ -374,8 +403,9 @@ describe('HttpClient', () => {
       const { HttpClient } = await import('../http-client');
       new HttpClient();
 
-      const errorInterceptor = mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
-      
+      const errorInterceptor =
+        mockAxiosInstance.interceptors.response.use.mock.calls[0][1];
+
       const mockError = {
         message: 'Error without config',
         response: {
@@ -392,7 +422,7 @@ describe('HttpClient', () => {
     it('should handle multiple concurrent requests', async () => {
       const { HttpClient } = await import('../http-client');
       const httpClient = new HttpClient();
-      
+
       const mockResponses = [
         { data: { id: 1 } },
         { data: { id: 2 } },
@@ -412,11 +442,7 @@ describe('HttpClient', () => {
 
       const results = await Promise.all(promises);
 
-      expect(results).toEqual([
-        { id: 1 },
-        { id: 2 },
-        { id: 3 },
-      ]);
+      expect(results).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
 
       expect(mockAxiosInstance.get).toHaveBeenCalledTimes(3);
     });

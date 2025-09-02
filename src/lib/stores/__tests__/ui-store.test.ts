@@ -36,7 +36,7 @@ describe('UI Store', () => {
     it('should handle empty search query', () => {
       // First set a query
       useUIStore.setState({ searchQuery: 'existing query' });
-      
+
       const store = useUIStore.getState();
       store.setSearchQuery('');
 
@@ -57,7 +57,7 @@ describe('UI Store', () => {
     it('should update view mode to grid', () => {
       // First set to list
       useUIStore.setState({ viewMode: 'list' });
-      
+
       const store = useUIStore.getState();
       store.setViewMode('grid');
 
@@ -78,7 +78,7 @@ describe('UI Store', () => {
     it('should update theme to light', () => {
       // First set to dark
       useUIStore.setState({ theme: 'dark' });
-      
+
       const store = useUIStore.getState();
       store.setTheme('light');
 
@@ -99,7 +99,7 @@ describe('UI Store', () => {
     it('should toggle sidebar from open to closed', () => {
       // First open the sidebar
       useUIStore.setState({ sidebarOpen: true });
-      
+
       const store = useUIStore.getState();
       store.toggleSidebar();
 
@@ -109,15 +109,15 @@ describe('UI Store', () => {
 
     it('should toggle sidebar multiple times', () => {
       const store = useUIStore.getState();
-      
+
       // Toggle to open
       store.toggleSidebar();
       expect(useUIStore.getState().sidebarOpen).toBe(true);
-      
+
       // Toggle to closed
       store.toggleSidebar();
       expect(useUIStore.getState().sidebarOpen).toBe(false);
-      
+
       // Toggle to open again
       store.toggleSidebar();
       expect(useUIStore.getState().sidebarOpen).toBe(true);
@@ -136,7 +136,7 @@ describe('UI Store', () => {
     it('should set searching to false', () => {
       // First set to true
       useUIStore.setState({ isSearching: true });
-      
+
       const store = useUIStore.getState();
       store.setSearching(false);
 
@@ -148,35 +148,35 @@ describe('UI Store', () => {
   describe('state selectors', () => {
     it('should select search query correctly using getState', () => {
       useUIStore.setState({ searchQuery: 'test query' });
-      
+
       const state = useUIStore.getState();
       expect(state.searchQuery).toBe('test query');
     });
 
     it('should select view mode correctly using getState', () => {
       useUIStore.setState({ viewMode: 'list' });
-      
+
       const state = useUIStore.getState();
       expect(state.viewMode).toBe('list');
     });
 
     it('should select theme correctly using getState', () => {
       useUIStore.setState({ theme: 'dark' });
-      
+
       const state = useUIStore.getState();
       expect(state.theme).toBe('dark');
     });
 
     it('should select sidebar state correctly using getState', () => {
       useUIStore.setState({ sidebarOpen: true });
-      
+
       const state = useUIStore.getState();
       expect(state.sidebarOpen).toBe(true);
     });
 
     it('should select searching state correctly using getState', () => {
       useUIStore.setState({ isSearching: true });
-      
+
       const state = useUIStore.getState();
       expect(state.isSearching).toBe(true);
     });
@@ -197,7 +197,7 @@ describe('UI Store', () => {
   describe('state persistence', () => {
     it('should persist UI preferences', () => {
       const store = useUIStore.getState();
-      
+
       // Update various UI preferences
       store.setSearchQuery('persistent query');
       store.setViewMode('list');

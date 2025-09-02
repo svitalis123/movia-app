@@ -11,6 +11,7 @@ npm run fix
 ```
 
 This will run:
+
 1. `eslint . --fix` - Auto-fix ESLint issues
 2. `prettier --write .` - Format code with Prettier
 
@@ -217,7 +218,7 @@ You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+
 - name: Setup Node.js
   uses: actions/setup-node@v4
   with:
-    node-version: '20'  # Updated from '18'
+    node-version: '20' # Updated from '18'
 ```
 
 ## 📚 Resources
@@ -229,4 +230,4 @@ You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+
 
 ---
 
-*Run `npm run fix` to automatically resolve most of these issues!*
+_Run `npm run fix` to automatically resolve most of these issues!_

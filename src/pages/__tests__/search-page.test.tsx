@@ -58,26 +58,26 @@ vi.mock('../../components/movie', () => ({
 vi.mock('../../components/search', () => ({
   SearchInput: ({ value, onSearch, onClear }: any) => (
     <div data-testid="search-input">
-      <input 
-        value={value} 
+      <input
+        value={value}
         onChange={(e) => onSearch(e.target.value)}
         data-testid="search-field"
       />
-      <button onClick={onClear} data-testid="clear-button">Clear</button>
+      <button onClick={onClear} data-testid="clear-button">
+        Clear
+      </button>
     </div>
   ),
 }));
 
 vi.mock('../../components/ui', () => ({
-  LoadingSpinner: ({ message }: any) => <div data-testid="loading">{message}</div>,
+  LoadingSpinner: ({ message }: any) => (
+    <div data-testid="loading">{message}</div>
+  ),
 }));
 
 const renderWithRouter = (component: React.ReactElement) => {
-  return render(
-    <BrowserRouter>
-      {component}
-    </BrowserRouter>
-  );
+  return render(<BrowserRouter>{component}</BrowserRouter>);
 };
 
 describe('SearchPage', () => {
@@ -87,35 +87,37 @@ describe('SearchPage', () => {
 
   it('renders search page with query', () => {
     renderWithRouter(<SearchPage />);
-    
-    expect(screen.getByText('Search Results for "test query"')).toBeInTheDocument();
+
+    expect(
+      screen.getByText('Search Results for "test query"')
+    ).toBeInTheDocument();
     expect(screen.getByTestId('search-input')).toBeInTheDocument();
     expect(screen.getByTestId('movie-list')).toBeInTheDocument();
   });
 
   it('calls searchMovies on mount with valid query', async () => {
     renderWithRouter(<SearchPage />);
-    
+
     await waitFor(() => {
       expect(mockSearchMovies).toHaveBeenCalledWith('test query', 1);
       expect(mockSetSearchQuery).toHaveBeenCalledWith('test query');
     });
   });
 
-
-
   it('displays empty message when no results found', () => {
     renderWithRouter(<SearchPage />);
-    
-    expect(screen.getByText('No movies found for "test query"')).toBeInTheDocument();
+
+    expect(
+      screen.getByText('No movies found for "test query"')
+    ).toBeInTheDocument();
   });
 
   it('handles clear search', () => {
     renderWithRouter(<SearchPage />);
-    
+
     const clearButton = screen.getByTestId('clear-button');
     fireEvent.click(clearButton);
-    
+
     expect(mockSetSearchQuery).toHaveBeenCalledWith('');
     expect(mockClearSearch).toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });

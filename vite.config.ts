@@ -1,11 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
-  plugins: [
-    react()
-  ],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -19,11 +17,14 @@ export default defineConfig({
           ui: ['lucide-react'],
           auth: ['@clerk/clerk-react'],
           store: ['zustand'],
-          utils: ['axios', 'clsx']
+          utils: ['axios', 'clsx'],
         },
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId
-            ? chunkInfo.facadeModuleId.split('/').pop()?.replace(/\.[^/.]+$/, '')
+            ? chunkInfo.facadeModuleId
+                .split('/')
+                .pop()
+                ?.replace(/\.[^/.]+$/, '')
             : 'chunk';
           return `js/${facadeModuleId}-[hash].js`;
         },
@@ -38,10 +39,10 @@ export default defineConfig({
             return `css/[name]-[hash][extname]`;
           }
           return `assets/[name]-[hash][extname]`;
-        }
-      }
+        },
+      },
     },
     minify: 'terser',
     chunkSizeWarningLimit: 1000,
   },
-})
+});

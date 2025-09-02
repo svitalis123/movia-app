@@ -18,7 +18,7 @@ vi.mock('@clerk/clerk-react', () => ({
 describe('SignIn Component', () => {
   it('renders Clerk SignIn component with default props', () => {
     render(<SignIn />);
-    
+
     expect(screen.getByTestId('clerk-signin')).toBeInTheDocument();
     expect(screen.getByTestId('redirect-url')).toHaveTextContent('/');
     expect(screen.getByTestId('routing')).toHaveTextContent('path');
@@ -29,34 +29,44 @@ describe('SignIn Component', () => {
   it('renders with custom redirect URL', () => {
     const customRedirectUrl = '/dashboard';
     render(<SignIn redirectUrl={customRedirectUrl} />);
-    
-    expect(screen.getByTestId('redirect-url')).toHaveTextContent(customRedirectUrl);
+
+    expect(screen.getByTestId('redirect-url')).toHaveTextContent(
+      customRedirectUrl
+    );
   });
 
   it('applies custom className', () => {
     const customClass = 'custom-signin-class';
     render(<SignIn className={customClass} />);
-    
-    const container = screen.getByTestId('clerk-signin').parentElement?.parentElement;
+
+    const container =
+      screen.getByTestId('clerk-signin').parentElement?.parentElement;
     expect(container).toHaveClass(customClass);
   });
 
   it('has proper styling structure', () => {
     render(<SignIn />);
-    
-    const container = screen.getByTestId('clerk-signin').parentElement?.parentElement;
-    expect(container).toHaveClass('flex', 'items-center', 'justify-center', 'min-h-screen', 'bg-gray-50');
-    
+
+    const container =
+      screen.getByTestId('clerk-signin').parentElement?.parentElement;
+    expect(container).toHaveClass(
+      'flex',
+      'items-center',
+      'justify-center',
+      'min-h-screen',
+      'bg-gray-50'
+    );
+
     const wrapper = screen.getByTestId('clerk-signin').parentElement;
     expect(wrapper).toHaveClass('w-full', 'max-w-md');
   });
 
   it('configures Clerk appearance correctly', () => {
     render(<SignIn />);
-    
+
     const appearanceElement = screen.getByTestId('appearance');
     const appearance = JSON.parse(appearanceElement.textContent || '{}');
-    
+
     expect(appearance.elements).toBeDefined();
     expect(appearance.elements.rootBox).toBe('w-full');
     expect(appearance.elements.card).toContain('shadow-xl');

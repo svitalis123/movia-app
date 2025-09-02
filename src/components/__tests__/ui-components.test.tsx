@@ -54,10 +54,10 @@ describe('UI Components', () => {
 
     it('renders with fallback', () => {
       render(
-        <ImageWithFallback 
-          src="invalid.jpg" 
-          alt="Test image" 
-          fallbackSrc="fallback.jpg" 
+        <ImageWithFallback
+          src="invalid.jpg"
+          alt="Test image"
+          fallbackSrc="fallback.jpg"
         />
       );
       // Should render without crashing

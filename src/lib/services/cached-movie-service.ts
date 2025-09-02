@@ -118,31 +118,40 @@ interface MovieService {
   getMovieCredits(movieId: number): Promise<TMDBCredits>;
   searchMovies(query: string, page?: number): Promise<TMDBResponse<TMDBMovie>>;
   getGenres(): Promise<{ genres: TMDBGenre[] }>;
-  getMoviesByGenre(genreId: number, page?: number): Promise<TMDBResponse<TMDBMovie>>;
-  getSimilarMovies(movieId: number, page?: number): Promise<TMDBResponse<TMDBMovie>>;
-  getMovieRecommendations(movieId: number, page?: number): Promise<TMDBResponse<TMDBMovie>>;
+  getMoviesByGenre(
+    genreId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>>;
+  getSimilarMovies(
+    movieId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>>;
+  getMovieRecommendations(
+    movieId: number,
+    page?: number
+  ): Promise<TMDBResponse<TMDBMovie>>;
 }
 
 /**
  * Cached Movie Service
- * 
+ *
  * This service wraps the TMDBMovieService with caching functionality.
  * It automatically caches API responses to improve performance and reduce
  * redundant API calls to TMDB.
  */
 class CachedMovieService implements MovieService {
   private movieService: TMDBMovieService;
-  
+
   // Cache TTL configurations (in milliseconds)
   private readonly cacheTTL = {
-    popularMovies: 10 * 60 * 1000,    // 10 minutes
-    movieDetails: 60 * 60 * 1000,     // 1 hour
-    movieCredits: 60 * 60 * 1000,     // 1 hour
-    searchResults: 5 * 60 * 1000,     // 5 minutes
-    genres: 24 * 60 * 60 * 1000,      // 24 hours
-    moviesByGenre: 15 * 60 * 1000,    // 15 minutes
-    similarMovies: 30 * 60 * 1000,    // 30 minutes
-    recommendations: 30 * 60 * 1000,  // 30 minutes
+    popularMovies: 10 * 60 * 1000, // 10 minutes
+    movieDetails: 60 * 60 * 1000, // 1 hour
+    movieCredits: 60 * 60 * 1000, // 1 hour
+    searchResults: 5 * 60 * 1000, // 5 minutes
+    genres: 24 * 60 * 60 * 1000, // 24 hours
+    moviesByGenre: 15 * 60 * 1000, // 15 minutes
+    similarMovies: 30 * 60 * 1000, // 30 minutes
+    recommendations: 30 * 60 * 1000, // 30 minutes
   };
 
   constructor(movieService?: TMDBMovieService) {
@@ -154,7 +163,7 @@ class CachedMovieService implements MovieService {
    */
   async getPopularMovies(page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
     const cacheKey = CacheKeyGenerator.popularMovies(page);
-    
+
     return cacheService.getOrSet(
       cacheKey,
       () => this.movieService.getPopularMovies(page),
@@ -167,7 +176,7 @@ class CachedMovieService implements MovieService {
    */
   async getMovieDetails(movieId: number): Promise<TMDBMovieDetails> {
     const cacheKey = CacheKeyGenerator.movieDetails(movieId);
-    
+
     return cacheService.getOrSet(
       cacheKey,
       () => this.movieService.getMovieDetails(movieId),
@@ -180,7 +189,7 @@ class CachedMovieService implements MovieService {
    */
   async getMovieCredits(movieId: number): Promise<TMDBCredits> {
     const cacheKey = CacheKeyGenerator.movieCredits(movieId);
-    
+
     return cacheService.getOrSet(
       cacheKey,
       () => this.movieService.getMovieCredits(movieId),
@@ -191,9 +200,12 @@ class CachedMovieService implements MovieService {
   /**
    * Searches movies with caching
    */
-  async searchMovies(query: string, page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
+  async searchMovies(
+    query: string,
+    page: number = 1
+  ): Promise<TMDBResponse<TMDBMovie>> {
     const cacheKey = CacheKeyGenerator.searchMovies(query, page);
-    
+
     return cacheService.getOrSet(
       cacheKey,
       () => this.movieService.searchMovies(query, page),
@@ -206,7 +218,7 @@ class CachedMovieService implements MovieService {
    */
   async getGenres(): Promise<{ genres: TMDBGenre[] }> {
     const cacheKey = CacheKeyGenerator.genres();
-    
+
     return cacheService.getOrSet(
       cacheKey,
       () => this.movieService.getGenres(),
@@ -217,9 +229,12 @@ class CachedMovieService implements MovieService {
   /**
    * Fetches movies by genre with caching
    */
-  async getMoviesByGenre(genreId: number, page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
+  async getMoviesByGenre(
+    genreId: number,
+    page: number = 1
+  ): Promise<TMDBResponse<TMDBMovie>> {
     const cacheKey = CacheKeyGenerator.moviesByGenre(genreId, page);
-    
+
     return cacheService.getOrSet(
       cacheKey,
       () => this.movieService.getMoviesByGenre(genreId, page),
@@ -230,9 +245,12 @@ class CachedMovieService implements MovieService {
   /**
    * Fetches similar movies with caching
    */
-  async getSimilarMovies(movieId: number, page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
+  async getSimilarMovies(
+    movieId: number,
+    page: number = 1
+  ): Promise<TMDBResponse<TMDBMovie>> {
     const cacheKey = CacheKeyGenerator.similarMovies(movieId, page);
-    
+
     return cacheService.getOrSet(
       cacheKey,
       () => this.movieService.getSimilarMovies(movieId, page),
@@ -243,9 +261,12 @@ class CachedMovieService implements MovieService {
   /**
    * Fetches movie recommendations with caching
    */
-  async getMovieRecommendations(movieId: number, page: number = 1): Promise<TMDBResponse<TMDBMovie>> {
+  async getMovieRecommendations(
+    movieId: number,
+    page: number = 1
+  ): Promise<TMDBResponse<TMDBMovie>> {
     const cacheKey = CacheKeyGenerator.movieRecommendations(movieId, page);
-    
+
     return cacheService.getOrSet(
       cacheKey,
       () => this.movieService.getMovieRecommendations(movieId, page),
@@ -263,7 +284,10 @@ class CachedMovieService implements MovieService {
   /**
    * Utility method to get backdrop image URL (delegated to movie service)
    */
-  getBackdropUrl(backdropPath: string | null, size: string = 'w1280'): string | null {
+  getBackdropUrl(
+    backdropPath: string | null,
+    size: string = 'w1280'
+  ): string | null {
     return this.movieService.getBackdropUrl(backdropPath, size);
   }
 
@@ -289,7 +313,7 @@ class CachedMovieService implements MovieService {
       CacheKeyGenerator.movieRecommendations(movieId),
     ];
 
-    keysToDelete.forEach(key => cacheService.delete(key));
+    keysToDelete.forEach((key) => cacheService.delete(key));
   }
 
   /**
@@ -297,8 +321,8 @@ class CachedMovieService implements MovieService {
    */
   clearSearchCache(): void {
     const allKeys = cacheService.keys();
-    const searchKeys = allKeys.filter(key => key.startsWith('search_'));
-    searchKeys.forEach(key => cacheService.delete(key));
+    const searchKeys = allKeys.filter((key) => key.startsWith('search_'));
+    searchKeys.forEach((key) => cacheService.delete(key));
   }
 
   /**
@@ -306,8 +330,10 @@ class CachedMovieService implements MovieService {
    */
   clearPopularMoviesCache(): void {
     const allKeys = cacheService.keys();
-    const popularKeys = allKeys.filter(key => key.startsWith('popular_movies_'));
-    popularKeys.forEach(key => cacheService.delete(key));
+    const popularKeys = allKeys.filter((key) =>
+      key.startsWith('popular_movies_')
+    );
+    popularKeys.forEach((key) => cacheService.delete(key));
   }
 
   /**
@@ -315,10 +341,10 @@ class CachedMovieService implements MovieService {
    */
   clearGenreCache(): void {
     const allKeys = cacheService.keys();
-    const genreKeys = allKeys.filter(key => 
-      key.startsWith('genre_') || key === 'movie_genres'
+    const genreKeys = allKeys.filter(
+      (key) => key.startsWith('genre_') || key === 'movie_genres'
     );
-    genreKeys.forEach(key => cacheService.delete(key));
+    genreKeys.forEach((key) => cacheService.delete(key));
   }
 
   /**
@@ -333,7 +359,7 @@ class CachedMovieService implements MovieService {
    */
   async preloadPopularMovies(pages: number = 3): Promise<void> {
     const promises = [];
-    
+
     for (let page = 1; page <= pages; page++) {
       promises.push(this.getPopularMovies(page));
     }
@@ -352,7 +378,7 @@ class CachedMovieService implements MovieService {
    * Preloads movie details and credits for a list of movie IDs
    */
   async preloadMovieDetails(movieIds: number[]): Promise<void> {
-    const promises = movieIds.flatMap(movieId => [
+    const promises = movieIds.flatMap((movieId) => [
       this.getMovieDetails(movieId),
       this.getMovieCredits(movieId),
     ]);

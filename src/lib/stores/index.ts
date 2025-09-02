@@ -1,11 +1,11 @@
 // Auth Store
-export { 
-  useAuthStore, 
-  useAuthUser, 
-  useIsAuthenticated, 
-  useAuthLoading, 
-  useAuthError, 
-  useAuthActions 
+export {
+  useAuthStore,
+  useAuthUser,
+  useIsAuthenticated,
+  useAuthLoading,
+  useAuthError,
+  useAuthActions,
 } from './auth-store';
 
 // Movie Store
@@ -35,10 +35,7 @@ export {
 } from './ui-store';
 
 // Toast Store
-export {
-  useToastStore,
-  useToast,
-} from './toast-store';
+export { useToastStore, useToast } from './toast-store';
 
 // Cache Store
 export {

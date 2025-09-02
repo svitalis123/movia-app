@@ -19,10 +19,12 @@ A comprehensive pipeline that handles code quality, testing, building, and deplo
 - **notify**: Sends notifications about deployment results
 
 #### Triggers:
+
 - Push to `main` or `develop` branches
 - Pull requests to `main` branch
 
 #### Required Secrets:
+
 - `VITE_CLERK_PUBLISHABLE_KEY`: Clerk authentication public key
 - `VITE_TMDB_API_KEY`: The Movie Database API key
 - `VERCEL_TOKEN`: Vercel deployment token
@@ -47,11 +49,13 @@ The workflows use the following environment variables:
 ## Deployment Strategy
 
 ### Production Deployment
+
 - Triggered on pushes to `main` branch
 - Requires all tests to pass
 - Deploys to production Vercel environment
 
 ### Preview Deployment
+
 - Triggered on pull requests to `main`
 - Creates preview deployments for testing
 - Allows testing changes before merging

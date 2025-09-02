@@ -45,7 +45,13 @@ vi.mock('../search-input', () => ({
 }));
 
 vi.mock('../../movie/movie-list', () => ({
-  MovieList: ({ movies, onMovieSelect, onPageChange, currentPage, totalPages }: unknown) => (
+  MovieList: ({
+    movies,
+    onMovieSelect,
+    onPageChange,
+    currentPage,
+    totalPages,
+  }: unknown) => (
     <div data-testid="movie-list">
       <div data-testid="movie-count">{movies.length} movies</div>
       <div data-testid="pagination-info">
@@ -174,7 +180,7 @@ describe('SearchResults', () => {
 
   it('displays search results when query is present', () => {
     mockSearchParams.set('q', 'test movie');
-    
+
     renderWithRouter(<SearchResults />);
 
     expect(screen.getByTestId('movie-list')).toBeInTheDocument();
@@ -210,7 +216,7 @@ describe('SearchResults', () => {
 
   it('shows error state with retry button', async () => {
     const user = userEvent.setup();
-    
+
     (useMovieStore as unknown).mockReturnValue({
       searchResults: [],
       loading: false,
@@ -235,7 +241,7 @@ describe('SearchResults', () => {
 
     expect(screen.getByTestId('error-message')).toBeInTheDocument();
     expect(screen.getByText('Failed to search movies')).toBeInTheDocument();
-    
+
     await user.click(screen.getByTestId('retry-button'));
     expect(mockSearchMovies).toHaveBeenCalledWith('test', 1);
   });
@@ -264,7 +270,9 @@ describe('SearchResults', () => {
     renderWithRouter(<SearchResults />);
 
     expect(screen.getByText('No movies found')).toBeInTheDocument();
-    expect(screen.getByText(/We couldn't find any movies matching/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/We couldn't find any movies matching/)
+    ).toBeInTheDocument();
     expect(screen.getByText('Browse Popular Movies')).toBeInTheDocument();
   });
 
@@ -280,7 +288,7 @@ describe('SearchResults', () => {
 
   it('handles search input changes', async () => {
     const user = userEvent.setup();
-    
+
     renderWithRouter(<SearchResults />);
 
     const searchInput = screen.getByTestId('search-input-field');
@@ -296,7 +304,7 @@ describe('SearchResults', () => {
     renderWithRouter(<SearchResults />);
 
     await user.click(screen.getByTestId('clear-button'));
-    
+
     expect(mockSetSearchParams).toHaveBeenCalledWith({});
     expect(mockClearSearch).toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith('/');
@@ -417,7 +425,9 @@ describe('SearchResults', () => {
 
     renderWithRouter(<SearchResults />);
 
-    expect(screen.getByText(/Showing 1-20 of 100 results for "test movie"/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Showing 1-20 of 100 results for "test movie"/)
+    ).toBeInTheDocument();
   });
 
   it('initializes search from URL params', () => {
@@ -437,8 +447,10 @@ describe('SearchResults', () => {
   });
 
   it('applies custom className', () => {
-    const { container } = renderWithRouter(<SearchResults className="custom-class" />);
-    
+    const { container } = renderWithRouter(
+      <SearchResults className="custom-class" />
+    );
+
     expect(container.firstChild).toHaveClass('custom-class');
   });
 });

@@ -95,7 +95,7 @@ describe('OptimizedMovieService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Setup default mock implementations
     mockedMovieService.getPopularMovies.mockResolvedValue(mockResponse);
     mockedMovieService.getMovieDetails.mockResolvedValue(mockMovieDetails);
@@ -116,7 +116,9 @@ describe('OptimizedMovieService', () => {
     it('should fetch popular movies with performance monitoring', async () => {
       const result = await optimizedMovieService.getPopularMovies(1);
 
-      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith('get-popular-movies');
+      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith(
+        'get-popular-movies'
+      );
       expect(mockedMovieService.getPopularMovies).toHaveBeenCalledWith(1);
       expect(result).toEqual(mockResponse);
     });
@@ -134,10 +136,13 @@ describe('OptimizedMovieService', () => {
       const error = new Error('API Error');
       mockedMovieService.getPopularMovies.mockRejectedValue(error);
 
-      await expect(optimizedMovieService.getPopularMovies(1)).rejects.toThrow('API Error');
-      
+      await expect(optimizedMovieService.getPopularMovies(1)).rejects.toThrow(
+        'API Error'
+      );
+
       // Verify timing was ended even on error
-      const mockEndTiming = mockedPerformanceMonitor.startTiming.mock.results[0].value;
+      const mockEndTiming =
+        mockedPerformanceMonitor.startTiming.mock.results[0].value;
       expect(mockEndTiming).toHaveBeenCalled();
     });
 
@@ -152,8 +157,13 @@ describe('OptimizedMovieService', () => {
     it('should search movies with performance monitoring', async () => {
       const result = await optimizedMovieService.searchMovies('test query', 2);
 
-      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith('search-movies');
-      expect(mockedMovieService.searchMovies).toHaveBeenCalledWith('test query', 2);
+      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith(
+        'search-movies'
+      );
+      expect(mockedMovieService.searchMovies).toHaveBeenCalledWith(
+        'test query',
+        2
+      );
       expect(result).toEqual(mockResponse);
     });
 
@@ -169,7 +179,10 @@ describe('OptimizedMovieService', () => {
     it('should use default page parameter', async () => {
       await optimizedMovieService.searchMovies('test query');
 
-      expect(mockedMovieService.searchMovies).toHaveBeenCalledWith('test query', 1);
+      expect(mockedMovieService.searchMovies).toHaveBeenCalledWith(
+        'test query',
+        1
+      );
     });
   });
 
@@ -177,7 +190,9 @@ describe('OptimizedMovieService', () => {
     it('should fetch movie details with performance monitoring', async () => {
       const result = await optimizedMovieService.getMovieDetails(1);
 
-      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith('get-movie-details');
+      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith(
+        'get-movie-details'
+      );
       expect(mockedMovieService.getMovieDetails).toHaveBeenCalledWith(1);
       expect(result).toEqual(mockMovieDetails);
     });
@@ -197,7 +212,9 @@ describe('OptimizedMovieService', () => {
 
     it('should handle movie without backdrop', async () => {
       const movieWithoutBackdrop = { ...mockMovieDetails, backdrop_path: null };
-      mockedMovieService.getMovieDetails.mockResolvedValue(movieWithoutBackdrop);
+      mockedMovieService.getMovieDetails.mockResolvedValue(
+        movieWithoutBackdrop
+      );
 
       await optimizedMovieService.getMovieDetails(1);
 
@@ -228,7 +245,9 @@ describe('OptimizedMovieService', () => {
     it('should fetch movie credits with performance monitoring', async () => {
       const result = await optimizedMovieService.getMovieCredits(1);
 
-      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith('get-movie-credits');
+      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith(
+        'get-movie-credits'
+      );
       expect(mockedMovieService.getMovieCredits).toHaveBeenCalledWith(1);
       expect(result).toEqual(mockCredits);
     });
@@ -244,7 +263,9 @@ describe('OptimizedMovieService', () => {
         })),
       };
 
-      mockedMovieService.getMovieCredits.mockResolvedValue(creditsWithMultipleCast);
+      mockedMovieService.getMovieCredits.mockResolvedValue(
+        creditsWithMultipleCast
+      );
 
       await optimizedMovieService.getMovieCredits(1);
 
@@ -262,7 +283,9 @@ describe('OptimizedMovieService', () => {
         cast: [{ ...mockCredits.cast[0], profile_path: null }],
       };
 
-      mockedMovieService.getMovieCredits.mockResolvedValue(creditsWithoutProfiles);
+      mockedMovieService.getMovieCredits.mockResolvedValue(
+        creditsWithoutProfiles
+      );
 
       await optimizedMovieService.getMovieCredits(1);
 
@@ -277,7 +300,9 @@ describe('OptimizedMovieService', () => {
 
       const result = await optimizedMovieService.getGenres();
 
-      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith('get-genres');
+      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith(
+        'get-genres'
+      );
       expect(mockedMovieService.getGenres).toHaveBeenCalled();
       expect(result).toEqual(mockGenres);
     });
@@ -304,7 +329,9 @@ describe('OptimizedMovieService', () => {
 
       const result = await optimizedMovieService.batchLoadMovies(movieIds);
 
-      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith('batch-load-movies');
+      expect(mockedPerformanceMonitor.startTiming).toHaveBeenCalledWith(
+        'batch-load-movies'
+      );
       expect(result).toHaveLength(8);
       expect(result[0].title).toBe('Movie 1');
       expect(result[7].title).toBe('Movie 8');
@@ -312,7 +339,7 @@ describe('OptimizedMovieService', () => {
 
     it('should handle failed requests in batch', async () => {
       const movieIds = [1, 2, 3];
-      
+
       mockedMovieService.getMovieDetails
         .mockResolvedValueOnce(mockMovieDetails)
         .mockRejectedValueOnce(new Error('Movie not found'))
@@ -327,7 +354,7 @@ describe('OptimizedMovieService', () => {
 
     it('should respect batch size limit', async () => {
       const movieIds = Array.from({ length: 12 }, (_, i) => i + 1);
-      
+
       // Mock all requests to resolve
       movieIds.forEach((id) => {
         mockedMovieService.getMovieDetails.mockResolvedValueOnce({
@@ -371,16 +398,18 @@ describe('OptimizedMovieService', () => {
 
     it('should use setTimeout fallback when requestIdleCallback is not available', async () => {
       delete (global as any).requestIdleCallback;
-      
-      const setTimeoutSpy = vi.spyOn(global, 'setTimeout').mockImplementation((callback) => {
-        (callback as Function)();
-        return 1 as any;
-      });
+
+      const setTimeoutSpy = vi
+        .spyOn(global, 'setTimeout')
+        .mockImplementation((callback) => {
+          (callback as Function)();
+          return 1 as any;
+        });
 
       await optimizedMovieService.prefetchNextPage(1);
 
       expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 100);
-      
+
       setTimeoutSpy.mockRestore();
     });
   });
@@ -388,13 +417,19 @@ describe('OptimizedMovieService', () => {
   describe('debouncedSearchMovies', () => {
     it('should provide debounced search functionality', async () => {
       const callback = vi.fn();
-      
+
       // The debounced function should exist
-      expect(typeof optimizedMovieService.debouncedSearchMovies).toBe('function');
-      
+      expect(typeof optimizedMovieService.debouncedSearchMovies).toBe(
+        'function'
+      );
+
       // Call the debounced function
-      await optimizedMovieService.debouncedSearchMovies('test query', 1, callback);
-      
+      await optimizedMovieService.debouncedSearchMovies(
+        'test query',
+        1,
+        callback
+      );
+
       // Since we mocked debounce to return the original function,
       // the callback should be called immediately in our test
       expect(callback).toHaveBeenCalledWith(mockResponse);
@@ -489,20 +524,26 @@ describe('OptimizedMovieService', () => {
       const error = new Error('Service unavailable');
       mockedMovieService.getPopularMovies.mockRejectedValue(error);
 
-      await expect(optimizedMovieService.getPopularMovies(1)).rejects.toThrow('Service unavailable');
+      await expect(optimizedMovieService.getPopularMovies(1)).rejects.toThrow(
+        'Service unavailable'
+      );
 
       // Should still end timing on error
-      const mockEndTiming = mockedPerformanceMonitor.startTiming.mock.results[0].value;
+      const mockEndTiming =
+        mockedPerformanceMonitor.startTiming.mock.results[0].value;
       expect(mockEndTiming).toHaveBeenCalled();
     });
 
     it('should handle image preloading errors gracefully', async () => {
       // Mock the preloadMovieImages method to not throw
-      const originalPreloadMovieImages = optimizedMovieService['preloadMovieImages'];
+      const originalPreloadMovieImages =
+        optimizedMovieService['preloadMovieImages'];
       optimizedMovieService['preloadMovieImages'] = vi.fn();
 
       // Should not throw error even if image preloading fails
-      await expect(optimizedMovieService.getPopularMovies(1)).resolves.toEqual(mockResponse);
+      await expect(optimizedMovieService.getPopularMovies(1)).resolves.toEqual(
+        mockResponse
+      );
 
       // Restore original method
       optimizedMovieService['preloadMovieImages'] = originalPreloadMovieImages;

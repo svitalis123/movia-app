@@ -39,28 +39,33 @@ A modern React application built with TypeScript, Tailwind CSS, and shadcn/ui fo
 ## Getting Started
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd movie-recommendation-app
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    ```
-   
+
    Fill in your API keys in the `.env` file:
+
    ```env
    VITE_TMDB_API_KEY=your_tmdb_api_key_here
    VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key_here
    ```
 
 4. **Start the development server**
+
    ```bash
    npm run dev
    ```
@@ -94,22 +99,25 @@ A modern React application built with TypeScript, Tailwind CSS, and shadcn/ui fo
 ## 🆕 Recent Updates
 
 ### Notification System (Task 13.2) ✅
+
 We've implemented a comprehensive notification system that provides users with immediate feedback for all actions:
 
 #### Key Features:
+
 - **Toast Notifications**: Success, error, warning, and info messages with smooth animations
 - **Loading States**: Global and operation-specific loading indicators for all async operations
 - **Enhanced Error Handling**: User-friendly error messages with actionable guidance
 - **Async Operation Hooks**: Simplified hooks for handling async operations with automatic notifications
 
 #### Quick Example:
+
 ```typescript
 import { useToast } from './lib/stores/toast-store';
 import { useAsyncOperation } from './lib/hooks/use-async-operation';
 
 function MyComponent() {
   const { showSuccess, showError } = useToast();
-  
+
   const { execute, loading } = useAsyncOperation(
     movieService.getMovieDetails,
     {
@@ -127,6 +135,7 @@ function MyComponent() {
 ```
 
 #### Authentication Fixes:
+
 - ✅ Fixed redirect loop after login/signup
 - ✅ Proper navigation to home page after authentication
 - ✅ Improved Clerk integration with React Router
@@ -162,12 +171,12 @@ src/
 
 ## Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `VITE_TMDB_API_KEY` | The Movie Database API key | Yes |
-| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk authentication key | Yes |
-| `VITE_TMDB_BASE_URL` | TMDB API base URL | No (has default) |
-| `VITE_TMDB_IMAGE_BASE_URL` | TMDB image base URL | No (has default) |
+| Variable                     | Description                | Required         |
+| ---------------------------- | -------------------------- | ---------------- |
+| `VITE_TMDB_API_KEY`          | The Movie Database API key | Yes              |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk authentication key   | Yes              |
+| `VITE_TMDB_BASE_URL`         | TMDB API base URL          | No (has default) |
+| `VITE_TMDB_IMAGE_BASE_URL`   | TMDB image base URL        | No (has default) |
 
 ## CI/CD Pipeline
 

@@ -39,7 +39,7 @@ describe('Cache Store', () => {
       movieDetails: {},
       genres: null,
     });
-    
+
     // Reset timers
     vi.useFakeTimers();
   });
@@ -52,17 +52,17 @@ describe('Cache Store', () => {
     it('should cache and retrieve movies', () => {
       const store = useCacheStore.getState();
       const movies = [mockMovie];
-      
+
       store.setCachedMovies('test-key', movies);
       const cachedMovies = store.getCachedMovies('test-key');
-      
+
       expect(cachedMovies).toEqual(movies);
     });
 
     it('should return null for non-existent cache key', () => {
       const store = useCacheStore.getState();
       const cachedMovies = store.getCachedMovies('non-existent-key');
-      
+
       expect(cachedMovies).toBe(null);
     });
 
@@ -70,18 +70,18 @@ describe('Cache Store', () => {
       const store = useCacheStore.getState();
       const movies = [mockMovie];
       const ttl = 5000; // 5 seconds
-      
+
       store.setCachedMovies('test-key', movies, ttl);
-      
+
       // Should be available immediately
       expect(store.getCachedMovies('test-key')).toEqual(movies);
-      
+
       // Advance time beyond TTL
       vi.advanceTimersByTime(ttl + 1000);
-      
+
       // Should be expired and return null
       expect(store.getCachedMovies('test-key')).toBe(null);
-      
+
       // Cache entry should be removed
       const state = useCacheStore.getState();
       expect(state.movies['test-key']).toBeUndefined();
@@ -90,15 +90,15 @@ describe('Cache Store', () => {
     it('should use default TTL when not specified', () => {
       const store = useCacheStore.getState();
       const movies = [mockMovie];
-      
+
       store.setCachedMovies('test-key', movies);
-      
+
       // Should be available immediately
       expect(store.getCachedMovies('test-key')).toEqual(movies);
-      
+
       // Advance time by default TTL (5 minutes)
       vi.advanceTimersByTime(5 * 60 * 1000 + 1000);
-      
+
       // Should be expired
       expect(store.getCachedMovies('test-key')).toBe(null);
     });
@@ -107,35 +107,35 @@ describe('Cache Store', () => {
   describe('movie details caching', () => {
     it('should cache and retrieve movie details', () => {
       const store = useCacheStore.getState();
-      
+
       store.setCachedMovieDetails(1, mockMovieDetails);
       const cachedDetails = store.getCachedMovieDetails(1);
-      
+
       expect(cachedDetails).toEqual(mockMovieDetails);
     });
 
     it('should return null for non-existent movie ID', () => {
       const store = useCacheStore.getState();
       const cachedDetails = store.getCachedMovieDetails(999);
-      
+
       expect(cachedDetails).toBe(null);
     });
 
     it('should expire cached movie details after TTL', () => {
       const store = useCacheStore.getState();
       const ttl = 10000; // 10 seconds
-      
+
       store.setCachedMovieDetails(1, mockMovieDetails, ttl);
-      
+
       // Should be available immediately
       expect(store.getCachedMovieDetails(1)).toEqual(mockMovieDetails);
-      
+
       // Advance time beyond TTL
       vi.advanceTimersByTime(ttl + 1000);
-      
+
       // Should be expired and return null
       expect(store.getCachedMovieDetails(1)).toBe(null);
-      
+
       // Cache entry should be removed
       const state = useCacheStore.getState();
       expect(state.movieDetails[1]).toBeUndefined();
@@ -145,35 +145,35 @@ describe('Cache Store', () => {
   describe('genres caching', () => {
     it('should cache and retrieve genres', () => {
       const store = useCacheStore.getState();
-      
+
       store.setCachedGenres(mockGenres);
       const cachedGenres = store.getCachedGenres();
-      
+
       expect(cachedGenres).toEqual(mockGenres);
     });
 
     it('should return null when no genres cached', () => {
       const store = useCacheStore.getState();
       const cachedGenres = store.getCachedGenres();
-      
+
       expect(cachedGenres).toBe(null);
     });
 
     it('should expire cached genres after TTL', () => {
       const store = useCacheStore.getState();
       const ttl = 15000; // 15 seconds
-      
+
       store.setCachedGenres(mockGenres, ttl);
-      
+
       // Should be available immediately
       expect(store.getCachedGenres()).toEqual(mockGenres);
-      
+
       // Advance time beyond TTL
       vi.advanceTimersByTime(ttl + 1000);
-      
+
       // Should be expired and return null
       expect(store.getCachedGenres()).toBe(null);
-      
+
       // Cache entry should be removed
       const state = useCacheStore.getState();
       expect(state.genres).toBe(null);
@@ -183,7 +183,7 @@ describe('Cache Store', () => {
   describe('cache clearing', () => {
     beforeEach(() => {
       const store = useCacheStore.getState();
-      
+
       // Set up some cached data
       store.setCachedMovies('popular-movies', [mockMovie]);
       store.setCachedMovies('search-results', [mockMovie]);
@@ -194,7 +194,7 @@ describe('Cache Store', () => {
     it('should clear all cache when no type specified', () => {
       const store = useCacheStore.getState();
       store.clearCache();
-      
+
       const state = useCacheStore.getState();
       expect(state.movies).toEqual({});
       expect(state.movieDetails).toEqual({});
@@ -204,7 +204,7 @@ describe('Cache Store', () => {
     it('should clear only movies cache', () => {
       const store = useCacheStore.getState();
       store.clearCache('movies');
-      
+
       const state = useCacheStore.getState();
       expect(state.movies).toEqual({});
       expect(state.movieDetails[1]).toBeTruthy(); // Should still exist
@@ -214,7 +214,7 @@ describe('Cache Store', () => {
     it('should clear only movie details cache', () => {
       const store = useCacheStore.getState();
       store.clearCache('movieDetails');
-      
+
       const state = useCacheStore.getState();
       expect(state.movieDetails).toEqual({});
       expect(state.movies['popular-movies']).toBeTruthy(); // Should still exist
@@ -224,7 +224,7 @@ describe('Cache Store', () => {
     it('should clear only genres cache', () => {
       const store = useCacheStore.getState();
       store.clearCache('genres');
-      
+
       const state = useCacheStore.getState();
       expect(state.genres).toBe(null);
       expect(state.movies['popular-movies']).toBeTruthy(); // Should still exist
@@ -236,32 +236,33 @@ describe('Cache Store', () => {
     it('should check if movies are cached using state directly', () => {
       const store = useCacheStore.getState();
       store.setCachedMovies('test-key', [mockMovie]);
-      
+
       const state = useCacheStore.getState();
       const cached = state.movies['test-key'];
-      const isCached = cached && (Date.now() - cached.timestamp <= cached.ttl);
-      
+      const isCached = cached && Date.now() - cached.timestamp <= cached.ttl;
+
       expect(isCached).toBe(true);
     });
 
     it('should check if movie details are cached using state directly', () => {
       const store = useCacheStore.getState();
       store.setCachedMovieDetails(1, mockMovieDetails);
-      
+
       const state = useCacheStore.getState();
       const cached = state.movieDetails[1];
-      const isCached = cached && (Date.now() - cached.timestamp <= cached.ttl);
-      
+      const isCached = cached && Date.now() - cached.timestamp <= cached.ttl;
+
       expect(isCached).toBe(true);
     });
 
     it('should check if genres are cached using state directly', () => {
       const store = useCacheStore.getState();
       store.setCachedGenres(mockGenres);
-      
+
       const state = useCacheStore.getState();
-      const isCached = state.genres && (Date.now() - state.genres.timestamp <= state.genres.ttl);
-      
+      const isCached =
+        state.genres && Date.now() - state.genres.timestamp <= state.genres.ttl;
+
       expect(isCached).toBe(true);
     });
   });
@@ -283,15 +284,15 @@ describe('Cache Store', () => {
   describe('multiple cache entries', () => {
     it('should handle multiple movie cache entries', () => {
       const store = useCacheStore.getState();
-      
+
       store.setCachedMovies('popular-page-1', [mockMovie]);
       store.setCachedMovies('popular-page-2', [{ ...mockMovie, id: 2 }]);
       store.setCachedMovies('search-action', [{ ...mockMovie, id: 3 }]);
-      
+
       expect(store.getCachedMovies('popular-page-1')).toHaveLength(1);
       expect(store.getCachedMovies('popular-page-2')).toHaveLength(1);
       expect(store.getCachedMovies('search-action')).toHaveLength(1);
-      
+
       expect(store.getCachedMovies('popular-page-1')?.[0].id).toBe(1);
       expect(store.getCachedMovies('popular-page-2')?.[0].id).toBe(2);
       expect(store.getCachedMovies('search-action')?.[0].id).toBe(3);
@@ -299,10 +300,10 @@ describe('Cache Store', () => {
 
     it('should handle multiple movie details cache entries', () => {
       const store = useCacheStore.getState();
-      
+
       store.setCachedMovieDetails(1, mockMovieDetails);
       store.setCachedMovieDetails(2, { ...mockMovieDetails, id: 2 });
-      
+
       expect(store.getCachedMovieDetails(1)?.id).toBe(1);
       expect(store.getCachedMovieDetails(2)?.id).toBe(2);
       expect(store.getCachedMovieDetails(3)).toBe(null);

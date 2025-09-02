@@ -13,7 +13,9 @@ class ClerkAuthService implements AuthService {
    * Note: With Clerk, login is handled by their components/hooks
    */
   async login(): Promise<User> {
-    throw new Error('Login should be handled by Clerk components (SignIn, SignUp)');
+    throw new Error(
+      'Login should be handled by Clerk components (SignIn, SignUp)'
+    );
   }
 
   /**
@@ -53,7 +55,7 @@ class ClerkAuthService implements AuthService {
    */
   onAuthStateChange(callback: (user: User | null) => void): () => void {
     this.authStateCallbacks.add(callback);
-    
+
     return () => {
       this.authStateCallbacks.delete(callback);
     };
@@ -63,7 +65,7 @@ class ClerkAuthService implements AuthService {
    * Notifies all registered callbacks of auth state changes
    */
   private notifyAuthStateChange(user: User | null): void {
-    this.authStateCallbacks.forEach(callback => callback(user));
+    this.authStateCallbacks.forEach((callback) => callback(user));
   }
 }
 
@@ -80,9 +82,11 @@ export function useClerkAuthService() {
    */
   const transformClerkUser = (clerkUser: unknown): User | null => {
     if (!clerkUser || typeof clerkUser !== 'object') return null;
-    
+
     const user = clerkUser as Record<string, unknown>;
-    const primaryEmail = user.primaryEmailAddress as Record<string, unknown> | undefined;
+    const primaryEmail = user.primaryEmailAddress as
+      | Record<string, unknown>
+      | undefined;
 
     return {
       id: String(user.id || ''),
@@ -90,8 +94,12 @@ export function useClerkAuthService() {
       firstName: user.firstName ? String(user.firstName) : undefined,
       lastName: user.lastName ? String(user.lastName) : undefined,
       imageUrl: user.imageUrl ? String(user.imageUrl) : undefined,
-      createdAt: user.createdAt ? new Date(user.createdAt as string).toISOString() : undefined,
-      lastLoginAt: user.lastSignInAt ? new Date(user.lastSignInAt as string).toISOString() : undefined,
+      createdAt: user.createdAt
+        ? new Date(user.createdAt as string).toISOString()
+        : undefined,
+      lastLoginAt: user.lastSignInAt
+        ? new Date(user.lastSignInAt as string).toISOString()
+        : undefined,
     };
   };
 
@@ -126,7 +134,9 @@ export function useClerkAuthService() {
    * In practice, this should trigger navigation to sign-in page/modal
    */
   const login = async (): Promise<User> => {
-    throw new Error('Login should be handled by navigating to Clerk SignIn component');
+    throw new Error(
+      'Login should be handled by navigating to Clerk SignIn component'
+    );
   };
 
   /**
@@ -163,19 +173,19 @@ export const authUtils = {
    */
   getUserDisplayName: (user: User | null): string => {
     if (!user) return 'Guest';
-    
+
     if (user.firstName && user.lastName) {
       return `${user.firstName} ${user.lastName}`;
     }
-    
+
     if (user.firstName) {
       return user.firstName;
     }
-    
+
     if (user.email) {
       return user.email.split('@')[0];
     }
-    
+
     return 'User';
   },
 
@@ -184,19 +194,19 @@ export const authUtils = {
    */
   getUserInitials: (user: User | null): string => {
     if (!user) return 'G';
-    
+
     if (user.firstName && user.lastName) {
       return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
     }
-    
+
     if (user.firstName) {
       return user.firstName[0].toUpperCase();
     }
-    
+
     if (user.email) {
       return user.email[0].toUpperCase();
     }
-    
+
     return 'U';
   },
 };

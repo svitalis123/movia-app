@@ -16,7 +16,8 @@ test.describe('Responsive Design and Mobile Experience', () => {
 
       // Should redirect to auth on desktop
       const currentUrl = page.url();
-      const isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+      const isAuthPage =
+        currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
       expect(isAuthPage).toBeTruthy();
 
       // Check that page content fits within viewport
@@ -29,7 +30,9 @@ test.describe('Responsive Design and Mobile Experience', () => {
       }
     });
 
-    test('should have proper responsive meta tags on desktop', async ({ page }) => {
+    test('should have proper responsive meta tags on desktop', async ({
+      page,
+    }) => {
       await page.goto('/');
       await page.waitForTimeout(1000);
 
@@ -39,7 +42,7 @@ test.describe('Responsive Design and Mobile Experience', () => {
 
       // Check that CSS is responsive
       const body = page.locator('body');
-      const bodyStyles = await body.evaluate(el => {
+      const bodyStyles = await body.evaluate((el) => {
         const styles = window.getComputedStyle(el);
         return styles.margin;
       });
@@ -59,7 +62,8 @@ test.describe('Responsive Design and Mobile Experience', () => {
 
       // Should redirect to auth on tablet
       const currentUrl = page.url();
-      const isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+      const isAuthPage =
+        currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
       expect(isAuthPage).toBeTruthy();
 
       // Check that content fits within tablet viewport
@@ -71,14 +75,16 @@ test.describe('Responsive Design and Mobile Experience', () => {
       }
     });
 
-    test('should maintain touch-friendly elements on tablet', async ({ page }) => {
+    test('should maintain touch-friendly elements on tablet', async ({
+      page,
+    }) => {
       await page.goto('/');
       await page.waitForTimeout(2000);
 
       // Check for interactive elements that should be touch-friendly
       const buttons = page.locator('button, a, input');
 
-      if (await buttons.count() > 0) {
+      if ((await buttons.count()) > 0) {
         const firstButton = buttons.first();
         const buttonBox = await firstButton.boundingBox();
 
@@ -101,7 +107,8 @@ test.describe('Responsive Design and Mobile Experience', () => {
 
       // Should redirect to auth on mobile
       const currentUrl = page.url();
-      const isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+      const isAuthPage =
+        currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
       expect(isAuthPage).toBeTruthy();
 
       // Content should not overflow horizontally
@@ -113,14 +120,16 @@ test.describe('Responsive Design and Mobile Experience', () => {
       }
     });
 
-    test('should have touch-friendly interactive elements', async ({ page }) => {
+    test('should have touch-friendly interactive elements', async ({
+      page,
+    }) => {
       await page.goto('/');
       await page.waitForTimeout(2000);
 
       // Check for touch-friendly elements
       const interactiveElements = page.locator('button, a, input');
 
-      if (await interactiveElements.count() > 0) {
+      if ((await interactiveElements.count()) > 0) {
         const firstElement = interactiveElements.first();
         const elementBox = await firstElement.boundingBox();
 
@@ -138,14 +147,14 @@ test.describe('Responsive Design and Mobile Experience', () => {
       // Check that text is readable on mobile
       const textElements = page.locator('p, span, div, h1, h2, h3, h4, h5, h6');
 
-      if (await textElements.count() > 0) {
+      if ((await textElements.count()) > 0) {
         const firstText = textElements.first();
 
-        const textStyles = await firstText.evaluate(el => {
+        const textStyles = await firstText.evaluate((el) => {
           const styles = window.getComputedStyle(el);
           return {
             fontSize: styles.fontSize,
-            color: styles.color
+            color: styles.color,
           };
         });
 
@@ -169,7 +178,8 @@ test.describe('Responsive Design and Mobile Experience', () => {
 
       // Should redirect to auth on larger mobile
       const currentUrl = page.url();
-      const isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+      const isAuthPage =
+        currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
       expect(isAuthPage).toBeTruthy();
 
       // Content should fit within larger mobile viewport
@@ -183,21 +193,28 @@ test.describe('Responsive Design and Mobile Experience', () => {
   });
 
   test.describe('Cross-Device Functionality', () => {
-    test('should maintain functionality across different screen sizes', async ({ page }) => {
+    test('should maintain functionality across different screen sizes', async ({
+      page,
+    }) => {
       const viewports = [
         { width: 1920, height: 1080, name: 'Desktop' },
         { width: 768, height: 1024, name: 'Tablet' },
-        { width: 375, height: 667, name: 'Mobile' }
+        { width: 375, height: 667, name: 'Mobile' },
       ];
 
       for (const viewport of viewports) {
-        await page.setViewportSize({ width: viewport.width, height: viewport.height });
+        await page.setViewportSize({
+          width: viewport.width,
+          height: viewport.height,
+        });
         await page.goto('/');
         await page.waitForTimeout(1000);
 
         // Should redirect to auth on all devices
         const currentUrl = page.url();
-        const isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+        const isAuthPage =
+          currentUrl.includes('/sign-in') ||
+          currentUrl.includes('accounts.dev');
         expect(isAuthPage).toBeTruthy();
 
         // Content should fit within viewport
@@ -210,14 +227,17 @@ test.describe('Responsive Design and Mobile Experience', () => {
       }
     });
 
-    test('should handle orientation changes on mobile devices', async ({ page }) => {
+    test('should handle orientation changes on mobile devices', async ({
+      page,
+    }) => {
       // Start in portrait mode
       await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/');
       await page.waitForTimeout(1000);
 
       let currentUrl = page.url();
-      let isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+      let isAuthPage =
+        currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
       expect(isAuthPage).toBeTruthy();
 
       // Switch to landscape mode
@@ -226,7 +246,8 @@ test.describe('Responsive Design and Mobile Experience', () => {
 
       // Should still work in landscape
       currentUrl = page.url();
-      isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+      isAuthPage =
+        currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
       expect(isAuthPage).toBeTruthy();
     });
   });
@@ -246,7 +267,7 @@ test.describe('Responsive Design and Mobile Experience', () => {
       // Should be able to navigate to interactive elements without errors
       // This is a basic smoke test for keyboard navigation
       const interactiveElements = page.locator('button, a, input');
-      const hasInteractiveElements = await interactiveElements.count() > 0;
+      const hasInteractiveElements = (await interactiveElements.count()) > 0;
       expect(hasInteractiveElements).toBeTruthy();
     });
   });

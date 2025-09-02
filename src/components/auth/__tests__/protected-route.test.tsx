@@ -4,8 +4,12 @@ import { ProtectedRoute } from '../protected-route';
 
 // Mock Clerk components
 vi.mock('@clerk/clerk-react', () => ({
-  SignedIn: vi.fn(({ children }) => <div data-testid="signed-in">{children}</div>),
-  SignedOut: vi.fn(({ children }) => <div data-testid="signed-out">{children}</div>),
+  SignedIn: vi.fn(({ children }) => (
+    <div data-testid="signed-in">{children}</div>
+  )),
+  SignedOut: vi.fn(({ children }) => (
+    <div data-testid="signed-out">{children}</div>
+  )),
   RedirectToSignIn: vi.fn(({ redirectUrl }) => (
     <div data-testid="redirect-to-signin">
       <div data-testid="redirect-url">{redirectUrl}</div>
@@ -21,7 +25,7 @@ describe('ProtectedRoute Component', () => {
         <div>{testContent}</div>
       </ProtectedRoute>
     );
-    
+
     expect(screen.getByTestId('signed-in')).toBeInTheDocument();
     expect(screen.getByText(testContent)).toBeInTheDocument();
   });
@@ -32,7 +36,7 @@ describe('ProtectedRoute Component', () => {
         <div>Protected content</div>
       </ProtectedRoute>
     );
-    
+
     expect(screen.getByTestId('signed-out')).toBeInTheDocument();
     expect(screen.getByTestId('redirect-to-signin')).toBeInTheDocument();
     expect(screen.getByTestId('redirect-url')).toHaveTextContent('/sign-in');
@@ -45,7 +49,7 @@ describe('ProtectedRoute Component', () => {
         <div>Protected content</div>
       </ProtectedRoute>
     );
-    
+
     expect(screen.getByTestId('signed-out')).toBeInTheDocument();
     expect(screen.getByText(fallbackContent)).toBeInTheDocument();
     expect(screen.queryByTestId('redirect-to-signin')).not.toBeInTheDocument();
@@ -58,8 +62,10 @@ describe('ProtectedRoute Component', () => {
         <div>Protected content</div>
       </ProtectedRoute>
     );
-    
-    expect(screen.getByTestId('redirect-url')).toHaveTextContent(customRedirectTo);
+
+    expect(screen.getByTestId('redirect-url')).toHaveTextContent(
+      customRedirectTo
+    );
   });
 
   it('renders both SignedIn and SignedOut components', () => {
@@ -68,7 +74,7 @@ describe('ProtectedRoute Component', () => {
         <div>Protected content</div>
       </ProtectedRoute>
     );
-    
+
     // Both components should be rendered (Clerk handles the conditional logic)
     expect(screen.getByTestId('signed-in')).toBeInTheDocument();
     expect(screen.getByTestId('signed-out')).toBeInTheDocument();

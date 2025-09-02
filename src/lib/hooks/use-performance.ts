@@ -10,11 +10,14 @@ export function usePerformanceMonitor(componentName: string) {
 
   useEffect(() => {
     mountTime.current = performance.now();
-    
+
     return () => {
       const unmountTime = performance.now();
       const totalLifetime = unmountTime - mountTime.current;
-      performanceMonitor.recordMetric(`${componentName}-lifetime`, totalLifetime);
+      performanceMonitor.recordMetric(
+        `${componentName}-lifetime`,
+        totalLifetime
+      );
     };
   }, [componentName]);
 
@@ -30,14 +33,17 @@ export function usePerformanceMonitor(componentName: string) {
     }
   }, [componentName]);
 
-  const recordCustomMetric = useCallback((metricName: string, value: number) => {
-    performanceMonitor.recordMetric(`${componentName}-${metricName}`, value);
-  }, [componentName]);
+  const recordCustomMetric = useCallback(
+    (metricName: string, value: number) => {
+      performanceMonitor.recordMetric(`${componentName}-${metricName}`, value);
+    },
+    [componentName]
+  );
 
   return {
     startRenderTiming,
     endRenderTiming,
-    recordCustomMetric
+    recordCustomMetric,
   };
 }
 
@@ -87,33 +93,39 @@ export function useIntersectionObserver(
   const elementRef = useRef<Element | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const setElement = useCallback((element: Element | null) => {
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
+  const setElement = useCallback(
+    (element: Element | null) => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
 
-    elementRef.current = element;
+      elementRef.current = element;
 
-    if (element) {
-      observerRef.current = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const startTime = performance.now();
-            callback(entry);
-            const duration = performance.now() - startTime;
-            performanceMonitor.recordMetric('intersection-callback', duration);
-          });
-        },
-        {
-          threshold: 0.1,
-          rootMargin: '50px',
-          ...options
-        }
-      );
+      if (element) {
+        observerRef.current = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              const startTime = performance.now();
+              callback(entry);
+              const duration = performance.now() - startTime;
+              performanceMonitor.recordMetric(
+                'intersection-callback',
+                duration
+              );
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: '50px',
+            ...options,
+          }
+        );
 
-      observerRef.current.observe(element);
-    }
-  }, [callback, options]);
+        observerRef.current.observe(element);
+      }
+    },
+    [callback, options]
+  );
 
   useEffect(() => {
     return () => {
@@ -138,18 +150,24 @@ export function useRenderPerformance(componentName: string, enabled = true) {
 
     renderCount.current++;
     const currentTime = performance.now();
-    
+
     if (lastRenderTime.current > 0) {
       const timeSinceLastRender = currentTime - lastRenderTime.current;
-      performanceMonitor.recordMetric(`${componentName}-render-interval`, timeSinceLastRender);
+      performanceMonitor.recordMetric(
+        `${componentName}-render-interval`,
+        timeSinceLastRender
+      );
     }
-    
+
     lastRenderTime.current = currentTime;
-    performanceMonitor.recordMetric(`${componentName}-render-count`, renderCount.current);
+    performanceMonitor.recordMetric(
+      `${componentName}-render-count`,
+      renderCount.current
+    );
   });
 
   return {
-    renderCount: renderCount.current
+    renderCount: renderCount.current,
   };
 }
 
@@ -163,11 +181,28 @@ export function useMemoryMonitor(componentName: string, interval = 5000) {
     }
 
     const checkMemory = () => {
-      const memory = (performance as unknown as { memory?: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number } }).memory;
+      const memory = (
+        performance as unknown as {
+          memory?: {
+            usedJSHeapSize: number;
+            totalJSHeapSize: number;
+            jsHeapSizeLimit: number;
+          };
+        }
+      ).memory;
       if (memory) {
-        performanceMonitor.recordMetric(`${componentName}-memory-used`, memory.usedJSHeapSize);
-        performanceMonitor.recordMetric(`${componentName}-memory-total`, memory.totalJSHeapSize);
-        performanceMonitor.recordMetric(`${componentName}-memory-limit`, memory.jsHeapSizeLimit);
+        performanceMonitor.recordMetric(
+          `${componentName}-memory-used`,
+          memory.usedJSHeapSize
+        );
+        performanceMonitor.recordMetric(
+          `${componentName}-memory-total`,
+          memory.totalJSHeapSize
+        );
+        performanceMonitor.recordMetric(
+          `${componentName}-memory-limit`,
+          memory.jsHeapSizeLimit
+        );
       }
     };
 
@@ -182,24 +217,30 @@ export function useMemoryMonitor(componentName: string, interval = 5000) {
  * Hook for network performance monitoring
  */
 export function useNetworkMonitor() {
-  const recordNetworkTiming = useCallback((url: string, startTime: number, endTime: number) => {
-    const duration = endTime - startTime;
-    performanceMonitor.recordMetric('network-request', duration);
-    performanceMonitor.recordMetric(`network-${url}`, duration);
-  }, []);
+  const recordNetworkTiming = useCallback(
+    (url: string, startTime: number, endTime: number) => {
+      const duration = endTime - startTime;
+      performanceMonitor.recordMetric('network-request', duration);
+      performanceMonitor.recordMetric(`network-${url}`, duration);
+    },
+    []
+  );
 
-  const wrapFetch = useCallback((url: string, options?: RequestInit) => {
-    const startTime = performance.now();
-    
-    return fetch(url, options).finally(() => {
-      const endTime = performance.now();
-      recordNetworkTiming(url, startTime, endTime);
-    });
-  }, [recordNetworkTiming]);
+  const wrapFetch = useCallback(
+    (url: string, options?: RequestInit) => {
+      const startTime = performance.now();
+
+      return fetch(url, options).finally(() => {
+        const endTime = performance.now();
+        recordNetworkTiming(url, startTime, endTime);
+      });
+    },
+    [recordNetworkTiming]
+  );
 
   return {
     wrapFetch,
-    recordNetworkTiming
+    recordNetworkTiming,
   };
 }
 
@@ -207,31 +248,37 @@ export function useNetworkMonitor() {
  * Hook for bundle size monitoring
  */
 export function useBundleMonitor() {
-  const recordModuleLoad = useCallback((moduleName: string, loadTime: number) => {
-    performanceMonitor.recordMetric(`module-load-${moduleName}`, loadTime);
-  }, []);
+  const recordModuleLoad = useCallback(
+    (moduleName: string, loadTime: number) => {
+      performanceMonitor.recordMetric(`module-load-${moduleName}`, loadTime);
+    },
+    []
+  );
 
-  const wrapDynamicImport = useCallback(async <T>(
-    importFn: () => Promise<T>,
-    moduleName: string
-  ): Promise<T> => {
-    const startTime = performance.now();
-    
-    try {
-      const module = await importFn();
-      const loadTime = performance.now() - startTime;
-      recordModuleLoad(moduleName, loadTime);
-      return module;
-    } catch (error) {
-      const loadTime = performance.now() - startTime;
-      performanceMonitor.recordMetric(`module-load-error-${moduleName}`, loadTime);
-      throw error;
-    }
-  }, [recordModuleLoad]);
+  const wrapDynamicImport = useCallback(
+    async <T>(importFn: () => Promise<T>, moduleName: string): Promise<T> => {
+      const startTime = performance.now();
+
+      try {
+        const module = await importFn();
+        const loadTime = performance.now() - startTime;
+        recordModuleLoad(moduleName, loadTime);
+        return module;
+      } catch (error) {
+        const loadTime = performance.now() - startTime;
+        performanceMonitor.recordMetric(
+          `module-load-error-${moduleName}`,
+          loadTime
+        );
+        throw error;
+      }
+    },
+    [recordModuleLoad]
+  );
 
   return {
     wrapDynamicImport,
-    recordModuleLoad
+    recordModuleLoad,
   };
 }
 
@@ -243,5 +290,5 @@ export default {
   useRenderPerformance,
   useMemoryMonitor,
   useNetworkMonitor,
-  useBundleMonitor
+  useBundleMonitor,
 };

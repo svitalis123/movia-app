@@ -132,7 +132,9 @@ describe('Integration Tests', () => {
 
   describe('Movie Store and Cache Store Integration', () => {
     it('should cache movies when fetching popular movies', async () => {
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(mockTMDBResponse);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        mockTMDBResponse
+      );
 
       const movieStore = useMovieStore.getState();
       await movieStore.fetchPopularMovies(1);
@@ -193,13 +195,19 @@ describe('Integration Tests', () => {
         vote_count: 1000,
         genre_ids: [28, 12],
       };
-      cacheStore.setCachedMovies('popular-movies-page-1', [transformedMovie], 1000); // 1 second TTL
+      cacheStore.setCachedMovies(
+        'popular-movies-page-1',
+        [transformedMovie],
+        1000
+      ); // 1 second TTL
 
       // Advance time to expire cache
       vi.advanceTimersByTime(2000);
 
       // Mock fresh data from service
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(mockTMDBResponse);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        mockTMDBResponse
+      );
 
       // Fetch movies - should call service since cache expired
       const movieStore = useMovieStore.getState();
@@ -263,7 +271,9 @@ describe('Integration Tests', () => {
   describe('Error Handling Integration', () => {
     it('should handle service errors across stores', async () => {
       const errorMessage = 'Integration test API error';
-      vi.mocked(movieService.getPopularMovies).mockRejectedValue(new Error(errorMessage));
+      vi.mocked(movieService.getPopularMovies).mockRejectedValue(
+        new Error(errorMessage)
+      );
 
       const movieStore = useMovieStore.getState();
       await movieStore.fetchPopularMovies(1);
@@ -282,7 +292,9 @@ describe('Integration Tests', () => {
       expect(useMovieStore.getState().error).toBe('Previous error');
 
       // Then make a successful request
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(mockTMDBResponse);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        mockTMDBResponse
+      );
       await movieStore.fetchPopularMovies(1);
 
       const movieState = useMovieStore.getState();
@@ -356,7 +368,9 @@ describe('Integration Tests', () => {
       const cachedMovieService = new CachedMovieService(movieService as any);
 
       // Mock the underlying service
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(mockTMDBResponse);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        mockTMDBResponse
+      );
 
       // Test that methods can be called
       const result = await cachedMovieService.getPopularMovies(1);
@@ -372,7 +386,7 @@ describe('Integration Tests', () => {
 
       // Test cache management methods exist and work
       expect(() => cachedMovieService.clearCache()).not.toThrow();
-      
+
       const stats = cachedMovieService.getCacheStats();
       expect(typeof stats).toBe('object');
       expect(typeof stats.hits).toBe('number');
@@ -386,10 +400,12 @@ describe('Integration Tests', () => {
       const cachedMovieService = new CachedMovieService(movieService as any);
 
       // Test configuration methods
-      expect(() => cachedMovieService.updateCacheTTL({
-        popularMovies: 10 * 60 * 1000,
-        movieDetails: 30 * 60 * 1000,
-      })).not.toThrow();
+      expect(() =>
+        cachedMovieService.updateCacheTTL({
+          popularMovies: 10 * 60 * 1000,
+          movieDetails: 30 * 60 * 1000,
+        })
+      ).not.toThrow();
 
       cacheService.destroy();
     });
@@ -399,8 +415,12 @@ describe('Integration Tests', () => {
       const cachedMovieService = new CachedMovieService(movieService as any);
 
       // Test cache type checking
-      expect(typeof cachedMovieService.isCached('popularMovies')).toBe('boolean');
-      expect(typeof cachedMovieService.isCached('movieDetails')).toBe('boolean');
+      expect(typeof cachedMovieService.isCached('popularMovies')).toBe(
+        'boolean'
+      );
+      expect(typeof cachedMovieService.isCached('movieDetails')).toBe(
+        'boolean'
+      );
 
       cacheService.destroy();
     });
@@ -409,8 +429,12 @@ describe('Integration Tests', () => {
   describe('Full Application Flow Integration', () => {
     it('should handle complete movie browsing flow', async () => {
       // Mock services
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(mockTMDBResponse);
-      vi.mocked(movieService.getMovieDetails).mockResolvedValue(mockMovieDetails);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        mockTMDBResponse
+      );
+      vi.mocked(movieService.getMovieDetails).mockResolvedValue(
+        mockMovieDetails
+      );
       vi.mocked(movieService.getMovieCredits).mockResolvedValue({
         id: 1,
         cast: [],
@@ -461,7 +485,9 @@ describe('Integration Tests', () => {
       const movieStore = useMovieStore.getState();
 
       // 1. Initial error
-      vi.mocked(movieService.getPopularMovies).mockRejectedValue(new Error('Network error'));
+      vi.mocked(movieService.getPopularMovies).mockRejectedValue(
+        new Error('Network error')
+      );
       await movieStore.fetchPopularMovies(1);
 
       let state = useMovieStore.getState();
@@ -469,7 +495,9 @@ describe('Integration Tests', () => {
       expect(state.popular).toHaveLength(0);
 
       // 2. User retries - success
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(mockTMDBResponse);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        mockTMDBResponse
+      );
       await movieStore.fetchPopularMovies(1);
 
       state = useMovieStore.getState();
@@ -485,11 +513,13 @@ describe('Integration Tests', () => {
 
       // 1. Anonymous user browsing
       expect(authStore.isAuthenticated).toBe(false);
-      
+
       // Load popular movies as anonymous user
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(mockTMDBResponse);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        mockTMDBResponse
+      );
       await movieStore.fetchPopularMovies(1);
-      
+
       let movieState = useMovieStore.getState();
       expect(movieState.popular).toHaveLength(1);
 
@@ -503,17 +533,24 @@ describe('Integration Tests', () => {
         results: [{ ...mockMovie, title: 'Authenticated Search Result' }],
       };
       vi.mocked(movieService.searchMovies).mockResolvedValue(searchResponse);
-      
+
       uiStore.setSearchQuery('authenticated search');
       await movieStore.searchMovies('authenticated search', 1);
 
       movieState = useMovieStore.getState();
-      expect(movieState.searchResults[0].title).toBe('Authenticated Search Result');
+      expect(movieState.searchResults[0].title).toBe(
+        'Authenticated Search Result'
+      );
 
       // 4. User views movie details
-      const detailsResponse = { ...mockMovieDetails, title: 'Detailed Movie View' };
-      vi.mocked(movieService.getMovieDetails).mockResolvedValue(detailsResponse);
-      
+      const detailsResponse = {
+        ...mockMovieDetails,
+        title: 'Detailed Movie View',
+      };
+      vi.mocked(movieService.getMovieDetails).mockResolvedValue(
+        detailsResponse
+      );
+
       await movieStore.fetchMovieDetails(1);
       movieState = useMovieStore.getState();
       expect(movieState.selectedMovie?.title).toBe('Detailed Movie View');
@@ -533,13 +570,23 @@ describe('Integration Tests', () => {
       const cacheStore = useCacheStore.getState();
 
       // Mock different responses for concurrent requests
-      const popularResponse = { ...mockTMDBResponse, results: [{ ...mockMovie, title: 'Popular Movie' }] };
-      const searchResponse = { ...mockTMDBResponse, results: [{ ...mockMovie, title: 'Search Result' }] };
+      const popularResponse = {
+        ...mockTMDBResponse,
+        results: [{ ...mockMovie, title: 'Popular Movie' }],
+      };
+      const searchResponse = {
+        ...mockTMDBResponse,
+        results: [{ ...mockMovie, title: 'Search Result' }],
+      };
       const detailsResponse = { ...mockMovieDetails, title: 'Movie Details' };
 
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(popularResponse);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        popularResponse
+      );
       vi.mocked(movieService.searchMovies).mockResolvedValue(searchResponse);
-      vi.mocked(movieService.getMovieDetails).mockResolvedValue(detailsResponse);
+      vi.mocked(movieService.getMovieDetails).mockResolvedValue(
+        detailsResponse
+      );
 
       // Start multiple operations concurrently
       const popularPromise = movieStore.fetchPopularMovies(1);
@@ -575,7 +622,9 @@ describe('Integration Tests', () => {
       expect(uiState.theme).toBe('dark');
 
       // Simulate rapid movie operations
-      vi.mocked(movieService.getPopularMovies).mockResolvedValue(mockTMDBResponse);
+      vi.mocked(movieService.getPopularMovies).mockResolvedValue(
+        mockTMDBResponse
+      );
       vi.mocked(movieService.searchMovies).mockResolvedValue(mockTMDBResponse);
 
       const operations = [

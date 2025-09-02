@@ -36,7 +36,7 @@ export function MovieCard({
   loading = false,
   variant = 'default',
   showGenres: _showGenres = false,
-  className
+  className,
 }: MovieCardProps) {
   const handleClick = () => {
     if (!loading) {
@@ -68,11 +68,13 @@ export function MovieCard({
 
   if (loading) {
     return (
-      <div className={cn(
-        'group relative overflow-hidden rounded-lg bg-muted animate-pulse',
-        variant === 'compact' ? 'aspect-[2/3]' : 'aspect-[2/3]',
-        className
-      )}>
+      <div
+        className={cn(
+          'group relative overflow-hidden rounded-lg bg-muted animate-pulse',
+          variant === 'compact' ? 'aspect-[2/3]' : 'aspect-[2/3]',
+          className
+        )}
+      >
         <div className="w-full h-full bg-muted-foreground/10" />
         <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
           <div className="h-4 bg-muted-foreground/20 rounded mb-2" />
@@ -104,15 +106,17 @@ export function MovieCard({
           className="w-full h-full object-cover"
           loading="lazy"
         />
-        
+
         {/* Overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
+
         {/* Rating badge - only show for default variant */}
         {variant === 'default' && movie.vote_average > 0 && (
           <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/70 backdrop-blur-sm rounded-full px-2 py-1 text-xs text-white">
             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-            <span className="font-medium">{formatRating(movie.vote_average)}</span>
+            <span className="font-medium">
+              {formatRating(movie.vote_average)}
+            </span>
           </div>
         )}
       </div>
@@ -123,13 +127,13 @@ export function MovieCard({
           <h3 className="font-semibold text-sm line-clamp-2 mb-1 group-hover:text-primary-foreground">
             {movie.title}
           </h3>
-          
+
           <div className="flex items-center gap-3 text-xs text-white/80">
             <div className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               <span>{formatReleaseDate(movie.release_date)}</span>
             </div>
-            
+
             {movie.vote_count > 0 && (
               <div className="flex items-center gap-1">
                 <span>{movie.vote_count} votes</span>
@@ -172,13 +176,13 @@ export function MovieCard({
           <h3 className="font-bold text-base line-clamp-2 mb-2">
             {movie.title}
           </h3>
-          
+
           <div className="flex items-center gap-4 text-sm text-white/80 mb-2">
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               <span>{formatReleaseDate(movie.release_date)}</span>
             </div>
-            
+
             {movie.vote_average > 0 && (
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -204,19 +208,21 @@ export function MovieCard({
 /**
  * MovieCardSkeleton for loading states
  */
-export function MovieCardSkeleton({ 
+export function MovieCardSkeleton({
   variant = 'default',
-  className 
-}: { 
+  className,
+}: {
   variant?: 'default' | 'compact' | 'detailed';
   className?: string;
 }) {
   return (
-    <div className={cn(
-      'relative overflow-hidden rounded-lg bg-muted animate-pulse',
-      'aspect-[2/3]',
-      className
-    )}>
+    <div
+      className={cn(
+        'relative overflow-hidden rounded-lg bg-muted animate-pulse',
+        'aspect-[2/3]',
+        className
+      )}
+    >
       <div className="w-full h-full bg-muted-foreground/10" />
       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-muted to-transparent">
         <div className="h-4 bg-muted-foreground/20 rounded mb-2" />

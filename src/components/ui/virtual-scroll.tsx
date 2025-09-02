@@ -22,7 +22,7 @@ export function VirtualScroll<T>({
   renderItem,
   overscan = 5,
   className = '',
-  onScroll
+  onScroll,
 }: VirtualScrollProps<T>) {
   const [scrollTop, setScrollTop] = useState(0);
   const scrollElementRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export function VirtualScroll<T>({
 
     return {
       start: Math.max(0, start - overscan),
-      end: Math.min(items.length - 1, end + overscan)
+      end: Math.min(items.length - 1, end + overscan),
     };
   }, [scrollTop, itemHeight, containerHeight, items.length, overscan]);
 
@@ -50,17 +50,20 @@ export function VirtualScroll<T>({
       result.push({
         index: i,
         item: items[i],
-        offsetY: i * itemHeight
+        offsetY: i * itemHeight,
       });
     }
     return result;
   }, [items, visibleRange, itemHeight]);
 
-  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const newScrollTop = e.currentTarget.scrollTop;
-    setScrollTop(newScrollTop);
-    onScroll?.(newScrollTop);
-  }, [onScroll]);
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const newScrollTop = e.currentTarget.scrollTop;
+      setScrollTop(newScrollTop);
+      onScroll?.(newScrollTop);
+    },
+    [onScroll]
+  );
 
   return (
     <div
@@ -78,7 +81,7 @@ export function VirtualScroll<T>({
               top: offsetY,
               left: 0,
               right: 0,
-              height: itemHeight
+              height: itemHeight,
             }}
           >
             {renderItem(item, index)}
@@ -113,7 +116,7 @@ export function VirtualGrid<T>({
   renderItem,
   gap = 0,
   overscan = 5,
-  className = ''
+  className = '',
 }: VirtualGridProps<T>) {
   const [scrollTop, setScrollTop] = useState(0);
   const scrollElementRef = useRef<HTMLDivElement>(null);
@@ -134,14 +137,14 @@ export function VirtualGrid<T>({
 
     return {
       start: Math.max(0, startRow - overscan),
-      end: Math.min(totalRows - 1, endRow + overscan)
+      end: Math.min(totalRows - 1, endRow + overscan),
     };
   }, [scrollTop, rowHeight, containerHeight, totalRows, overscan]);
 
   // Get visible items
   const visibleItems = useMemo(() => {
     const result = [];
-    
+
     for (let row = visibleRange.start; row <= visibleRange.end; row++) {
       for (let col = 0; col < columnsPerRow; col++) {
         const index = row * columnsPerRow + col;
@@ -151,11 +154,11 @@ export function VirtualGrid<T>({
           index,
           item: items[index],
           x: col * (itemWidth + gap),
-          y: row * rowHeight
+          y: row * rowHeight,
         });
       }
     }
-    
+
     return result;
   }, [items, visibleRange, columnsPerRow, itemWidth, gap, rowHeight]);
 
@@ -179,7 +182,7 @@ export function VirtualGrid<T>({
               left: x,
               top: y,
               width: itemWidth,
-              height: itemHeight
+              height: itemHeight,
             }}
           >
             {renderItem(item, index)}
@@ -189,7 +192,5 @@ export function VirtualGrid<T>({
     </div>
   );
 }
-
-
 
 export default VirtualScroll;

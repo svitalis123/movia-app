@@ -47,7 +47,7 @@ class HttpClient {
       timeout: this.config.timeout,
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
     });
   }
@@ -80,8 +80,11 @@ class HttpClient {
 
     this.axiosInstance.interceptors.response.use(
       (response: any) => {
-        const duration = Date.now() - (response.config.metadata?.startTime || 0);
-        console.log(`[HTTP] ${response.status} ${response.config.url} (${duration}ms)`);
+        const duration =
+          Date.now() - (response.config.metadata?.startTime || 0);
+        console.log(
+          `[HTTP] ${response.status} ${response.config.url} (${duration}ms)`
+        );
         return response;
       },
       async (error: any) => {
@@ -102,7 +105,7 @@ class HttpClient {
 
   private async handleResponseError(error: any): Promise<any> {
     const { config, response } = error;
-    
+
     console.error('[HTTP] Response error:', {
       status: response?.status,
       url: config?.url,
@@ -118,12 +121,16 @@ class HttpClient {
 
   private shouldRetry(error: any): boolean {
     const { config, response } = error;
-    
+
     if (!config || config.__retryCount >= this.config.retries) {
       return false;
     }
 
-    if (!RETRY_CONFIG.retryableMethods.includes(config.method?.toUpperCase() || '')) {
+    if (
+      !RETRY_CONFIG.retryableMethods.includes(
+        config.method?.toUpperCase() || ''
+      )
+    ) {
       return false;
     }
 
@@ -137,14 +144,16 @@ class HttpClient {
   private async retryRequest(error: any): Promise<any> {
     const config = error.config;
     const retryCount = config.__retryCount || 0;
-    
+
     config.__retryCount = retryCount + 1;
 
     const delay = this.config.retryDelay * Math.pow(2, retryCount);
-    
-    console.log(`[HTTP] Retrying request (${retryCount + 1}/${this.config.retries}) after ${delay}ms`);
 
-    await new Promise(resolve => setTimeout(resolve, delay));
+    console.log(
+      `[HTTP] Retrying request (${retryCount + 1}/${this.config.retries}) after ${delay}ms`
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, delay));
 
     return this.axiosInstance.request(config);
   }
@@ -161,18 +170,34 @@ class HttpClient {
 
     const status = response.status;
     const endpoint = config?.url || 'unknown';
-    
+
     switch (status) {
       case 401:
-        return new APIError('Invalid API key', status, endpoint, 'UNAUTHORIZED');
+        return new APIError(
+          'Invalid API key',
+          status,
+          endpoint,
+          'UNAUTHORIZED'
+        );
       case 404:
-        return new APIError('Resource not found', status, endpoint, 'NOT_FOUND');
+        return new APIError(
+          'Resource not found',
+          status,
+          endpoint,
+          'NOT_FOUND'
+        );
       case 429:
-        return new APIError('Rate limit exceeded', status, endpoint, 'RATE_LIMITED');
+        return new APIError(
+          'Rate limit exceeded',
+          status,
+          endpoint,
+          'RATE_LIMITED'
+        );
       case 500:
         return new APIError('Server error', status, endpoint, 'SERVER_ERROR');
       default:
-        const message = response.data?.status_message || error.message || 'Request failed';
+        const message =
+          response.data?.status_message || error.message || 'Request failed';
         return new APIError(message, status, endpoint);
     }
   }
@@ -213,7 +238,7 @@ class HttpClient {
 
   updateConfig(newConfig: Partial<HttpClientConfig>): void {
     this.config = { ...this.config, ...newConfig };
-    
+
     this.axiosInstance.defaults.baseURL = this.config.baseURL;
     this.axiosInstance.defaults.timeout = this.config.timeout;
   }

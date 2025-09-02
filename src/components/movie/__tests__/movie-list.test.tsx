@@ -5,20 +5,39 @@ import type { Movie } from '../../../lib/types';
 
 // Mock the MovieCard component
 vi.mock('../movie-card', () => ({
-  MovieCard: ({ movie, onClick }: { movie: Movie; onClick: (id: number) => void }) => (
-    <div data-testid={`movie-card-${movie.id}`} onClick={() => onClick(movie.id)}>
+  MovieCard: ({
+    movie,
+    onClick,
+  }: {
+    movie: Movie;
+    onClick: (id: number) => void;
+  }) => (
+    <div
+      data-testid={`movie-card-${movie.id}`}
+      onClick={() => onClick(movie.id)}
+    >
       {movie.title}
     </div>
   ),
-  MovieCardSkeleton: () => <div data-testid="movie-card-skeleton">Loading...</div>,
+  MovieCardSkeleton: () => (
+    <div data-testid="movie-card-skeleton">Loading...</div>
+  ),
 }));
 
 // Mock the ErrorMessage component
 vi.mock('../../ui/error-message', () => ({
-  ErrorMessage: ({ message, onRetry }: { message: string; onRetry: () => void }) => (
+  ErrorMessage: ({
+    message,
+    onRetry,
+  }: {
+    message: string;
+    onRetry: () => void;
+  }) => (
     <div data-testid="error-message">
       <span>{message}</span>
-      <button onClick={onRetry} data-testid="retry-button">Retry</button>
+      <button onClick={onRetry} data-testid="retry-button">
+        Retry
+      </button>
     </div>
   ),
 }));
@@ -124,12 +143,16 @@ describe('MovieList', () => {
     render(<MovieList {...mockProps} movies={[]} />);
 
     expect(screen.getByText('No movies found')).toBeInTheDocument();
-    expect(screen.getByText('Try adjusting your search or browse popular movies.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Try adjusting your search or browse popular movies.')
+    ).toBeInTheDocument();
   });
 
   it('renders custom empty message', () => {
     const customMessage = 'Custom empty message';
-    render(<MovieList {...mockProps} movies={[]} emptyMessage={customMessage} />);
+    render(
+      <MovieList {...mockProps} movies={[]} emptyMessage={customMessage} />
+    );
 
     expect(screen.getByText(customMessage)).toBeInTheDocument();
   });
@@ -140,7 +163,7 @@ describe('MovieList', () => {
     expect(screen.getByLabelText('Previous page')).toBeInTheDocument();
     expect(screen.getByLabelText('Next page')).toBeInTheDocument();
     expect(screen.getByText('Page 1 of 5')).toBeInTheDocument();
-    
+
     // Should show page numbers
     expect(screen.getByLabelText('Go to page 1')).toBeInTheDocument();
     expect(screen.getByLabelText('Go to page 2')).toBeInTheDocument();
@@ -210,7 +233,7 @@ describe('MovieList', () => {
     expect(screen.getByLabelText('Go to page 1')).toBeInTheDocument();
     expect(screen.getByLabelText('Go to page 20')).toBeInTheDocument();
     expect(screen.getByLabelText('Go to page 10')).toBeInTheDocument();
-    
+
     // Should not show all pages (would be too many)
     expect(screen.queryByLabelText('Go to page 15')).not.toBeInTheDocument();
   });
@@ -258,7 +281,7 @@ describe('MovieListSkeleton', () => {
 
     const skeletons = screen.getAllByTestId('movie-card-skeleton');
     expect(skeletons).toHaveLength(20);
-    
+
     const gridContainer = document.querySelector('.grid-cols-2');
     expect(gridContainer).toBeInTheDocument();
   });
@@ -268,7 +291,7 @@ describe('MovieListSkeleton', () => {
 
     const skeletons = screen.getAllByTestId('movie-card-skeleton');
     expect(skeletons).toHaveLength(20);
-    
+
     const listContainer = document.querySelector('.grid-cols-1');
     expect(listContainer).toBeInTheDocument();
   });

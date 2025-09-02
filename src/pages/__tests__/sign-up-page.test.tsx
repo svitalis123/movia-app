@@ -14,7 +14,7 @@ vi.mock('../../components/auth', () => ({
 describe('SignUpPage', () => {
   it('renders SignUp component with correct redirect URL', () => {
     render(<SignUpPage />);
-    
+
     expect(screen.getByTestId('sign-up-component')).toBeInTheDocument();
     expect(screen.getByTestId('redirect-url')).toHaveTextContent('/');
   });

@@ -11,7 +11,7 @@ describe('CachedMovieService', () => {
   beforeEach(() => {
     // Create a real cache service for integration testing
     realCacheService = new InMemoryCacheService(100, 1000); // Small cache for testing
-    
+
     // Create mock movie service
     mockMovieService = {
       getPopularMovies: vi.fn(),
@@ -22,8 +22,12 @@ describe('CachedMovieService', () => {
       getMoviesByGenre: vi.fn(),
       getSimilarMovies: vi.fn(),
       getMovieRecommendations: vi.fn(),
-      getImageUrl: vi.fn().mockReturnValue('https://image.tmdb.org/t/p/w500/test.jpg'),
-      getBackdropUrl: vi.fn().mockReturnValue('https://image.tmdb.org/t/p/w1280/backdrop.jpg'),
+      getImageUrl: vi
+        .fn()
+        .mockReturnValue('https://image.tmdb.org/t/p/w500/test.jpg'),
+      getBackdropUrl: vi
+        .fn()
+        .mockReturnValue('https://image.tmdb.org/t/p/w1280/backdrop.jpg'),
     } as any;
 
     cachedMovieService = new CachedMovieService(mockMovieService);
@@ -103,7 +107,10 @@ describe('CachedMovieService', () => {
 
       const result = cachedMovieService.getImageUrl('/test.jpg', 'w500');
 
-      expect(mockMovieService.getImageUrl).toHaveBeenCalledWith('/test.jpg', 'w500');
+      expect(mockMovieService.getImageUrl).toHaveBeenCalledWith(
+        '/test.jpg',
+        'w500'
+      );
       expect(result).toBe(mockUrl);
     });
 
@@ -111,9 +118,15 @@ describe('CachedMovieService', () => {
       const mockUrl = 'https://image.tmdb.org/t/p/w1280/backdrop.jpg';
       mockMovieService.getBackdropUrl.mockReturnValue(mockUrl);
 
-      const result = cachedMovieService.getBackdropUrl('/backdrop.jpg', 'w1280');
+      const result = cachedMovieService.getBackdropUrl(
+        '/backdrop.jpg',
+        'w1280'
+      );
 
-      expect(mockMovieService.getBackdropUrl).toHaveBeenCalledWith('/backdrop.jpg', 'w1280');
+      expect(mockMovieService.getBackdropUrl).toHaveBeenCalledWith(
+        '/backdrop.jpg',
+        'w1280'
+      );
       expect(result).toBe(mockUrl);
     });
   });

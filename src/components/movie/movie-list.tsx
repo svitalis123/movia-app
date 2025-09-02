@@ -45,7 +45,7 @@ export function MovieList({
   totalPages,
   viewMode = 'grid',
   emptyMessage = 'No movies found',
-  className
+  className,
 }: MovieListProps) {
   // Generate skeleton items for loading state
   const renderSkeletons = () => {
@@ -58,7 +58,7 @@ export function MovieList({
   const generatePaginationNumbers = () => {
     const maxVisiblePages = 5;
     const pages: (number | string)[] = [];
-    
+
     if (totalPages <= maxVisiblePages) {
       // Show all pages if total is small
       for (let i = 1; i <= totalPages; i++) {
@@ -67,31 +67,31 @@ export function MovieList({
     } else {
       // Always show first page
       pages.push(1);
-      
+
       if (currentPage > 3) {
         pages.push('...');
       }
-      
+
       // Show pages around current page
       const start = Math.max(2, currentPage - 1);
       const end = Math.min(totalPages - 1, currentPage + 1);
-      
+
       for (let i = start; i <= end; i++) {
         if (i !== 1 && i !== totalPages) {
           pages.push(i);
         }
       }
-      
+
       if (currentPage < totalPages - 2) {
         pages.push('...');
       }
-      
+
       // Always show last page if more than 1 page
       if (totalPages > 1) {
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
 
@@ -119,8 +119,13 @@ export function MovieList({
 
   if (error) {
     return (
-      <div className={cn('flex flex-col items-center justify-center py-12', className)}>
-        <ErrorMessage 
+      <div
+        className={cn(
+          'flex flex-col items-center justify-center py-12',
+          className
+        )}
+      >
+        <ErrorMessage
           message={error}
           onRetry={() => onPageChange(currentPage)}
         />
@@ -131,12 +136,14 @@ export function MovieList({
   return (
     <div className={cn('space-y-6', className)}>
       {/* Movie Grid */}
-      <div className={cn(
-        'grid gap-4',
-        viewMode === 'grid' 
-          ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6' 
-          : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-      )}>
+      <div
+        className={cn(
+          'grid gap-4',
+          viewMode === 'grid'
+            ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
+            : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+        )}
+      >
         {loading ? (
           renderSkeletons()
         ) : movies.length > 0 ? (
@@ -236,32 +243,37 @@ export function MovieList({
 /**
  * MovieListSkeleton for loading states
  */
-export function MovieListSkeleton({ 
+export function MovieListSkeleton({
   viewMode = 'grid',
-  className 
-}: { 
+  className,
+}: {
   viewMode?: 'grid' | 'list';
   className?: string;
 }) {
   return (
     <div className={cn('space-y-6', className)}>
-      <div className={cn(
-        'grid gap-4',
-        viewMode === 'grid' 
-          ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6' 
-          : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-      )}>
+      <div
+        className={cn(
+          'grid gap-4',
+          viewMode === 'grid'
+            ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
+            : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+        )}
+      >
         {Array.from({ length: 20 }, (_, index) => (
           <MovieCardSkeleton key={`skeleton-${index}`} />
         ))}
       </div>
-      
+
       {/* Pagination Skeleton */}
       <div className="flex items-center justify-center space-x-2">
         <div className="h-10 w-20 bg-muted rounded-md animate-pulse" />
         <div className="flex space-x-1">
           {Array.from({ length: 5 }, (_, index) => (
-            <div key={index} className="h-10 w-10 bg-muted rounded-md animate-pulse" />
+            <div
+              key={index}
+              className="h-10 w-10 bg-muted rounded-md animate-pulse"
+            />
           ))}
         </div>
         <div className="h-10 w-16 bg-muted rounded-md animate-pulse" />

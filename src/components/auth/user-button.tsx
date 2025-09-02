@@ -16,7 +16,8 @@ export function UserButton({ className, showName = false }: UserButtonProps) {
         appearance={{
           elements: {
             avatarBox: 'w-8 h-8',
-            userButtonPopoverCard: 'shadow-lg border border-gray-200 rounded-lg',
+            userButtonPopoverCard:
+              'shadow-lg border border-gray-200 rounded-lg',
             userButtonPopoverActionButton: 'hover:bg-gray-50 text-gray-700',
             userButtonPopoverActionButtonText: 'text-sm',
             userButtonPopoverFooter: 'hidden', // Hide Clerk branding

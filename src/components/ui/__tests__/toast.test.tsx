@@ -72,10 +72,34 @@ describe('ToastContainer', () => {
   it('should display correct icons for different toast types', () => {
     mockUseToastStore.mockReturnValue({
       toasts: [
-        { id: '1', type: 'success', message: 'Success', duration: 5000, dismissible: true },
-        { id: '2', type: 'error', message: 'Error', duration: 0, dismissible: true },
-        { id: '3', type: 'warning', message: 'Warning', duration: 5000, dismissible: true },
-        { id: '4', type: 'info', message: 'Info', duration: 5000, dismissible: true },
+        {
+          id: '1',
+          type: 'success',
+          message: 'Success',
+          duration: 5000,
+          dismissible: true,
+        },
+        {
+          id: '2',
+          type: 'error',
+          message: 'Error',
+          duration: 0,
+          dismissible: true,
+        },
+        {
+          id: '3',
+          type: 'warning',
+          message: 'Warning',
+          duration: 5000,
+          dismissible: true,
+        },
+        {
+          id: '4',
+          type: 'info',
+          message: 'Info',
+          duration: 5000,
+          dismissible: true,
+        },
       ],
       removeToast: mockRemoveToast,
       addToast: vi.fn(),
@@ -119,7 +143,7 @@ describe('ToastContainer', () => {
 
     const dismissButton = screen.getByLabelText('Dismiss notification');
     expect(dismissButton).toBeInTheDocument();
-    
+
     // Verify clicking the button exists (actual removal is tested in store tests)
     fireEvent.click(dismissButton);
   });
@@ -146,7 +170,9 @@ describe('ToastContainer', () => {
 
     render(<ToastContainer />);
 
-    expect(screen.queryByLabelText('Dismiss notification')).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText('Dismiss notification')
+    ).not.toBeInTheDocument();
   });
 
   it('should auto-dismiss toast after duration', async () => {
@@ -206,8 +232,20 @@ describe('ToastContainer', () => {
   it('should apply correct styling for different toast types', () => {
     mockUseToastStore.mockReturnValue({
       toasts: [
-        { id: '1', type: 'success', message: 'Success', duration: 5000, dismissible: true },
-        { id: '2', type: 'error', message: 'Error', duration: 0, dismissible: true },
+        {
+          id: '1',
+          type: 'success',
+          message: 'Success',
+          duration: 5000,
+          dismissible: true,
+        },
+        {
+          id: '2',
+          type: 'error',
+          message: 'Error',
+          duration: 0,
+          dismissible: true,
+        },
       ],
       removeToast: mockRemoveToast,
       addToast: vi.fn(),

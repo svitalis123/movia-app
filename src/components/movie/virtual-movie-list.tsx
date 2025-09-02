@@ -35,36 +35,49 @@ export function VirtualMovieList({
   itemHeight = 420,
   gap = 16,
   className,
-  emptyMessage = 'No movies found'
+  emptyMessage = 'No movies found',
 }: VirtualMovieListProps) {
-  
   // Calculate how many skeleton items to show during loading
   const columnsPerRow = Math.floor((containerWidth + gap) / (itemWidth + gap));
   const rowsVisible = Math.ceil(containerHeight / (itemHeight + gap));
   const skeletonCount = columnsPerRow * rowsVisible;
 
   // Create skeleton items for loading state
-  const skeletonItems = useMemo(() => 
-    Array.from({ length: skeletonCount }, (_, index) => ({ id: `skeleton-${index}` })),
+  const skeletonItems = useMemo(
+    () =>
+      Array.from({ length: skeletonCount }, (_, index) => ({
+        id: `skeleton-${index}`,
+      })),
     [skeletonCount]
   );
 
-  const renderMovieItem = useCallback((movie: Movie, _index: number) => (
-    <MovieCard
-      key={movie.id}
-      movie={movie}
-      onClick={() => onMovieSelect(movie.id)}
-      className="w-full h-full"
-    />
-  ), [onMovieSelect]);
+  const renderMovieItem = useCallback(
+    (movie: Movie, _index: number) => (
+      <MovieCard
+        key={movie.id}
+        movie={movie}
+        onClick={() => onMovieSelect(movie.id)}
+        className="w-full h-full"
+      />
+    ),
+    [onMovieSelect]
+  );
 
-  const renderSkeletonItem = useCallback((item: { id: string }, _index: number) => (
-    <MovieCardSkeleton key={item.id} className="w-full h-full" />
-  ), []);
+  const renderSkeletonItem = useCallback(
+    (item: { id: string }, _index: number) => (
+      <MovieCardSkeleton key={item.id} className="w-full h-full" />
+    ),
+    []
+  );
 
   if (error) {
     return (
-      <div className={cn('flex items-center justify-center min-h-[400px]', className)}>
+      <div
+        className={cn(
+          'flex items-center justify-center min-h-[400px]',
+          className
+        )}
+      >
         <ErrorMessage message={error} />
       </div>
     );
@@ -89,7 +102,12 @@ export function VirtualMovieList({
 
   if (movies.length === 0) {
     return (
-      <div className={cn('flex items-center justify-center min-h-[400px]', className)}>
+      <div
+        className={cn(
+          'flex items-center justify-center min-h-[400px]',
+          className
+        )}
+      >
         <div className="text-center">
           <p className="text-lg text-muted-foreground">{emptyMessage}</p>
         </div>
@@ -109,7 +127,7 @@ export function VirtualMovieList({
         gap={gap}
         className="border rounded-lg"
       />
-      
+
       {/* Loading overlay for additional items */}
       {loading && movies.length > 0 && (
         <div className="mt-4 text-center">
@@ -123,12 +141,11 @@ export function VirtualMovieList({
   );
 }
 
-
-
 /**
  * Optimized movie list with automatic virtualization threshold
  */
-interface SmartMovieListProps extends Omit<VirtualMovieListProps, 'containerWidth' | 'containerHeight'> {
+interface SmartMovieListProps
+  extends Omit<VirtualMovieListProps, 'containerWidth' | 'containerHeight'> {
   virtualizationThreshold?: number;
   containerRef?: React.RefObject<HTMLElement>;
 }
@@ -139,18 +156,14 @@ export function SmartMovieList({
   containerRef,
   ...props
 }: SmartMovieListProps) {
-  const { calculateDimensions } = useResponsiveMovieGrid(containerRef as React.RefObject<HTMLElement>);
+  const { calculateDimensions } = useResponsiveMovieGrid(
+    containerRef as React.RefObject<HTMLElement>
+  );
   const dimensions = calculateDimensions();
 
   // Use virtual scrolling only for large lists
   if (movies.length > virtualizationThreshold) {
-    return (
-      <VirtualMovieList
-        movies={movies}
-        {...dimensions}
-        {...props}
-      />
-    );
+    return <VirtualMovieList movies={movies} {...dimensions} {...props} />;
   }
 
   // For smaller lists, use regular grid layout

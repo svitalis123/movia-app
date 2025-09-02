@@ -22,7 +22,13 @@ function ThrowError({ shouldThrow = false }: { shouldThrow?: boolean }) {
 }
 
 // Custom fallback component for testing
-function CustomFallback({ error, resetError }: { error: Error; resetError: () => void }) {
+function CustomFallback({
+  error,
+  resetError,
+}: {
+  error: Error;
+  resetError: () => void;
+}) {
   return (
     <div data-testid="custom-fallback">
       <span>Custom error: {error.message}</span>
@@ -57,7 +63,9 @@ describe('ErrorBoundary', () => {
     );
 
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-    expect(screen.getByText(/We're sorry, but something unexpected happened/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/We're sorry, but something unexpected happened/)
+    ).toBeInTheDocument();
     expect(screen.getByText('Try Again')).toBeInTheDocument();
     expect(screen.getByText('Reload Page')).toBeInTheDocument();
     expect(screen.getByText('Go Home')).toBeInTheDocument();
@@ -77,7 +85,7 @@ describe('ErrorBoundary', () => {
 
   it('calls onError callback when error occurs', () => {
     const onError = vi.fn();
-    
+
     render(
       <ErrorBoundary onError={onError}>
         <ThrowError shouldThrow={true} />
@@ -121,7 +129,9 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    expect(screen.getByText('Error Details (Development):')).toBeInTheDocument();
+    expect(
+      screen.getByText('Error Details (Development):')
+    ).toBeInTheDocument();
     expect(screen.getByText('Test error')).toBeInTheDocument();
 
     process.env.NODE_ENV = originalEnv;
@@ -137,7 +147,9 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    expect(screen.queryByText('Error Details (Development):')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Error Details (Development):')
+    ).not.toBeInTheDocument();
 
     process.env.NODE_ENV = originalEnv;
   });
@@ -226,7 +238,9 @@ describe('CompactErrorFallback', () => {
     const mockError = new Error('Test error');
     const mockResetError = vi.fn();
 
-    render(<CompactErrorFallback error={mockError} resetError={mockResetError} />);
+    render(
+      <CompactErrorFallback error={mockError} resetError={mockResetError} />
+    );
 
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     expect(screen.getByText('Retry')).toBeInTheDocument();
@@ -236,7 +250,9 @@ describe('CompactErrorFallback', () => {
     const mockError = new Error('Test error');
     const mockResetError = vi.fn();
 
-    render(<CompactErrorFallback error={mockError} resetError={mockResetError} />);
+    render(
+      <CompactErrorFallback error={mockError} resetError={mockResetError} />
+    );
 
     fireEvent.click(screen.getByText('Retry'));
     expect(mockResetError).toHaveBeenCalled();
@@ -246,9 +262,18 @@ describe('CompactErrorFallback', () => {
     const mockError = new Error('Test error');
     const mockResetError = vi.fn();
 
-    render(<CompactErrorFallback error={mockError} resetError={mockResetError} />);
+    render(
+      <CompactErrorFallback error={mockError} resetError={mockResetError} />
+    );
 
     const container = screen.getByText('Something went wrong').closest('div');
-    expect(container).toHaveClass('flex', 'flex-col', 'items-center', 'justify-center', 'p-4', 'text-center');
+    expect(container).toHaveClass(
+      'flex',
+      'flex-col',
+      'items-center',
+      'justify-center',
+      'p-4',
+      'text-center'
+    );
   });
 });

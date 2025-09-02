@@ -1,5 +1,10 @@
 import { movieService } from './movie-service';
-import { performanceMonitor, debounce, memoize, imagePreloader } from '../utils/performance';
+import {
+  performanceMonitor,
+  debounce,
+  memoize,
+  imagePreloader,
+} from '../utils/performance';
 
 // Define types locally to avoid import issues
 interface TMDBMovie {
@@ -116,7 +121,7 @@ interface TMDBResponse<T> {
  */
 class OptimizedMovieService {
   private movieService = movieService;
-  
+
   // Memoized methods for caching expensive operations
   private memoizedGetPopularMovies = memoize(
     (page: number) => this.movieService.getPopularMovies(page),
@@ -124,7 +129,8 @@ class OptimizedMovieService {
   );
 
   private memoizedSearchMovies = memoize(
-    (query: string, page: number) => this.movieService.searchMovies(query, page),
+    (query: string, page: number) =>
+      this.movieService.searchMovies(query, page),
     (query, page) => `search-${query}-${page}`
   );
 
@@ -134,32 +140,35 @@ class OptimizedMovieService {
   );
 
   // Debounced search to prevent excessive API calls
-  public debouncedSearchMovies = debounce(
-    async (...args: unknown[]) => {
-      const [query, page = 1, callback] = args as [string, number, (result: TMDBResponse<TMDBMovie>) => void];
-      const endTiming = performanceMonitor.startTiming('search-movies');
-      try {
-        const result = await this.searchMovies(query, page);
-        callback(result);
-      } finally {
-        endTiming();
-      }
-    },
-    300
-  );
+  public debouncedSearchMovies = debounce(async (...args: unknown[]) => {
+    const [query, page = 1, callback] = args as [
+      string,
+      number,
+      (result: TMDBResponse<TMDBMovie>) => void,
+    ];
+    const endTiming = performanceMonitor.startTiming('search-movies');
+    try {
+      const result = await this.searchMovies(query, page);
+      callback(result);
+    } finally {
+      endTiming();
+    }
+  }, 300);
 
   /**
    * Get popular movies with performance monitoring
    */
   async getPopularMovies(page = 1): Promise<TMDBResponse<TMDBMovie>> {
     const endTiming = performanceMonitor.startTiming('get-popular-movies');
-    
+
     try {
-      const result = await this.memoizedGetPopularMovies(page) as TMDBResponse<TMDBMovie>;
-      
+      const result = (await this.memoizedGetPopularMovies(
+        page
+      )) as TMDBResponse<TMDBMovie>;
+
       // Preload movie posters
       this.preloadMovieImages(result.results);
-      
+
       return result;
     } finally {
       endTiming();
@@ -169,15 +178,21 @@ class OptimizedMovieService {
   /**
    * Search movies with performance monitoring
    */
-  async searchMovies(query: string, page = 1): Promise<TMDBResponse<TMDBMovie>> {
+  async searchMovies(
+    query: string,
+    page = 1
+  ): Promise<TMDBResponse<TMDBMovie>> {
     const endTiming = performanceMonitor.startTiming('search-movies');
-    
+
     try {
-      const result = await this.memoizedSearchMovies(query, page) as TMDBResponse<TMDBMovie>;
-      
+      const result = (await this.memoizedSearchMovies(
+        query,
+        page
+      )) as TMDBResponse<TMDBMovie>;
+
       // Preload movie posters
       this.preloadMovieImages(result.results);
-      
+
       return result;
     } finally {
       endTiming();
@@ -189,18 +204,24 @@ class OptimizedMovieService {
    */
   async getMovieDetails(movieId: number): Promise<TMDBMovieDetails> {
     const endTiming = performanceMonitor.startTiming('get-movie-details');
-    
+
     try {
       const result = await this.memoizedGetMovieDetails(movieId);
-      
+
       // Preload backdrop and poster images
       if (result.backdrop_path) {
-        imagePreloader.preload(`https://image.tmdb.org/t/p/w1280${result.backdrop_path}`, 1);
+        imagePreloader.preload(
+          `https://image.tmdb.org/t/p/w1280${result.backdrop_path}`,
+          1
+        );
       }
       if (result.poster_path) {
-        imagePreloader.preload(`https://image.tmdb.org/t/p/w500${result.poster_path}`, 1);
+        imagePreloader.preload(
+          `https://image.tmdb.org/t/p/w500${result.poster_path}`,
+          1
+        );
       }
-      
+
       return result;
     } finally {
       endTiming();
@@ -212,18 +233,21 @@ class OptimizedMovieService {
    */
   async getMovieCredits(movieId: number): Promise<TMDBCredits> {
     const endTiming = performanceMonitor.startTiming('get-movie-credits');
-    
+
     try {
       const result = await this.movieService.getMovieCredits(movieId);
-      
+
       // Preload cast profile images (top 10)
       const topCast = result.cast.slice(0, 10);
-      topCast.forEach(actor => {
+      topCast.forEach((actor) => {
         if (actor.profile_path) {
-          imagePreloader.preload(`https://image.tmdb.org/t/p/w185${actor.profile_path}`, 0);
+          imagePreloader.preload(
+            `https://image.tmdb.org/t/p/w185${actor.profile_path}`,
+            0
+          );
         }
       });
-      
+
       return result;
     } finally {
       endTiming();
@@ -235,7 +259,7 @@ class OptimizedMovieService {
    */
   async getGenres(): Promise<{ genres: TMDBGenre[] }> {
     const endTiming = performanceMonitor.startTiming('get-genres');
-    
+
     try {
       return await this.movieService.getGenres();
     } finally {
@@ -251,7 +275,10 @@ class OptimizedMovieService {
       if (movie.poster_path) {
         // Higher priority for first few movies
         const priority = index < 6 ? 2 : 1;
-        imagePreloader.preload(`https://image.tmdb.org/t/p/w342${movie.poster_path}`, priority);
+        imagePreloader.preload(
+          `https://image.tmdb.org/t/p/w342${movie.poster_path}`,
+          priority
+        );
       }
     });
   }
@@ -261,24 +288,24 @@ class OptimizedMovieService {
    */
   async batchLoadMovies(movieIds: number[]): Promise<TMDBMovieDetails[]> {
     const endTiming = performanceMonitor.startTiming('batch-load-movies');
-    
+
     try {
       // Load movies in parallel with concurrency limit
       const batchSize = 5;
       const results: TMDBMovieDetails[] = [];
-      
+
       for (let i = 0; i < movieIds.length; i += batchSize) {
         const batch = movieIds.slice(i, i + batchSize);
-        const batchPromises = batch.map(id => this.getMovieDetails(id));
+        const batchPromises = batch.map((id) => this.getMovieDetails(id));
         const batchResults = await Promise.allSettled(batchPromises);
-        
-        batchResults.forEach(result => {
+
+        batchResults.forEach((result) => {
           if (result.status === 'fulfilled') {
             results.push(result.value);
           }
         });
       }
-      
+
       return results;
     } finally {
       endTiming();
@@ -290,7 +317,7 @@ class OptimizedMovieService {
    */
   async prefetchNextPage(currentPage: number, query?: string): Promise<void> {
     const nextPage = currentPage + 1;
-    
+
     // Use requestIdleCallback if available
     const prefetch = () => {
       if (query) {
@@ -299,7 +326,7 @@ class OptimizedMovieService {
         this.getPopularMovies(nextPage).catch(() => {});
       }
     };
-    
+
     if ('requestIdleCallback' in window) {
       requestIdleCallback(prefetch);
     } else {
@@ -318,7 +345,8 @@ class OptimizedMovieService {
     );
 
     this.memoizedSearchMovies = memoize(
-      (query: string, page: number) => this.movieService.searchMovies(query, page),
+      (query: string, page: number) =>
+        this.movieService.searchMovies(query, page),
       (query, page) => `search-${query}-${page}`
     );
 

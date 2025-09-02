@@ -13,8 +13,13 @@ export function Header() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchInput, setSearchInput] = useState('');
-  
-  const { viewMode, searchQuery: _searchQuery, setSearchQuery, setViewMode } = useUIStore();
+
+  const {
+    viewMode,
+    searchQuery: _searchQuery,
+    setSearchQuery,
+    setViewMode,
+  } = useUIStore();
   const { searchMovies, clearSearch } = useMovieStore();
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -47,8 +52,8 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo and Brand */}
           <div className="flex items-center space-x-4">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="flex items-center space-x-2 text-xl font-bold text-primary hover:text-primary/80 transition-colors"
               onClick={closeMobileMenu}
             >
@@ -59,8 +64,8 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="text-sm font-medium !text-white hover:text-foreground transition-colors"
             >
               Movies
@@ -120,7 +125,11 @@ export function Header() {
             className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Toggle mobile menu"
           >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
         </div>
 
@@ -151,8 +160,8 @@ export function Header() {
 
               {/* Mobile Navigation */}
               <nav className="space-y-2">
-                <Link 
-                  to="/" 
+                <Link
+                  to="/"
                   className="block px-3 py-2 text-sm font-medium text-white hover:text-foreground hover:bg-muted rounded-md transition-colors"
                   onClick={closeMobileMenu}
                 >
@@ -162,7 +171,9 @@ export function Header() {
 
               {/* Mobile View Mode Toggle */}
               <div className="flex items-center justify-between px-3 py-2">
-                <span className="text-sm font-medium text-muted-foreground">View Mode</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  View Mode
+                </span>
                 <div className="flex items-center border rounded-md">
                   <button
                     onClick={() => setViewMode('grid')}
@@ -184,7 +195,9 @@ export function Header() {
               {/* Mobile Authentication */}
               <div className="px-3 py-2 border-t">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-muted-foreground">Account</span>
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Account
+                  </span>
                   <UserButton />
                 </div>
               </div>

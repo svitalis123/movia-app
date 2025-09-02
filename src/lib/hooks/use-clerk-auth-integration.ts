@@ -27,9 +27,11 @@ export function useClerkAuthIntegration() {
    */
   const transformClerkUser = (clerkUser: unknown): User | null => {
     if (!clerkUser || typeof clerkUser !== 'object') return null;
-    
+
     const user = clerkUser as Record<string, unknown>;
-    const primaryEmail = user.primaryEmailAddress as Record<string, unknown> | undefined;
+    const primaryEmail = user.primaryEmailAddress as
+      | Record<string, unknown>
+      | undefined;
 
     return {
       id: String(user.id || ''),
@@ -37,8 +39,12 @@ export function useClerkAuthIntegration() {
       firstName: user.firstName ? String(user.firstName) : undefined,
       lastName: user.lastName ? String(user.lastName) : undefined,
       imageUrl: user.imageUrl ? String(user.imageUrl) : undefined,
-      createdAt: user.createdAt ? new Date(user.createdAt as string).toISOString() : undefined,
-      lastLoginAt: user.lastSignInAt ? new Date(user.lastSignInAt as string).toISOString() : undefined,
+      createdAt: user.createdAt
+        ? new Date(user.createdAt as string).toISOString()
+        : undefined,
+      lastLoginAt: user.lastSignInAt
+        ? new Date(user.lastSignInAt as string).toISOString()
+        : undefined,
     };
   };
 
@@ -51,21 +57,29 @@ export function useClerkAuthIntegration() {
 
     try {
       clearError();
-      
+
       if (isSignedIn && clerkUser) {
         const transformedUser = transformClerkUser(clerkUser);
         setUser(transformedUser);
       } else {
         setUser(null);
       }
-      
+
       setLoading(false);
     } catch (error) {
       console.error('Error syncing auth state:', error);
       setError(error instanceof Error ? error.message : 'Authentication error');
       setLoading(false);
     }
-  }, [isSignedIn, isLoaded, clerkUser, setUser, setLoading, setError, clearError]);
+  }, [
+    isSignedIn,
+    isLoaded,
+    clerkUser,
+    setUser,
+    setLoading,
+    setError,
+    clearError,
+  ]);
 
   /**
    * Enhanced logout function that updates both Clerk and store
@@ -124,10 +138,10 @@ export function useAuthStatus() {
    */
   const getCurrentUser = (): User | null => {
     if (!isLoaded || !isSignedIn) return null;
-    
+
     // Prefer the store user as it's already transformed
     if (authUser) return authUser;
-    
+
     // Fallback to transforming Clerk user
     if (user) {
       return {
@@ -136,11 +150,15 @@ export function useAuthStatus() {
         firstName: user.firstName || undefined,
         lastName: user.lastName || undefined,
         imageUrl: user.imageUrl || undefined,
-        createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : undefined,
-        lastLoginAt: user.lastSignInAt ? new Date(user.lastSignInAt).toISOString() : undefined,
+        createdAt: user.createdAt
+          ? new Date(user.createdAt).toISOString()
+          : undefined,
+        lastLoginAt: user.lastSignInAt
+          ? new Date(user.lastSignInAt).toISOString()
+          : undefined,
       };
     }
-    
+
     return null;
   };
 
@@ -149,7 +167,11 @@ export function useAuthStatus() {
    */
   const hasCompleteProfile = (): boolean => {
     const currentUser = getCurrentUser();
-    return !!(currentUser?.firstName && currentUser?.lastName && currentUser?.email);
+    return !!(
+      currentUser?.firstName &&
+      currentUser?.lastName &&
+      currentUser?.email
+    );
   };
 
   return {

@@ -9,20 +9,22 @@ test.describe('Search Functionality Structure', () => {
   test('should redirect search page to authentication', async ({ page }) => {
     await page.goto('/search');
     await page.waitForTimeout(1000);
-    
+
     // Should redirect to auth since user is not authenticated
     const currentUrl = page.url();
-    const isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+    const isAuthPage =
+      currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
     expect(isAuthPage).toBeTruthy();
   });
 
   test('should handle search URLs with query parameters', async ({ page }) => {
     await page.goto('/search?query=test%20movie');
     await page.waitForTimeout(1000);
-    
+
     // Should redirect to auth but preserve the intent to search
     const currentUrl = page.url();
-    const isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+    const isAuthPage =
+      currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
     expect(isAuthPage).toBeTruthy();
   });
 
@@ -31,16 +33,17 @@ test.describe('Search Functionality Structure', () => {
     const searchRoutes = [
       '/search',
       '/search?query=test',
-      '/search?query=test&page=2'
+      '/search?query=test&page=2',
     ];
-    
+
     for (const route of searchRoutes) {
       await page.goto(route);
       await page.waitForTimeout(500);
-      
+
       // All should redirect to authentication
       const currentUrl = page.url();
-      const isAuthPage = currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
+      const isAuthPage =
+        currentUrl.includes('/sign-in') || currentUrl.includes('accounts.dev');
       expect(isAuthPage).toBeTruthy();
     }
   });

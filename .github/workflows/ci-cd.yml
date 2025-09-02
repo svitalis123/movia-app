@@ -14,29 +14,29 @@ jobs:
   quality-and-test:
     name: Code Quality & Testing
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Type checking
         run: npm run type-check
-        
+
       - name: Lint code
         run: npm run lint
-        
+
       - name: Format check
         run: npm run format:check
-        
+
       - name: Run unit tests with coverage
         run: npm run test:coverage
         env:
@@ -46,7 +46,7 @@ jobs:
           VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
           VITE_APP_NAME: Movie Recommendation App
           VITE_APP_VERSION: 1.0.0
-          
+
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
         if: always()
@@ -55,7 +55,7 @@ jobs:
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
-          
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
@@ -71,23 +71,23 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-latest
     needs: quality-and-test
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-        
+
       - name: Build application
         run: npm run build
         env:
@@ -97,13 +97,13 @@ jobs:
           VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
           VITE_APP_NAME: Movie Recommendation App
           VITE_APP_VERSION: 1.0.0
-          
+
       - name: Start preview server
         run: npm run preview &
-        
+
       - name: Wait for server
         run: npx wait-on http://localhost:4173 --timeout 60000
-        
+
       - name: Run E2E tests
         run: npm run test:e2e:all
         env:
@@ -113,7 +113,7 @@ jobs:
           VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
           VITE_APP_NAME: Movie Recommendation App
           VITE_APP_VERSION: 1.0.0
-          
+
       - name: Upload E2E test results
         uses: actions/upload-artifact@v4
         if: always()
@@ -127,20 +127,20 @@ jobs:
     name: Build Application
     runs-on: ubuntu-latest
     needs: [quality-and-test, e2e-tests]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Build application
         run: npm run build
         env:
@@ -150,7 +150,7 @@ jobs:
           VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p
           VITE_APP_NAME: Movie Recommendation App
           VITE_APP_VERSION: 1.0.0
-          
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -162,23 +162,23 @@ jobs:
   security-audit:
     name: Security Audit
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Run security audit
         run: npm audit --audit-level=moderate
-        
+
       - name: Check for known vulnerabilities
         run: npx audit-ci --moderate
 
@@ -189,17 +189,17 @@ jobs:
     needs: [build, security-audit]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment: production
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: build-files
           path: dist/
-          
+
       - name: Deploy to Vercel
         uses: vercel/action@v1
         with:
@@ -222,17 +222,17 @@ jobs:
     needs: [build, security-audit]
     if: github.event_name == 'pull_request'
     environment: preview
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: build-files
           path: dist/
-          
+
       - name: Deploy Preview to Vercel
         uses: vercel/action@v1
         with:
@@ -253,7 +253,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [deploy-production, deploy-preview]
     if: always()
-    
+
     steps:
       - name: Notify Success
         if: needs.deploy-production.result == 'success' || needs.deploy-preview.result == 'success'
@@ -261,7 +261,7 @@ jobs:
           echo "✅ Deployment successful!"
           echo "Production deployment: ${{ needs.deploy-production.result }}"
           echo "Preview deployment: ${{ needs.deploy-preview.result }}"
-          
+
       - name: Notify Failure
         if: needs.deploy-production.result == 'failure' || needs.deploy-preview.result == 'failure'
         run: |

@@ -13,12 +13,12 @@ interface UseAuthGuardOptions {
  * Provides authentication state and automatic redirects
  */
 export function useAuthGuard(options: UseAuthGuardOptions = {}) {
-  const { 
-    redirectTo = '/sign-in', 
+  const {
+    redirectTo = '/sign-in',
     requireAuth = true,
-    onAuthStateChange 
+    onAuthStateChange,
   } = options;
-  
+
   const { isSignedIn, isLoaded } = useAuth();
   const { user } = useUser();
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export function useAuthGuard(options: UseAuthGuardOptions = {}) {
     if (!isLoaded) return; // Wait for Clerk to load
 
     const authState = !!isSignedIn;
-    
+
     // Call the callback if provided
     onAuthStateChange?.(authState);
 
@@ -38,7 +38,14 @@ export function useAuthGuard(options: UseAuthGuardOptions = {}) {
     if (requireAuth && !authState) {
       navigate(redirectTo, { replace: true });
     }
-  }, [isSignedIn, isLoaded, requireAuth, redirectTo, navigate, onAuthStateChange]);
+  }, [
+    isSignedIn,
+    isLoaded,
+    requireAuth,
+    redirectTo,
+    navigate,
+    onAuthStateChange,
+  ]);
 
   return {
     isAuthenticated,
@@ -52,9 +59,9 @@ export function useAuthGuard(options: UseAuthGuardOptions = {}) {
  * Hook specifically for protecting routes that require authentication
  */
 export function useRequireAuth(redirectTo = '/sign-in') {
-  return useAuthGuard({ 
-    requireAuth: true, 
-    redirectTo 
+  return useAuthGuard({
+    requireAuth: true,
+    redirectTo,
   });
 }
 

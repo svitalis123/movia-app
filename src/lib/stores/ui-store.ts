@@ -29,7 +29,10 @@ interface UIActions {
   toggleSidebar: () => void;
   setSearching: (isSearching: boolean) => void;
   // Loading state actions
-  setLoadingState: (operation: keyof UIState['loadingStates'], isLoading: boolean) => void;
+  setLoadingState: (
+    operation: keyof UIState['loadingStates'],
+    isLoading: boolean
+  ) => void;
   setGlobalLoading: (isLoading: boolean, message?: string) => void;
 }
 
@@ -81,7 +84,10 @@ export const useUIStore = create<UIStore>()(
         set({ isSearching });
       },
 
-      setLoadingState: (operation: keyof UIState['loadingStates'], isLoading: boolean) => {
+      setLoadingState: (
+        operation: keyof UIState['loadingStates'],
+        isLoading: boolean
+      ) => {
         set((state) => ({
           loadingStates: {
             ...state.loadingStates,
@@ -121,18 +127,21 @@ export const useViewMode = () => useUIStore((state) => state.viewMode);
 export const useTheme = () => useUIStore((state) => state.theme);
 export const useSidebarOpen = () => useUIStore((state) => state.sidebarOpen);
 export const useIsSearching = () => useUIStore((state) => state.isSearching);
-export const useLoadingStates = () => useUIStore((state) => state.loadingStates);
-export const useGlobalLoading = () => useUIStore((state) => state.globalLoading);
+export const useLoadingStates = () =>
+  useUIStore((state) => state.loadingStates);
+export const useGlobalLoading = () =>
+  useUIStore((state) => state.globalLoading);
 
 /**
  * Action hooks for UI operations
  */
-export const useUIActions = () => useUIStore((state) => ({
-  setSearchQuery: state.setSearchQuery,
-  setViewMode: state.setViewMode,
-  setTheme: state.setTheme,
-  toggleSidebar: state.toggleSidebar,
-  setSearching: state.setSearching,
-  setLoadingState: state.setLoadingState,
-  setGlobalLoading: state.setGlobalLoading,
-}));
+export const useUIActions = () =>
+  useUIStore((state) => ({
+    setSearchQuery: state.setSearchQuery,
+    setViewMode: state.setViewMode,
+    setTheme: state.setTheme,
+    toggleSidebar: state.toggleSidebar,
+    setSearching: state.setSearching,
+    setLoadingState: state.setLoadingState,
+    setGlobalLoading: state.setGlobalLoading,
+  }));

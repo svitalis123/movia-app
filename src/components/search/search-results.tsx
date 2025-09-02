@@ -23,14 +23,14 @@ interface Movie {
   original_language?: string;
 }
 
-type MovieSortBy = 
-  | 'popularity.desc' 
-  | 'popularity.asc' 
-  | 'release_date.desc' 
-  | 'release_date.asc' 
-  | 'vote_average.desc' 
-  | 'vote_average.asc' 
-  | 'title.asc' 
+type MovieSortBy =
+  | 'popularity.desc'
+  | 'popularity.asc'
+  | 'release_date.desc'
+  | 'release_date.asc'
+  | 'vote_average.desc'
+  | 'vote_average.asc'
+  | 'title.asc'
   | 'title.desc';
 
 interface SearchResultsProps {
@@ -59,7 +59,13 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
   const { searchResults, loading, error, pagination } = useMovieStore();
   const { searchQuery, viewMode } = useUIStore();
   const { setSearchQuery } = useUIActions();
-  const { searchMovies, clearSearch, goToNextPage: _goToNextPage, goToPreviousPage: _goToPreviousPage, goToPage: _goToPage } = useMovieStore();
+  const {
+    searchMovies,
+    clearSearch,
+    goToNextPage: _goToNextPage,
+    goToPreviousPage: _goToPreviousPage,
+    goToPage: _goToPage,
+  } = useMovieStore();
 
   // Get query from URL params
   const queryParam = searchParams.get('q') || '';
@@ -128,7 +134,7 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
 
     // Apply year filters
     if (filters.minYear || filters.maxYear) {
-      results = results.filter(movie => {
+      results = results.filter((movie) => {
         if (!movie.release_date) return false;
         const year = new Date(movie.release_date).getFullYear();
         if (filters.minYear && year < filters.minYear) return false;
@@ -139,7 +145,9 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
 
     // Apply rating filter
     if (filters.minRating) {
-      results = results.filter(movie => movie.vote_average >= (filters.minRating || 0));
+      results = results.filter(
+        (movie) => movie.vote_average >= (filters.minRating || 0)
+      );
     }
 
     // Apply sorting
@@ -150,9 +158,15 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
         case 'popularity.asc':
           return (a.popularity || 0) - (b.popularity || 0);
         case 'release_date.desc':
-          return new Date(b.release_date || 0).getTime() - new Date(a.release_date || 0).getTime();
+          return (
+            new Date(b.release_date || 0).getTime() -
+            new Date(a.release_date || 0).getTime()
+          );
         case 'release_date.asc':
-          return new Date(a.release_date || 0).getTime() - new Date(b.release_date || 0).getTime();
+          return (
+            new Date(a.release_date || 0).getTime() -
+            new Date(b.release_date || 0).getTime()
+          );
         case 'vote_average.desc':
           return b.vote_average - a.vote_average;
         case 'vote_average.asc':
@@ -173,7 +187,7 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
 
   // Handle filter changes
   const handleFilterChange = (newFilters: Partial<SearchFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters((prev) => ({ ...prev, ...newFilters }));
   };
 
   // Reset filters
@@ -184,7 +198,11 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
   };
 
   // Check if any filters are active
-  const hasActiveFilters = filters.minYear || filters.maxYear || filters.minRating || filters.sortBy !== 'popularity.desc';
+  const hasActiveFilters =
+    filters.minYear ||
+    filters.maxYear ||
+    filters.minRating ||
+    filters.sortBy !== 'popularity.desc';
 
   return (
     <div className={`container mx-auto px-4 py-6 max-w-7xl ${className}`}>
@@ -201,7 +219,7 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
               className="w-full"
             />
           </div>
-          
+
           {/* Filter Toggle */}
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -215,7 +233,11 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
             <span>Filters</span>
             {hasActiveFilters && (
               <span className="bg-background text-primary px-1.5 py-0.5 rounded text-xs">
-                {[filters.minYear, filters.maxYear, filters.minRating].filter(Boolean).length}
+                {
+                  [filters.minYear, filters.maxYear, filters.minRating].filter(
+                    Boolean
+                  ).length
+                }
               </span>
             )}
           </button>
@@ -227,13 +249,18 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
             <div>
               {pagination.totalResults > 0 ? (
                 <>
-                  Showing {((pagination.currentPage - 1) * 20) + 1}-{Math.min(pagination.currentPage * 20, pagination.totalResults)} of {pagination.totalResults} results for "{queryParam}"
+                  Showing {(pagination.currentPage - 1) * 20 + 1}-
+                  {Math.min(
+                    pagination.currentPage * 20,
+                    pagination.totalResults
+                  )}{' '}
+                  of {pagination.totalResults} results for "{queryParam}"
                 </>
               ) : (
                 <>No results found for "{queryParam}"</>
               )}
             </div>
-            
+
             {filteredResults.length !== searchResults.length && (
               <div className="text-xs">
                 ({filteredResults.length} after filtering)
@@ -252,13 +279,21 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
               <label className="block text-sm font-medium mb-2">Sort By</label>
               <select
                 value={filters.sortBy}
-                onChange={(e) => handleFilterChange({ sortBy: e.target.value as MovieSortBy })}
+                onChange={(e) =>
+                  handleFilterChange({ sortBy: e.target.value as MovieSortBy })
+                }
                 className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
               >
-                <option value="popularity.desc">Popularity (High to Low)</option>
+                <option value="popularity.desc">
+                  Popularity (High to Low)
+                </option>
                 <option value="popularity.asc">Popularity (Low to High)</option>
-                <option value="release_date.desc">Release Date (Newest First)</option>
-                <option value="release_date.asc">Release Date (Oldest First)</option>
+                <option value="release_date.desc">
+                  Release Date (Newest First)
+                </option>
+                <option value="release_date.asc">
+                  Release Date (Oldest First)
+                </option>
                 <option value="vote_average.desc">Rating (High to Low)</option>
                 <option value="vote_average.asc">Rating (Low to High)</option>
                 <option value="title.asc">Title (A-Z)</option>
@@ -268,7 +303,9 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
 
             {/* Year Range */}
             <div className="flex-1">
-              <label className="block text-sm font-medium mb-2">Release Year</label>
+              <label className="block text-sm font-medium mb-2">
+                Release Year
+              </label>
               <div className="flex gap-2">
                 <input
                   type="number"
@@ -276,7 +313,13 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
                   min="1900"
                   max={new Date().getFullYear()}
                   value={filters.minYear || ''}
-                  onChange={(e) => handleFilterChange({ minYear: e.target.value ? parseInt(e.target.value) : undefined })}
+                  onChange={(e) =>
+                    handleFilterChange({
+                      minYear: e.target.value
+                        ? parseInt(e.target.value)
+                        : undefined,
+                    })
+                  }
                   className="flex-1 px-3 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                 />
                 <input
@@ -285,7 +328,13 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
                   min="1900"
                   max={new Date().getFullYear()}
                   value={filters.maxYear || ''}
-                  onChange={(e) => handleFilterChange({ maxYear: e.target.value ? parseInt(e.target.value) : undefined })}
+                  onChange={(e) =>
+                    handleFilterChange({
+                      maxYear: e.target.value
+                        ? parseInt(e.target.value)
+                        : undefined,
+                    })
+                  }
                   className="flex-1 px-3 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
@@ -293,10 +342,18 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
 
             {/* Minimum Rating */}
             <div className="flex-1">
-              <label className="block text-sm font-medium mb-2">Minimum Rating</label>
+              <label className="block text-sm font-medium mb-2">
+                Minimum Rating
+              </label>
               <select
                 value={filters.minRating || ''}
-                onChange={(e) => handleFilterChange({ minRating: e.target.value ? parseFloat(e.target.value) : undefined })}
+                onChange={(e) =>
+                  handleFilterChange({
+                    minRating: e.target.value
+                      ? parseFloat(e.target.value)
+                      : undefined,
+                  })
+                }
                 className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <option value="">Any Rating</option>
@@ -336,7 +393,7 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
       {/* Error State */}
       {error && !loading && (
         <div className="py-12">
-          <ErrorMessage 
+          <ErrorMessage
             message={error}
             onRetry={() => queryParam && searchMovies(queryParam, pageParam)}
           />
@@ -349,10 +406,9 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
           <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-semibold mb-2">No movies found</h3>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            {searchResults.length === 0 
+            {searchResults.length === 0
               ? `We couldn't find any movies matching "${queryParam}". Try different keywords or check your spelling.`
-              : `No movies match your current filters. Try adjusting your filter criteria.`
-            }
+              : `No movies match your current filters. Try adjusting your filter criteria.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {searchResults.length > 0 && (
@@ -395,7 +451,7 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
               <div className="text-sm text-muted-foreground">
                 Page {pagination.currentPage} of {pagination.totalPages}
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <button
                   onClick={handlePreviousPage}
@@ -404,37 +460,43 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
                 >
                   Previous
                 </button>
-                
+
                 {/* Page Numbers */}
                 <div className="flex items-center space-x-1">
-                  {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                    let pageNum;
-                    if (pagination.totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (pagination.currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (pagination.currentPage >= pagination.totalPages - 2) {
-                      pageNum = pagination.totalPages - 4 + i;
-                    } else {
-                      pageNum = pagination.currentPage - 2 + i;
+                  {Array.from(
+                    { length: Math.min(5, pagination.totalPages) },
+                    (_, i) => {
+                      let pageNum;
+                      if (pagination.totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (pagination.currentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (
+                        pagination.currentPage >=
+                        pagination.totalPages - 2
+                      ) {
+                        pageNum = pagination.totalPages - 4 + i;
+                      } else {
+                        pageNum = pagination.currentPage - 2 + i;
+                      }
+
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                            pageNum === pagination.currentPage
+                              ? 'bg-primary text-primary-foreground'
+                              : 'border border-input hover:bg-muted'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
                     }
-                    
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => handlePageChange(pageNum)}
-                        className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                          pageNum === pagination.currentPage
-                            ? 'bg-primary text-primary-foreground'
-                            : 'border border-input hover:bg-muted'
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
+                  )}
                 </div>
-                
+
                 <button
                   onClick={handleNextPage}
                   disabled={!pagination.hasNextPage}
@@ -454,7 +516,8 @@ export function SearchResults({ className = '' }: SearchResultsProps) {
           <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-semibold mb-2">Search for Movies</h3>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            Enter a movie title, actor name, or keyword to find movies you're looking for.
+            Enter a movie title, actor name, or keyword to find movies you're
+            looking for.
           </p>
           <button
             onClick={() => navigate('/')}

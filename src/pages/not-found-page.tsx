@@ -35,7 +35,7 @@ export function NotFoundPage() {
           >
             Go to Home
           </button>
-          
+
           <button
             onClick={handleGoBack}
             className="w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
@@ -52,8 +52,8 @@ export function NotFoundPage() {
               className="text-blue-600 hover:text-blue-700 underline"
             >
               return to the homepage
-            </button>
-            {' '}and try again.
+            </button>{' '}
+            and try again.
           </p>
         </div>
       </div>

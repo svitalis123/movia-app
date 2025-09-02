@@ -15,9 +15,11 @@ export function ImageWithFallback({
   className,
   loading = 'lazy',
   onLoad,
-  onError
+  onError,
 }: ImageWithFallbackProps) {
-  const [imageState, setImageState] = useState<'loading' | 'loaded' | 'error'>('loading');
+  const [imageState, setImageState] = useState<'loading' | 'loaded' | 'error'>(
+    'loading'
+  );
   const [currentSrc, setCurrentSrc] = useState<string | null>(src);
   const imgRef = useRef<HTMLImageElement>(null);
   const [isInView, setIsInView] = useState(false);
@@ -73,7 +75,7 @@ export function ImageWithFallback({
   };
 
   return (
-    <div 
+    <div
       ref={imgRef}
       className={`relative overflow-hidden bg-muted ${className || ''}`}
       style={containerStyle}
@@ -91,7 +93,7 @@ export function ImageWithFallback({
             `}
             loading={loading}
           />
-          
+
           {/* Loading placeholder */}
           {imageState === 'loading' && (
             <div className="absolute inset-0 flex items-center justify-center bg-muted">
@@ -234,24 +236,19 @@ export function ResponsiveImage({
   className?: string;
 } & Omit<ImageWithFallbackProps, 'src' | 'alt'>) {
   return (
-    <ImageWithFallback
-      src={src}
-      alt={alt}
-      className={className}
-      {...props}
-    />
+    <ImageWithFallback src={src} alt={alt} className={className} {...props} />
   );
 }
 
 /**
  * Image preloader utility component
  */
-export function ImagePreloader({ 
-  urls, 
-  onComplete 
-}: { 
-  urls: string[]; 
-  onComplete?: () => void; 
+export function ImagePreloader({
+  urls,
+  onComplete,
+}: {
+  urls: string[];
+  onComplete?: () => void;
 }) {
   useEffect(() => {
     if (urls.length === 0) {

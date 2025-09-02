@@ -11,18 +11,18 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
   immediate = false
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null;
-  
+
   return function executedFunction(...args: Parameters<T>) {
     const later = () => {
       timeout = null;
       if (!immediate) func(...args);
     };
-    
+
     const callNow = immediate && !timeout;
-    
+
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(later, wait);
-    
+
     if (callNow) func(...args);
   };
 }
@@ -35,12 +35,12 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
-  
+
   return function executedFunction(...args: Parameters<T>) {
     if (!inThrottle) {
       func(...args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }
@@ -54,17 +54,17 @@ export function memoize<T extends (...args: any[]) => any>(
   getKey?: (...args: Parameters<T>) => string
 ): T {
   const cache = new Map<string, ReturnType<T>>();
-  
+
   return ((...args: Parameters<T>): ReturnType<T> => {
     const key = getKey ? getKey(...args) : JSON.stringify(args);
-    
+
     if (cache.has(key)) {
       return cache.get(key)!;
     }
-    
+
     const result = fn(...args);
     cache.set(key, result);
-    
+
     return result;
   }) as T;
 }
@@ -87,20 +87,23 @@ export class ImagePreloader {
     return new Promise((resolve, reject) => {
       this.queue.push({ url, priority });
       this.queue.sort((a, b) => b.priority - a.priority);
-      
+
       this.processQueue();
-      
+
       // Set up listeners for this specific URL
       const checkComplete = () => {
         if (this.loaded.has(url)) {
           resolve();
-        } else if (!this.loading.has(url) && !this.queue.some(item => item.url === url)) {
+        } else if (
+          !this.loading.has(url) &&
+          !this.queue.some((item) => item.url === url)
+        ) {
           reject(new Error(`Failed to load image: ${url}`));
         } else {
           setTimeout(checkComplete, 100);
         }
       };
-      
+
       checkComplete();
     });
   }
@@ -121,20 +124,20 @@ export class ImagePreloader {
     this.currentLoading++;
 
     const img = new Image();
-    
+
     img.onload = () => {
       this.loading.delete(url);
       this.loaded.add(url);
       this.currentLoading--;
       this.processQueue();
     };
-    
+
     img.onerror = () => {
       this.loading.delete(url);
       this.currentLoading--;
       this.processQueue();
     };
-    
+
     img.src = url;
   }
 
@@ -167,21 +170,24 @@ export class LazyLoadObserver {
   private callbacks = new Map<Element, () => void>();
 
   constructor(options: IntersectionObserverInit = {}) {
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const callback = this.callbacks.get(entry.target);
-          if (callback) {
-            callback();
-            this.unobserve(entry.target);
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const callback = this.callbacks.get(entry.target);
+            if (callback) {
+              callback();
+              this.unobserve(entry.target);
+            }
           }
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '50px',
-      ...options
-    });
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '50px',
+        ...options,
+      }
+    );
   }
 
   observe(element: Element, callback: () => void): void {
@@ -216,7 +222,7 @@ export class PerformanceMonitor {
 
   startTiming(label: string): () => void {
     const start = performance.now();
-    
+
     return () => {
       const duration = performance.now() - start;
       this.recordMetric(label, duration);
@@ -227,17 +233,19 @@ export class PerformanceMonitor {
     if (!this.metrics.has(label)) {
       this.metrics.set(label, []);
     }
-    
+
     const values = this.metrics.get(label)!;
     values.push(value);
-    
+
     // Keep only last 100 measurements
     if (values.length > 100) {
       values.shift();
     }
   }
 
-  getMetrics(label: string): { avg: number; min: number; max: number; count: number } | null {
+  getMetrics(
+    label: string
+  ): { avg: number; min: number; max: number; count: number } | null {
     const values = this.metrics.get(label);
     if (!values || values.length === 0) {
       return null;
@@ -248,17 +256,23 @@ export class PerformanceMonitor {
       avg: sum / values.length,
       min: Math.min(...values),
       max: Math.max(...values),
-      count: values.length
+      count: values.length,
     };
   }
 
-  getAllMetrics(): Record<string, ReturnType<PerformanceMonitor['getMetrics']>> {
-    const result: Record<string, ReturnType<PerformanceMonitor['getMetrics']>> = {};
-    
+  getAllMetrics(): Record<
+    string,
+    ReturnType<PerformanceMonitor['getMetrics']>
+  > {
+    const result: Record<
+      string,
+      ReturnType<PerformanceMonitor['getMetrics']>
+    > = {};
+
     for (const [label] of this.metrics) {
       result[label] = this.getMetrics(label);
     }
-    
+
     return result;
   }
 
@@ -285,7 +299,7 @@ export const bundleOptimization = {
    */
   async loadModule<T>(importFn: () => Promise<T>): Promise<T> {
     const endTiming = performanceMonitor.startTiming('module-load');
-    
+
     try {
       const module = await importFn();
       endTiming();
@@ -315,7 +329,7 @@ export const bundleOptimization = {
    */
   pure<T extends (...args: unknown[]) => unknown>(fn: T): T {
     return fn;
-  }
+  },
 };
 
 /**
@@ -332,19 +346,21 @@ export const memoryManagement = {
     delete: (key: K) => boolean;
   } {
     const cache = new WeakMap<K, V>();
-    
+
     return {
       get: (key: K) => cache.get(key),
       set: (key: K, value: V) => cache.set(key, value),
       has: (key: K) => cache.has(key),
-      delete: (key: K) => cache.delete(key)
+      delete: (key: K) => cache.delete(key),
     };
   },
 
   /**
    * Create a size-limited cache with LRU eviction
    */
-  createLRUCache<K, V>(maxSize: number): {
+  createLRUCache<K, V>(
+    maxSize: number
+  ): {
     get: (key: K) => V | undefined;
     set: (key: K, value: V) => void;
     has: (key: K) => boolean;
@@ -353,7 +369,7 @@ export const memoryManagement = {
     size: number;
   } {
     const cache = new Map<K, V>();
-    
+
     return {
       get(key: K): V | undefined {
         if (cache.has(key)) {
@@ -365,7 +381,7 @@ export const memoryManagement = {
         }
         return undefined;
       },
-      
+
       set(key: K, value: V): void {
         if (cache.has(key)) {
           cache.delete(key);
@@ -376,13 +392,15 @@ export const memoryManagement = {
         }
         cache.set(key, value);
       },
-      
+
       has: (key: K) => cache.has(key),
       delete: (key: K) => cache.delete(key),
       clear: () => cache.clear(),
-      get size() { return cache.size; }
+      get size() {
+        return cache.size;
+      },
     };
-  }
+  },
 };
 
 export default {
@@ -393,5 +411,5 @@ export default {
   LazyLoadObserver,
   performanceMonitor,
   bundleOptimization,
-  memoryManagement
+  memoryManagement,
 };
