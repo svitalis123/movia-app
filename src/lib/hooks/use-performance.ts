@@ -163,7 +163,7 @@ export function useMemoryMonitor(componentName: string, interval = 5000) {
     }
 
     const checkMemory = () => {
-      const memory = (performance as unknown as { memory?: { usedJSHeapSize: number; totalJSHeapSize: number } }).memory;
+      const memory = (performance as unknown as { memory?: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number } }).memory;
       if (memory) {
         performanceMonitor.recordMetric(`${componentName}-memory-used`, memory.usedJSHeapSize);
         performanceMonitor.recordMetric(`${componentName}-memory-total`, memory.totalJSHeapSize);

@@ -135,7 +135,8 @@ class OptimizedMovieService {
 
   // Debounced search to prevent excessive API calls
   public debouncedSearchMovies = debounce(
-    async (query: string, page = 1, callback: (result: TMDBResponse<TMDBMovie>) => void) => {
+    async (...args: unknown[]) => {
+      const [query, page = 1, callback] = args as [string, number, (result: TMDBResponse<TMDBMovie>) => void];
       const endTiming = performanceMonitor.startTiming('search-movies');
       try {
         const result = await this.searchMovies(query, page);
@@ -154,7 +155,7 @@ class OptimizedMovieService {
     const endTiming = performanceMonitor.startTiming('get-popular-movies');
     
     try {
-      const result = await this.memoizedGetPopularMovies(page);
+      const result = await this.memoizedGetPopularMovies(page) as TMDBResponse<TMDBMovie>;
       
       // Preload movie posters
       this.preloadMovieImages(result.results);
@@ -172,7 +173,7 @@ class OptimizedMovieService {
     const endTiming = performanceMonitor.startTiming('search-movies');
     
     try {
-      const result = await this.memoizedSearchMovies(query, page);
+      const result = await this.memoizedSearchMovies(query, page) as TMDBResponse<TMDBMovie>;
       
       // Preload movie posters
       this.preloadMovieImages(result.results);

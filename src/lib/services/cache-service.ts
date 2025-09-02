@@ -89,7 +89,7 @@ class InMemoryCacheService implements CacheService {
     this.stats.hits++;
     this.updateHitRate();
     
-    return entry.data;
+    return entry.data as T;
   }
 
   /**

@@ -48,7 +48,8 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 /**
  * Memoization utility for expensive computations
  */
-export function memoize<T extends (...args: unknown[]) => unknown>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function memoize<T extends (...args: any[]) => any>(
   fn: T,
   getKey?: (...args: Parameters<T>) => string
 ): T {
