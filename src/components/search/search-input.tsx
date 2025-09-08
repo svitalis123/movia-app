@@ -463,7 +463,7 @@ export function SearchInput({
       {showDropdown && (
         <div
           ref={dropdownRef}
-          className="absolute top-full left-0 right-0 mt-1 bg-background border border-input rounded-md shadow-lg z-50 max-h-96 overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-1 bg-[#613595] border border-input rounded-md shadow-lg z-50 max-h-96 overflow-y-auto"
         >
           {renderDropdownContent()}
         </div>

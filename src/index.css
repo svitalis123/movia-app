@@ -6,6 +6,8 @@
 @theme {
   /* Light mode colors - better contrast */
   --color-background: 255 255 255; /* Pure white background */
+  --background: 0 0 0;
+  --background: #613599;
   --color-foreground: 15 23 42; /* Dark slate for main text */
   --color-card: 255 255 255; /* White cards */
   --color-card-foreground: 15 23 42; /* Dark text on cards */
