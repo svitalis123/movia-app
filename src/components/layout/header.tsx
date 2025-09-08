@@ -72,8 +72,6 @@ export function Header() {
             </Link>
           </nav>
 
-      
-
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
             {/* View Mode Toggle */}
