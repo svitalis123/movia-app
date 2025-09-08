@@ -1,8 +1,8 @@
 # Movie Recommendation App
 
-[![CI/CD Pipeline](https://github.com/username/movie-recommendation-app/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/username/movie-recommendation-app/actions/workflows/ci-cd.yml)
-[![Code Quality](https://github.com/username/movie-recommendation-app/actions/workflows/code-quality.yml/badge.svg)](https://github.com/username/movie-recommendation-app/actions/workflows/code-quality.yml)
-[![E2E Tests](https://github.com/username/movie-recommendation-app/actions/workflows/e2e.yml/badge.svg)](https://github.com/username/movie-recommendation-app/actions/workflows/e2e.yml)
+[![CI/CD Pipeline](https://github.com/svitalis123/movia-app/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/username/movie-recommendation-app/actions/workflows/ci-cd.yml)
+[![Code Quality](https://github.com/svitalis123/movia-app/actions/workflows/code-quality.yml/badge.svg)](https://github.com/svitalis123/movia-app/actions/workflows/code-quality.yml)
+[![E2E Tests](https://github.com/svitalis123/movia-app/actions/workflows/e2e.yml/badge.svg)](https://github.com/svitalis123/movia-app/actions/workflows/e2e.yml)
 
 A modern React application built with TypeScript, Tailwind CSS, and shadcn/ui for browsing and discovering movies using The Movie Database (TMDB) API.
 
